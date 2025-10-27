@@ -21,7 +21,7 @@ export default function WhyDASES() {
           and scalable for institutions. One platform that works for everyone.
         </p>
         <div className={styles.actions}>
-          <Link href="#demo" className={styles.link}
+          <Link href="#bookDemo" className={styles.link}
 
 
             onClick={() => {
@@ -35,7 +35,7 @@ export default function WhyDASES() {
 
           >  Book Demo Now
           </Link>
-          <Link href="#contact" className={styles.link}>
+          <Link href="/sample-report" className={styles.link}>
             Sample Report
           </Link>
         </div>
