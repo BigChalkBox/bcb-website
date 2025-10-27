@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import styles from "../dashboard/Dashboard.module.css"; // reuse same CSS
+import Link from "next/link";
 
 export default function StudentReportsPage() {
   const supabase = createClientComponentClient();
@@ -99,9 +100,9 @@ export default function StudentReportsPage() {
 
               <div className={styles.reportActions}>
                 {r.status === "Completed" || r.status === "Evaluated" ? (
-                  <a href={`/reports/${r.submission_id}`} target="_blank">
+                  <Link href={`/reports/${r.submission_id}`} target="_blank">
                     <button className={styles.primaryButton}>📄 View Report</button>
-                  </a>
+                  </Link>
                 ) : (
                   <button disabled className={styles.disabledButton}>
                     ⏳ Not Evaluated

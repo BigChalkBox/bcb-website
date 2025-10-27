@@ -553,6 +553,7 @@ import Latex from "react-latex-next";
 import "katex/dist/katex.min.css";
 import "./QuestionEditor.css";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 /* ---------- Helpers ---------- */
 function uuid() {
@@ -1189,7 +1190,7 @@ function ImageThumbs({ paths, onDelete }) {
     <div className="image-thumbnails">
       {paths.map((p, i) => (
         <div key={i} className="image-thumb">
-          <img src={p} alt={`img-${i}`} />
+          <Image src={p} alt={`img-${i}`} />
           <button
             type="button"
             onClick={() => onDelete(i)}

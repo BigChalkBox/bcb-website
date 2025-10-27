@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./WhyDases.module.css";
 import { FaChalkboardTeacher, FaUserGraduate, FaUniversity, FaUsers } from "react-icons/fa";
 
@@ -20,7 +21,7 @@ export default function WhyDASES() {
           and scalable for institutions. One platform that works for everyone.
         </p>
         <div className={styles.actions}>
-          <a href="#demo" className={styles.link}
+          <Link href="#demo" className={styles.link}
 
 
             onClick={() => {
@@ -33,10 +34,10 @@ export default function WhyDASES() {
             }}
 
           >  Book Demo Now
-          </a>
-          <a href="#contact" className={styles.link}>
+          </Link>
+          <Link href="#contact" className={styles.link}>
             Sample Report
-          </a>
+          </Link>
         </div>
       </div>
 

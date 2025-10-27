@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import styles from "./EvaluationsPage.module.css";
 import Header from "@/components/HeaderSub";
+import Link from "next/link";
 
 export default function EvaluationsPage() {
   const [papers, setPapers] = useState([]);
@@ -145,13 +146,13 @@ export default function EvaluationsPage() {
                         <td>{s.enrollment_no}</td>
                         <td>{s.email}</td>
                         <td>
-                          <a
+                          <Link
                             href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/submissions/${s.file_path}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             View PDF
-                          </a>
+                          </Link>
                         </td>
                         <td
                           className={

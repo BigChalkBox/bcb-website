@@ -5,6 +5,7 @@ import styles from "./Report.module.css";
 import { createClient } from "@supabase/supabase-js";
 import Latex from "react-latex-next";
 import "katex/dist/katex.min.css";
+import Image from "next/image";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -365,7 +366,7 @@ export default function ReportPage({ params }) {
                             className={styles.imageThumb}
                             onClick={() => openLightbox(imgSrc)}
                           >
-                            <img src={imgSrc} alt={`Answer page ${i + 1}`} />
+                            <Image src={imgSrc} alt={`Answer page ${i + 1}`} />
                             <div className={styles.imageOverlay}>
                               <span>🔍 Click to enlarge</span>
                             </div>
@@ -393,7 +394,7 @@ export default function ReportPage({ params }) {
           <button className={styles.lightboxClose} onClick={closeLightbox}>
             ✕
           </button>
-          <img
+          <Image
             src={lightboxImage}
             alt="Full size view"
             onClick={(e) => e.stopPropagation()}

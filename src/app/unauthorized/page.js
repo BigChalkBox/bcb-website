@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function UnauthorizedPage() {
   return (
     <div
@@ -12,9 +14,9 @@ export default function UnauthorizedPage() {
     >
       <h1>🚫 Unauthorized Access</h1>
       <p>You don’t have permission to view this page.</p>
-      <a href="/" style={{ marginTop: "1rem", color: "#0070f3" }}>
+      <Link href="/" style={{ marginTop: "1rem", color: "#0070f3" }}>
         Go back to home
-      </a>
+      </Link>
     </div>
   );
 }

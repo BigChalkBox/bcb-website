@@ -7,6 +7,7 @@ import "katex/dist/katex.min.css";
 import { downloadPaperAsPDF } from "@/utils/pdfGenerator";
 import { downloadCompleteQuestionPaper } from "@/utils/completePdfGenerator";
 import styles from "./ReviewPage.module.css";
+import Image from "next/image";
 
 export default function ReviewPage() {
   const { id } = useParams();
@@ -81,7 +82,7 @@ export default function ReviewPage() {
       {q.images?.length > 0 && (
         <div className={styles.imageGrid}>
           {q.images.map((imagePath, i) => (
-            <img
+            <Image
               key={i}
               src={imagePath}
               className={styles.questionImage}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import styles from "./SubmissionsPage.module.css";
+import Link from "next/link";
 
 export default function SubmissionsPage() {
   const { id: paperId } = useParams();
@@ -151,13 +152,13 @@ export default function SubmissionsPage() {
                 <td>{sub.enrollment_no}</td>
                 <td>{sub.email}</td>
                 <td>
-                  <a
+                  <Link
                     href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/submissions/${sub.file_path}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     📎 View
-                  </a>
+                  </Link>
                 </td>
                 <td>
                   {sub.submitted_at
