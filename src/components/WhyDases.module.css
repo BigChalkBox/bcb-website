@@ -2,80 +2,91 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 4rem;
-  padding: 4rem 7rem;
-
+  gap: clamp(2rem, 5vw, 4rem);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 7vw, 7rem);
   margin: 7% auto;
 }
+
 
 .left {
   flex: 1;
   max-width: 40%;
 }
 
+
 .subtitle {
   background: linear-gradient(45deg, #fbbf24, #f59e0b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 2rem;
+  font-size: clamp(1.3rem, 3vw, 2rem);
   margin-bottom: 0.5rem;
 }
 
+
 .subtitle1{
-     background: linear-gradient(45deg, #248cfb, #0b55f5);
+  background: linear-gradient(45deg, #248cfb, #0b55f5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 2rem;
+  font-size: clamp(1.3rem, 3vw, 2rem);
   margin-bottom: 0.5rem;
   font-weight: 700;
-
 }
 
+
 .title {
-  font-size: 5rem;
+  font-size: clamp(2.5rem, 7vw, 5rem);
   font-weight: 800;
   line-height: 1;
   color: #2b2b2b;
 }
 
+
 .description {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
   line-height: 1.6;
   margin: 5% 0;
-
   color: #555;
   max-width: 90%;
 }
 
+
 .actions {
   display: flex;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
+
 
 .link {
   color: #ffffff;
   background: linear-gradient(45deg, #fbbf24, #f59e0b);
-  padding: 1%;
-  border-radius:10px ;
+  padding: clamp(0.75rem, 1.5vw, 1%);
+  border-radius: 10px;
   font-weight: 500;
   text-decoration: none;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
+
 .link:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
   filter: brightness(1.1);
 }
+
 
 .right {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem 5rem ;
+  gap: clamp(1.5rem, 3vw, 2rem) clamp(2rem, 5vw, 5rem);
   margin-top: 15%;
 }
+
 
 .card {
   display: flex;
@@ -83,44 +94,113 @@
   gap: 1rem;
 }
 
+
 .card1{
-      display: flex;
+  display: flex;
   align-items: flex-start;
   gap: 1rem;
   margin-top: -7rem;
 }
 
+
 .card2{
-      display: flex;
+  display: flex;
   align-items: flex-start;
   gap: 1rem;
   margin-top: -6rem;
 }
 
+
 .icon {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   color: #fbbf24;
   flex-shrink: 0;
 }
 
+
 .card h3 {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
   font-weight: 600;
   margin-bottom: 0.3rem;
   color: #2b2b2b;
 }
 
+
 .card p {
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   line-height: 1.5;
   color: #444;
 }
 
+
+.card1 h3 {
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #2b2b2b;
+}
+
+
+.card1 p {
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  line-height: 1.5;
+  color: #444;
+}
+
+
+.card2 h3 {
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #2b2b2b;
+}
+
+
+.card2 p {
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  line-height: 1.5;
+  color: #444;
+}
+
+
 /* RESPONSIVE */
+
+/* Large tablets and small desktops */
+@media (max-width: 1200px) {
+  .section {
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 5vw, 5rem);
+  }
+  
+  .title {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+  
+  .right {
+    gap: clamp(1.2rem, 2.5vw, 1.8rem) clamp(1.5rem, 4vw, 3rem);
+    margin-top: 10%;
+  }
+  
+  .card1 {
+    margin-top: -5rem;
+  }
+  
+  .card2 {
+    margin-top: -4rem;
+  }
+}
+
+
+/* Tablets */
 @media (max-width: 992px) {
   .section {
     flex-direction: column;
     gap: 3rem;
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+    margin: 5% auto;
+  }
+  
+  .left {
+    max-width: 100%;
   }
 
   .description {
@@ -128,6 +208,201 @@
   }
 
   .right {
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0;
+    width: 100%;
+  }
+  
+  .card1 {
+    margin-top: 0;
+  }
+  
+  .card2 {
+    margin-top: 0;
+  }
+}
+
+
+/* Mobile landscape and small tablets */
+@media (max-width: 768px) {
+  .section {
+    gap: 2.5rem;
+    padding: clamp(1.5rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem);
+  }
+  
+  .subtitle,
+  .subtitle1 {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+  }
+  
+  .title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+  
+  .description {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    margin: 4% 0;
+  }
+  
+  .actions {
+    gap: 1rem;
+  }
+  
+  .link {
+    padding: clamp(0.7rem, 2vw, 0.85rem) clamp(1.2rem, 3vw, 1.5rem);
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+  }
+  
+  .right {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card,
+  .card1,
+  .card2 {
+    margin-top: 0;
+  }
+}
+
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+  .section {
+    gap: 2rem;
+    padding: clamp(1.5rem, 4vw, 2rem) clamp(1rem, 4vw, 1.5rem);
+    margin: 4% auto;
+  }
+  
+  .subtitle,
+  .subtitle1 {
+    font-size: clamp(1.1rem, 5vw, 1.3rem);
+    margin-bottom: 0.4rem;
+  }
+  
+  .title {
+    font-size: clamp(1.75rem, 9vw, 2.5rem);
+    line-height: 1.1;
+  }
+  
+  .description {
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+    line-height: 1.5;
+    margin: 3% 0;
+    max-width: 100%;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  
+  .link {
+    padding: 0.75rem 1.5rem;
+    font-size: clamp(0.85rem, 2.5vw, 0.9rem);
+    text-align: center;
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .right {
+    gap: 1.2rem;
+  }
+  
+  .card,
+  .card1,
+  .card2 {
+    gap: 0.75rem;
+  }
+  
+  .icon {
+    font-size: clamp(1.3rem, 4vw, 1.5rem);
+  }
+  
+  .card h3,
+  .card1 h3,
+  .card2 h3 {
+    font-size: clamp(0.95rem, 2.5vw, 1rem);
+  }
+  
+  .card p,
+  .card1 p,
+  .card2 p {
+    font-size: clamp(0.8rem, 2vw, 0.85rem);
+  }
+}
+
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .section {
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
+    margin: 3% auto;
+  }
+  
+  .subtitle,
+  .subtitle1 {
+    font-size: clamp(1rem, 6vw, 1.2rem);
+  }
+  
+  .title {
+    font-size: clamp(1.5rem, 10vw, 2rem);
+  }
+  
+  .description {
+    font-size: clamp(0.8rem, 3vw, 0.9rem);
+  }
+  
+  .link {
+    padding: 0.65rem 1.2rem;
+    font-size: 0.85rem;
+  }
+  
+  .right {
+    gap: 1rem;
+  }
+  
+  .icon {
+    font-size: 1.3rem;
+  }
+}
+
+
+/* Large desktop screens */
+@media (min-width: 1440px) {
+  .section {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .title {
+    font-size: 5.5rem;
+  }
+  
+  .right {
+    gap: 2.5rem 6rem;
+  }
+}
+
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .section {
+    max-width: 1600px;
+  }
+  
+  .title {
+    font-size: 6rem;
+  }
+  
+  .description {
+    font-size: 1.1rem;
+  }
+  
+  .right {
+    gap: 3rem 7rem;
   }
 }

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import styles from "./SampleReportPage.module.css";
-import HeaderSample from "../../components/Headersample";
+
 import BookDemoForm from "@/components/BookDemoForm";
+import Header from "@/components/Header";
 
 
 export default function SampleReportPage() {
@@ -29,8 +30,8 @@ export default function SampleReportPage() {
 
     return (
         <>
+            <Header />
 
-            <HeaderSample />
             <section className={styles.pageSection}>
                 <div className={styles.container}>
                     <header className={styles.header}>

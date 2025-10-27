@@ -1,3 +1,4 @@
+// src/components/Reviews.js
 "use client";
 import React, { useRef } from "react";
 import Slider from "react-slick";

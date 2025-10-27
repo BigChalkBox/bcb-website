@@ -1,65 +1,77 @@
 .pageSection {
   background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
   min-height: 100vh;
-  padding: 3rem 1.5rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 2vw, 1.5rem);
   display: flex;
   justify-content: center;
 }
+
 
 .container {
   width: 100%;
   max-width: 1000px;
   background: #fff;
-  border-radius: 18px;
+  border-radius: clamp(12px, 1.8vw, 18px);
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
-  padding: 2rem 2.5rem;
+  padding: clamp(1.5rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
   display: flex;
   flex-direction: column;
 }
 
+
 .header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
 }
 
+
 .title {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
   font-weight: 800;
   color: #0f172a;
   margin-bottom: 0.5rem;
+  line-height: 1.2;
 }
+
 
 .subtitle {
   color: #64748b;
-  font-size: 1.05rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
   font-weight: 500;
+  line-height: 1.4;
+  padding: 0 1rem;
 }
+
 
 /* Tabs */
 .tabs {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(1.25rem, 2vw, 1.5rem);
 }
+
 
 .tabButton {
   background: #f1f5f9;
   border: none;
-  border-radius: 10px;
-  padding: 0.8rem 1.4rem;
-  font-size: 0.95rem;
+  border-radius: clamp(8px, 1vw, 10px);
+  padding: clamp(0.7rem, 1.2vw, 0.8rem) clamp(1.1rem, 2vw, 1.4rem);
+  font-size: clamp(0.85rem, 1.4vw, 0.95rem);
   font-weight: 600;
   color: #334155;
   cursor: pointer;
   transition: 0.25s ease;
+  white-space: nowrap;
 }
+
 
 .tabButton:hover {
   background: #e2e8f0;
   transform: translateY(-1px);
 }
+
 
 .active {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
@@ -67,61 +79,114 @@
   box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
 
+
 /* PDF Viewer */
 .viewer {
-  border-radius: 12px;
+  border-radius: clamp(10px, 1.2vw, 12px);
   overflow: hidden;
   border: 1px solid #e2e8f0;
   background: #f8fafc;
 }
 
+
 .pdfFrame {
   width: 100%;
-  height: 80vh;
+  height: clamp(60vh, 75vh, 80vh);
   border: none;
 }
 
 
-
-
 /* ===== CTA SECTION ===== */
 .ctaSection {
-  padding: var(--spacing-lg) var(--spacing-lg);
+  padding: clamp(2rem, 4vw, var(--spacing-lg)) var(--spacing-lg);
   background: var(--gradient-primary);
   color: white;
   text-align: center;
   border-radius: 100px 100px 0px 0px;
 }
 
+
 .ctaContent {
   max-width: 600px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
+
 .ctaTitle {
-  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 800;
   margin-bottom: var(--spacing-md);
   line-height: 1.2;
 }
 
+
 .ctaDescription {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
   margin-bottom: var(--spacing-xl);
   color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
 }
 
 
-
 .sectionAlt1 {
-  padding: 1rem var(--spacing-lg);
+  padding: clamp(1rem, 2vw, 1rem) var(--spacing-lg);
   background: var(--bg-tertiary);
-  
+}
+
+
+.primaryButton {
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  color: var(--text-primary);
+  border: none;
+  padding: clamp(0.75rem, 2vw, var(--spacing-md)) clamp(1.5rem, 4vw, var(--spacing-xl));
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 600;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg);
+  width: auto;
+  max-width: 100%;
+}
+
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+  filter: brightness(1.1);
 }
 
 
 /* ===== RESPONSIVE DESIGN ===== */
+
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+  .pageSection {
+    padding: clamp(1.75rem, 3.5vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+  }
+  
+  .container {
+    max-width: 95%;
+  }
+  
+  .pdfFrame {
+    height: clamp(65vh, 72vh, 75vh);
+  }
+}
+
+
+/* Tablets */
 @media (max-width: 768px) {
+  .pageSection {
+    padding: 2rem 1rem;
+  }
+  
+  .container {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+  
   .hero {
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
@@ -131,11 +196,11 @@
   }
   
   .heroTitle {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
   }
   
   .heroDescription {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.2vw, 1.1rem);
   }
   
   .flowContainer {
@@ -148,15 +213,16 @@
   }
   
   .sectionTitle {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
   }
 
   .buttonWrapper{
     display: flex;
     flex-direction: column;
-  margin-top: 1rem;
-    gap: 20px;
-}
+    margin-top: 1rem;
+    gap: 15px;
+    align-items: center;
+  }
   
   .section, .sectionAlt {
     padding: var(--spacing-2xl) var(--spacing-md);
@@ -187,30 +253,151 @@
     gap: var(--spacing-lg);
   }
   
+  .title {
+    font-size: clamp(1.4rem, 4vw, 1.75rem);
+  }
+  
+  .subtitle {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    padding: 0 0.5rem;
+  }
+  
+  .tabs {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .tabButton {
+    padding: 0.65rem 1.1rem;
+    font-size: 0.85rem;
+  }
+  
+  .pdfFrame {
+    height: clamp(60vh, 68vh, 70vh);
+  }
+  
+  .ctaSection {
+    border-radius: 50px 50px 0px 0px;
+    padding: clamp(1.75rem, 3vw, 2rem) clamp(1rem, 2vw, 1.5rem);
+  }
+  
   .ctaTitle {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
   }
   
   .ctaDescription {
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
   }
-
-
+  
+  .primaryButton {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
 }
 
+
+/* Mobile landscape and small tablets */
+@media (max-width: 640px) {
+  .pageSection {
+    padding: 1.75rem 0.75rem;
+  }
+  
+  .container {
+    padding: 1.25rem;
+  }
+  
+  .header {
+    margin-bottom: 1.25rem;
+  }
+  
+  .title {
+    font-size: clamp(1.3rem, 5vw, 1.6rem);
+  }
+  
+  .subtitle {
+    font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+  }
+  
+  .tabs {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .tabButton {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .pdfFrame {
+    height: 60vh;
+  }
+  
+  .ctaSection {
+    border-radius: 40px 40px 0px 0px;
+  }
+}
+
+
+/* Mobile portrait */
 @media (max-width: 480px) {
+  .pageSection {
+    padding: 1.5rem 0.75rem;
+    min-height: auto;
+  }
+  
+  .container {
+    padding: 1.25rem 1rem;
+    border-radius: 10px;
+  }
+  
+  .header {
+    margin-bottom: 1rem;
+  }
+  
+  .title {
+    font-size: clamp(1.25rem, 6vw, 1.5rem);
+    margin-bottom: 0.4rem;
+  }
+  
+  .subtitle {
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+    padding: 0;
+  }
+  
+  .tabs {
+    gap: 0.5rem;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .tabButton {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  .viewer {
+    border-radius: 8px;
+  }
+  
+  .pdfFrame {
+    height: 55vh;
+  }
+  
   .heroTitle {
-    font-size: 2rem;
+    font-size: clamp(1.75rem, 6vw, 2rem);
   }
   
   .flowBox {
-    width: 60px;
-    height: 60px;
+    width: clamp(50px, 15vw, 60px);
+    height: clamp(50px, 15vw, 60px);
   }
   
   .flowIcon {
-    width: 30px;
-    height: 30px;
+    width: clamp(25px, 7vw, 30px);
+    height: clamp(25px, 7vw, 30px);
   }
   
   .stepCard, .featureCard, .benefitCard, .testimonialCard {
@@ -219,12 +406,130 @@
   
   .statsGrid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
   }
   
   .statNumber {
-    font-size: 2rem;
+    font-size: clamp(1.75rem, 5vw, 2rem);
+  }
+  
+  .ctaSection {
+    border-radius: 30px 30px 0px 0px;
+    padding: 1.5rem 1rem;
+  }
+  
+  .ctaTitle {
+    font-size: clamp(1.4rem, 5vw, 1.75rem);
+  }
+  
+  .ctaDescription {
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+  }
+  
+  .primaryButton {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .buttonWrapper {
+    gap: 12px;
+    width: 100%;
   }
 }
+
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .pageSection {
+    padding: 1.25rem 0.5rem;
+  }
+  
+  .container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .tabs {
+    gap: 0.4rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .tabButton {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+    width: 100%;
+  }
+  
+  .pdfFrame {
+    height: 50vh;
+  }
+  
+  .ctaSection {
+    border-radius: 20px 20px 0px 0px;
+    padding: 1.25rem 0.75rem;
+  }
+  
+  .ctaTitle {
+    font-size: 1.3rem;
+  }
+  
+  .ctaDescription {
+    font-size: 0.85rem;
+  }
+  
+  .primaryButton {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+
+/* Large desktop screens */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1100px;
+  }
+  
+  .pdfFrame {
+    height: 82vh;
+  }
+}
+
+
+/* Ultra-wide screens */
+@media (min-width: 1600px) {
+  .pageSection {
+    padding: 3.5rem 2rem;
+  }
+  
+  .container {
+    max-width: 1200px;
+    padding: 2.5rem 3rem;
+  }
+  
+  .title {
+    font-size: 2.25rem;
+  }
+  
+  .subtitle {
+    font-size: 1.15rem;
+  }
+  
+  .pdfFrame {
+    height: 85vh;
+  }
+}
+
 
 /* ===== ANIMATIONS ===== */
 @keyframes fadeInUp {
@@ -238,6 +543,7 @@
   }
 }
 
+
 .stepCard,
 .featureCard,
 .benefitCard,
@@ -246,53 +552,41 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
+
 /* ===== ACCESSIBILITY ===== */
 
 /* ===== FOCUS STYLES ===== */
-.primaryButton:focus {
+.primaryButton:focus,
+.tabButton:focus {
   outline: 2px solid #fbbf24;
   outline-offset: 2px;
 }
 
+
 /* ===== PRINT STYLES ===== */
 @media print {
+  .pageSection {
+    background: white;
+  }
+  
   .hero {
     background: white;
     color: black;
   }
   
-  .primaryButton {
+  .primaryButton,
+  .tabButton {
     background: #e5e7eb;
     color: black;
   }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .title {
-    font-size: 1.5rem;
+  
+  .container {
+    box-shadow: none;
+    border: 1px solid #000;
   }
+  
   .pdfFrame {
-    height: 70vh;
+    height: auto;
+    min-height: 500px;
   }
-}
-
-
-.primaryButton {
-  background: linear-gradient(45deg, #fbbf24, #f59e0b);
-  color: var(--text-primary);
-  border: none;
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: var(--border-radius-lg);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-lg);
-}
-
-.primaryButton:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
-  filter: brightness(1.1);
 }

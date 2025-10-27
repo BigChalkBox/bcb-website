@@ -108,6 +108,7 @@
     flex-direction: column;
     padding: 20px;
     text-align: center;
+    /* display: block; */
   }
 
   .logo img {
@@ -124,5 +125,12 @@
 
   .textBox {
     text-align: center;
+  }
+}
+
+
+@media (max-width: 760px) {
+  .container {
+    display: none;
   }
 }

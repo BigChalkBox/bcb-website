@@ -12,20 +12,7 @@ export default function Header() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const supabase = createClientComponentClient();
-
-  const handleLogout = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("Logout failed:", error);
-      alert("Error during logout.");
-    } else {
-      router.push("/DASESLanding");
-    }
-
-    setLoading(false);
-  };
+    const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header
