@@ -366,7 +366,7 @@ export default function ReportPage({ params }) {
                             className={styles.imageThumb}
                             onClick={() => openLightbox(imgSrc)}
                           >
-                            <Image src={imgSrc} alt={`Answer page ${i + 1}`} />
+                            <Image src={imgSrc} fill alt={`Answer page ${i + 1}`} />
                             <div className={styles.imageOverlay}>
                               <span>🔍 Click to enlarge</span>
                             </div>
@@ -396,6 +396,7 @@ export default function ReportPage({ params }) {
           </button>
           <Image
             src={lightboxImage}
+            fill
             alt="Full size view"
             onClick={(e) => e.stopPropagation()}
           />

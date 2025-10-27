@@ -85,6 +85,7 @@ export default function ReviewPage() {
             <Image
               key={i}
               src={imagePath}
+              fill
               className={styles.questionImage}
               alt={`Q${idx + 1}-img${i + 1}`}
             />

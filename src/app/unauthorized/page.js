@@ -13,7 +13,7 @@ export default function UnauthorizedPage() {
       }}
     >
       <h1>🚫 Unauthorized Access</h1>
-      <p>You don’t have permission to view this page.</p>
+      <p>You do not have permission to view this page.</p>
       <Link href="/" style={{ marginTop: "1rem", color: "#0070f3" }}>
         Go back to home
       </Link>
