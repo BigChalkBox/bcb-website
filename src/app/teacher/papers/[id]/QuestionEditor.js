@@ -732,13 +732,14 @@ export default function QuestionEditor({
               </h4>
               <div className="or-toggle">
                 <label>
-                  <input
-                    type="checkbox"
-                    checked={q.isOr}
-                    onChange={() => toggleOrFlag(q.qid)}
-                  />{" "}
-                  Mark this as "OR" question
-                </label>
+  <input
+    type="checkbox"
+    checked={q.isOr}
+    onChange={() => toggleOrFlag(q.qid)}
+  />{" "}
+  {"Mark this as \"OR\" question"}
+</label>
+
               </div>
               <button
                 onClick={() => deleteQuestion(q.qid)}

@@ -239,15 +239,16 @@ export default function UploadAndExtract({ paperId, initialPaper }) {
 
                 {/* OR Toggle */}
                 <div className="or-toggle">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={q.isOr}
-                      onChange={() => toggleOrFlag(q.qid)}
-                      disabled={finalized}
-                    />{" "}
-                    Mark this as "OR" question
-                  </label>
+<label>
+  <input
+    type="checkbox"
+    checked={q.isOr}
+    onChange={() => toggleOrFlag(q.qid)}
+    disabled={finalized}
+  />{" "}
+  {"Mark this as \"OR\" question"}
+</label>
+
                 </div>
 
                 {/* Editing Controls */}
