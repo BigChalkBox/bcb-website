@@ -1,0 +1,694 @@
+/* Dashboard.module.css */
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+}
+
+/* ========== LOADING STATE ========== */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: #64748b;
+  font-weight: 500;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+  width: 300px;
+  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+  color: white;
+  padding: 2rem 0;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  padding: 0 2rem 2rem;
+  margin: 0 0 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: -0.5px;
+}
+
+/* ========== PROFILE BOX ========== */
+.profileBox {
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 1rem 2rem;
+  padding: 1.75rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.profileBox:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.profileName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: white;
+}
+
+.profileEmail {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 1rem;
+  word-break: break-word;
+}
+
+.profileInfo {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.profileEnroll,
+.profilePhone {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.editButton {
+  background: white;
+  color: #1e40af;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.editButton:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.editButton:active {
+  transform: translateY(0);
+}
+
+/* ========== NAVIGATION ========== */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 1rem;
+  margin-top: auto;
+}
+
+.nav a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  padding: 0.9rem 1.25rem;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: white;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.nav a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  transform: translateX(4px);
+}
+
+.nav a:hover::before {
+  transform: scaleY(1);
+}
+
+/* ========== MAIN CONTENT ========== */
+.main {
+  flex: 1;
+  padding: 2.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ========== WELCOME SECTION ========== */
+.welcome {
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.6s ease;
+}
+
+.welcome h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.welcome p {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.welcome p strong {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+/* ========== SECTIONS ========== */
+.assigned,
+.reports {
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.6s ease 0.1s backwards;
+}
+
+.assigned h2,
+.reports h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.assigned > p,
+.reports > p {
+  color: #64748b;
+  font-size: 1rem;
+  padding: 2rem;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== PAPER CARD ========== */
+.paperCard {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.paperCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.paperCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  border-color: #cbd5e1;
+}
+
+.paperCard:hover::before {
+  transform: scaleY(1);
+}
+
+.paperCard h3 {
+  font-size: 1.35rem;
+  color: #0f172a;
+  margin: 0 0 1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.paperCard p {
+  color: #475569;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.paperActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* ========== REPORT CARD ========== */
+.reportCard {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.reportCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #10b981, #059669);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.reportCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  border-color: #cbd5e1;
+}
+
+.reportCard:hover::before {
+  transform: scaleY(1);
+}
+
+.reportCard h3 {
+  font-size: 1.35rem;
+  color: #0f172a;
+  margin: 0 0 1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.reportCard p {
+  color: #475569;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.reportActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* ========== BUTTONS ========== */
+.primaryButton {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+}
+
+.primaryButton:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+.secondaryButton {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
+}
+
+.secondaryButton:hover {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+.secondaryButton:active {
+  transform: translateY(0);
+}
+
+.disabledButton {
+  background: #e2e8f0;
+  color: #94a3b8;
+  border: 1px solid #cbd5e1;
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  cursor: not-allowed;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* ========== MODAL ========== */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1.75rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form input,
+.feedbackTextarea,
+.ratingSelect {
+  padding: 0.875rem 1.125rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: #fafafa;
+}
+
+.form input:focus,
+.feedbackTextarea:focus,
+.ratingSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.feedbackTextarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+.ratingSelect {
+  cursor: pointer;
+}
+
+.form label {
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: -0.5rem;
+}
+
+.form p {
+  padding: 0.875rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  margin: 0;
+  animation: slideDown 0.3s ease;
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 0.9rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.modalActions button[type="submit"] {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.modalActions button[type="submit"]:hover {
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+.modalActions button[type="button"] {
+  background: #f8fafc;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+}
+
+.modalActions button[type="button"]:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== SCROLLBAR STYLING ========== */
+.sidebar::-webkit-scrollbar,
+.modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.modal::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 260px;
+  }
+
+  .main {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .profileBox {
+    margin: 0 1rem 1.5rem;
+  }
+
+  .nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+
+  .nav a {
+    white-space: nowrap;
+  }
+
+  .main {
+    padding: 1.5rem;
+  }
+
+  .welcome h2 {
+    font-size: 1.5rem;
+  }
+
+  .paperActions,
+  .reportActions {
+    flex-direction: column;
+  }
+
+  .paperActions button,
+  .reportActions button,
+  .paperActions a,
+  .reportActions a {
+    width: 100%;
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .disabledButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 1.75rem;
+  }
+
+  .modalActions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 1rem;
+  }
+
+  .welcome h2 {
+    font-size: 1.25rem;
+  }
+
+  .welcome p {
+    font-size: 1rem;
+  }
+
+  .paperCard h3,
+  .reportCard h3 {
+    font-size: 1.15rem;
+  }
+
+  .modal h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,128 @@
+.container {
+  position: relative; /* allows absolute positioning of logo */
+  background: #fcb316;
+  border-radius: 20px;
+  padding: 40px 60px 40px 140px; /* extra left space for logo overlap */
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  margin-bottom: 5rem;
+
+}
+
+/* Bulging logo */
+.logo {
+  position: absolute;
+  bottom: -11.5;   /* stick to bottom */
+  left: 10;     /* stick to left */
+  z-index: 2;  /* keep on top of box */
+}
+.logo img {
+  width: 150%;
+  height: auto;
+}
+
+/* Content area */
+.contentBox {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 15%;
+}
+
+.sliderArea {
+  width: 100%;
+  min-width: 0;
+}
+
+.textBox {
+  padding: 10px 0;
+  text-align: left;
+}
+
+.text {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.name {
+  font-weight: bold;
+  color: #0056d6;
+  margin-top: 10px;
+}
+
+.title {
+  font-size: 0.9rem;
+  color: #0056d6;
+}
+
+/* Next button */
+.nextBtn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #0056d6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 3;
+}
+.nextBtn:hover {
+  background: #0040a8;
+}
+
+
+/* Dots wrapper */
+.slickdots {
+  bottom: 8px; /* inside yellow box */
+  left: 60%;
+}
+
+.slickdots li button:before {
+  font-size: 0.5rem; /* smaller dots */
+  color: white;    /* inactive color */
+  opacity: 0.5;
+}
+
+.slickdots li.slick-active button:before {
+  color: #0056d6; /* blue active dot */
+  opacity: 1;
+}
+
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .logo img {
+    position: static;
+    margin-bottom: 15px;
+  }
+
+  .nextBtn {
+    right: 10px;
+    bottom: 10px;
+    top: auto;
+    transform: none;
+  }
+
+  .textBox {
+    text-align: center;
+  }
+}

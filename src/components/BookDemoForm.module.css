@@ -1,0 +1,239 @@
+/* BookDemoForm.module.css */
+
+.formSection {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 20px;
+  padding: 2.25rem;
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* Subtle gradient edge accent */
+.formContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Titles */
+.formTitle {
+  font-size: 2rem;
+  margin: 0 0 0.25rem;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.formContainer > p {
+  font-size: 1.05rem;
+  color: #64748b;
+  margin: 0.25rem 0 1.5rem;
+  font-weight: 500;
+}
+
+/* Divider */
+.formContainer hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, #e2e8f0, #cbd5e1);
+  border-radius: 1px;
+  margin: 0.75rem 0 0.25rem;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+/* Grid rows */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.row:nth-of-type(4) {
+  grid-template-columns: 1fr 0.65fr 0.65fr; /* select + date + time */
+}
+
+/* Inputs/select/textarea */
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  font-family: inherit;
+}
+
+.form input::placeholder,
+.form textarea::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.form input:hover,
+.form select:hover,
+.form textarea:hover {
+  border-color: #cbd5e1;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+/* Select arrow */
+.form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 8l5 5 5-5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 16px 16px;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+.form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Submit */
+.submitButton {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+  padding: 0.95rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  margin-top: 0.25rem;
+}
+
+.submitButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+.submitButton:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 3px;
+}
+
+/* Disabled state (if you disable during submission) */
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+
+/* Status message */
+.status {
+  margin-top: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  animation: fadeIn 0.2s ease;
+  word-break: break-word;
+}
+
+/* Optional helper classes if rendering spans inside status for deterministic colors */
+.success { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+.error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+
+/* Focus-visible for keyboard users */
+.form :where(input, select, textarea, button):focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .formContainer {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .row:nth-of-type(4) {
+    grid-template-columns: 1fr;
+  }
+  .formContainer {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+  .formTitle {
+    font-size: 1.6rem;
+  }
+  .formContainer > p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Print */
+@media print {
+  .formSection {
+    background: white;
+    padding: 0;
+  }
+  .formContainer {
+    box-shadow: none;
+    border: 1px solid #000;
+    background: white;
+  }
+}

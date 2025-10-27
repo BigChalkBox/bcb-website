@@ -1,0 +1,190 @@
+.
+├── README.md
+├── data
+│   └── papers
+├── eslint.config.mjs
+├── gemini_eval.log
+├── jsconfig.json
+├── next.config.mjs
+├── output.txt
+├── package-lock.json
+├── package.json
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── logo
+│   │   ├── Group1.png
+│   │   ├── logo-t.png
+│   │   ├── logo.png
+│   │   ├── logo.svg
+│   │   └── navbar-logo.png
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── scripts
+│   └── generate_booklets.py
+└── src
+    ├── app
+    │   ├── DASESLanding
+    │   │   ├── page.js
+    │   │   └── page.module.css
+    │   ├── SignIn
+    │   │   ├── page.js
+    │   │   └── page.module.css
+    │   ├── admin
+    │   │   ├── analytics
+    │   │   │   └── page.js
+    │   │   ├── dashboard
+    │   │   │   ├── dashboard.module.css
+    │   │   │   └── page.js
+    │   │   ├── institutions
+    │   │   │   └── page.js
+    │   │   ├── settings
+    │   │   │   └── page.js
+    │   │   ├── students
+    │   │   │   └── page.js
+    │   │   └── teachers
+    │   │       └── page.js
+    │   ├── api
+    │   │   ├── admin
+    │   │   │   ├── create-institution
+    │   │   │   │   └── route.js
+    │   │   │   ├── create-student
+    │   │   │   │   └── route.js
+    │   │   │   ├── create-teacher
+    │   │   │   │   └── route.js
+    │   │   │   ├── delete-institution
+    │   │   │   │   └── route.js
+    │   │   │   ├── delete-student
+    │   │   │   │   └── route.js
+    │   │   │   ├── delete-teacher
+    │   │   │   │   └── route.js
+    │   │   │   ├── edit-institution
+    │   │   │   │   └── route.js
+    │   │   │   ├── edit-student
+    │   │   │   │   └── route.js
+    │   │   │   ├── edit-teacher
+    │   │   │   │   └── route.js
+    │   │   │   ├── get-institution-users
+    │   │   │   │   └── route.js
+    │   │   │   ├── get-institutions
+    │   │   │   │   └── route.js
+    │   │   │   ├── get-settings
+    │   │   │   │   └── route.js
+    │   │   │   ├── get-students
+    │   │   │   │   └── route.js
+    │   │   │   ├── get-teachers
+    │   │   │   │   └── route.js
+    │   │   │   └── update-settings
+    │   │   │       └── route.js
+    │   │   ├── evaluate-all
+    │   │   │   └── route.js
+    │   │   ├── evaluations
+    │   │   │   ├── [submissionId]
+    │   │   │   │   ├── evaluate
+    │   │   │   │   └── route.js
+    │   │   │   └── route.js
+    │   │   ├── extract
+    │   │   │   └── route.js
+    │   │   ├── generate
+    │   │   │   └── route.js
+    │   │   ├── papers
+    │   │   │   ├── [id]
+    │   │   │   │   ├── finalize
+    │   │   │   │   │   └── route.js
+    │   │   │   │   ├── question
+    │   │   │   │   │   └── route.js
+    │   │   │   │   ├── questions
+    │   │   │   │   │   └── [qid]
+    │   │   │   │   │       └── rubric
+    │   │   │   │   │           └── route.js
+    │   │   │   │   ├── route.js
+    │   │   │   │   └── submissions
+    │   │   │   │       └── route.js
+    │   │   │   └── route.js
+    │   │   ├── student
+    │   │   │   └── feedback
+    │   │   │       └── route.js
+    │   │   ├── teacher
+    │   │   │   ├── create-paper
+    │   │   │   │   └── route.js
+    │   │   │   ├── generate-answer-sheets
+    │   │   │   │   └── route.js
+    │   │   │   ├── reports
+    │   │   │   │   └── route.js
+    │   │   │   └── share-results
+    │   │   │       └── route.js
+    │   │   └── upload
+    │   │       └── route.js
+    │   ├── favicon.ico
+    │   ├── globals.css
+    │   ├── layout.js
+    │   ├── page.js
+    │   ├── page.module.css
+    │   ├── reports
+    │   │   └── [submissionId]
+    │   │       ├── Report.module.css
+    │   │       └── page.js
+    │   ├── student
+    │   │   ├── dashboard
+    │   │   │   ├── Dashboard.module.css
+    │   │   │   └── page.js
+    │   │   ├── reports
+    │   │   │   └── page.js
+    │   │   └── upload
+    │   │       └── [submission_id]
+    │   │           ├── UploadPage.module.css
+    │   │           └── page.js
+    │   ├── teacher
+    │   │   ├── answer-sheets
+    │   │   │   ├── AnswerSheets.module.css
+    │   │   │   └── page.js
+    │   │   ├── dashboard
+    │   │   │   ├── Dashboard.module.css
+    │   │   │   └── page.js
+    │   │   ├── evaluations
+    │   │   │   ├── EvaluationsPage.module.css
+    │   │   │   └── page.js
+    │   │   ├── papers
+    │   │   │   └── [id]
+    │   │   │       ├── PaperEditor.js
+    │   │   │       ├── PaperPage.module.css
+    │   │   │       ├── QuestionEditor.css
+    │   │   │       ├── QuestionEditor.js
+    │   │   │       ├── RubricEditor.js
+    │   │   │       ├── UploadAndExtract.css
+    │   │   │       ├── UploadAndExtract.js
+    │   │   │       ├── page.js
+    │   │   │       ├── review
+    │   │   │       │   ├── ReviewPage.module.css
+    │   │   │       │   └── page.js
+    │   │   │       └── submissions
+    │   │   │           ├── SubmissionsPage.module.css
+    │   │   │           └── page.js
+    │   │   ├── reports
+    │   │   │   ├── Reports.module.css
+    │   │   │   └── page.js
+    │   │   ├── settings
+    │   │   ├── students
+    │   │   └── submissions
+    │   └── unauthorized
+    │       └── page.js
+    ├── components
+    │   ├── FeatureCircle.js
+    │   ├── FeatureCircle.module.css
+    │   ├── Header.js
+    │   ├── Header.module.css
+    │   ├── HeaderSub.js
+    │   ├── HeaderSub.module.css
+    │   ├── Reviews.js
+    │   ├── Reviews.module.css
+    │   ├── WhyDASES.js
+    │   └── WhyDases.module.css
+    ├── lib
+    │   └── paperStore.js
+    ├── middleware.js
+    └── utils
+        ├── completePdfGenerator.js
+        └── pdfGenerator.js
+
+79 directories, 109 files

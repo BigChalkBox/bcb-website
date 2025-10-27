@@ -1,0 +1,298 @@
+.pageSection {
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.tabButton {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.tabButton:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* PDF Viewer */
+.viewer {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.pdfFrame {
+  width: 100%;
+  height: 80vh;
+  border: none;
+}
+
+
+
+
+/* ===== CTA SECTION ===== */
+.ctaSection {
+  padding: var(--spacing-lg) var(--spacing-lg);
+  background: var(--gradient-primary);
+  color: white;
+  text-align: center;
+  border-radius: 100px 100px 0px 0px;
+}
+
+.ctaContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+
+.ctaDescription {
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-xl);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+
+
+.sectionAlt1 {
+  padding: 1rem var(--spacing-lg);
+  background: var(--bg-tertiary);
+  
+}
+
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    text-align: center;
+    min-height: auto;
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+  
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .heroDescription {
+    font-size: 1.1rem;
+  }
+  
+  .flowContainer {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .flowArrow {
+    transform: rotate(90deg);
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .buttonWrapper{
+    display: flex;
+    flex-direction: column;
+  margin-top: 1rem;
+    gap: 20px;
+}
+  
+  .section, .sectionAlt {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+  
+  .stepsGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .featuresGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .benefitsGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+  
+  .testimonialsGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .ctaTitle {
+    font-size: 2rem;
+  }
+  
+  .ctaDescription {
+    font-size: 1.1rem;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+  
+  .flowBox {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .flowIcon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .stepCard, .featureCard, .benefitCard, .testimonialCard {
+    padding: var(--spacing-lg);
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statNumber {
+    font-size: 2rem;
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stepCard,
+.featureCard,
+.benefitCard,
+.statCard,
+.testimonialCard {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* ===== FOCUS STYLES ===== */
+.primaryButton:focus {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .hero {
+    background: white;
+    color: black;
+  }
+  
+  .primaryButton {
+    background: #e5e7eb;
+    color: black;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  .pdfFrame {
+    height: 70vh;
+  }
+}
+
+
+.primaryButton {
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  color: var(--text-primary);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+  filter: brightness(1.1);
+}

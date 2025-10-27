@@ -1,0 +1,238 @@
+.container {
+  display: flex;
+  min-height: 80vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  color: #1a1a1a;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  position: relative;
+      border-radius: 100px;
+}
+
+/* Enhanced sidebar */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 100px;
+  z-index: 10;
+}
+
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+
+}
+
+.numberContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.number {
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: #cbd5e1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  margin-top: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.connector {
+  position: absolute;
+  top: 4.5rem;
+  width: 2px;
+  height: 3rem;
+  background: linear-gradient(to bottom, #e2e8f0, transparent);
+  z-index: 1;
+}
+
+.numberContainer.active .number {
+  color: #0f172a;
+  font-weight: 400;
+  transform: scale(1.1);
+}
+
+.numberContainer.active .indicator {
+  background: var(--gradient-primary);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  transform: scale(1.5);
+}
+
+/* Enhanced content sections */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.contentWrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  position: relative;
+}
+
+.sectionContent {
+  width: 100%;
+  max-width: 600px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--gradient-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+}
+
+.text {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #475569;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 2rem 0;
+  }
+  
+  .sidebarContent {
+    flex-direction: row;
+    gap: 2rem;
+  }
+  
+  .connector {
+    display: none;
+  }
+  
+  .contentWrapper {
+    padding: 0 1.5rem;
+  }
+  
+  .section {
+    min-height: 80vh;
+    padding: 3rem 0;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 1.5rem 0;
+  }
+  
+  .number {
+    font-size: 2.5rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .text {
+    font-size: 1rem;
+  }
+  
+  .contentWrapper {
+    padding: 0 1rem;
+  }
+  
+  .section {
+    min-height: 70vh;
+    padding: 2rem 0;
+  }
+}
+
+/* Smooth scroll enhancement */
+.content {
+  scroll-padding-top: 2rem;
+}
+
+/* Focus states for accessibility */
+.numberContainer:focus-visible {
+  outline: 2px solid var(--gradient-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Enhanced visual hierarchy */
+.section:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e2e8f0 50%, transparent);
+}
