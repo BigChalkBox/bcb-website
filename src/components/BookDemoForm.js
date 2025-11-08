@@ -134,20 +134,20 @@ return (
     <div className={styles.bottomCards}>
       <div className={styles.infoCard}>
         <div className={styles.iconBox}>📞</div>
-        <h4>(+91) 98765 43210</h4>
+        <h4>+91 94118 08080</h4>
         <p>Reach us anytime on call</p>
       </div>
 
       <div className={styles.infoCard}>
         <div className={styles.iconBox}>📧</div>
-        <h4>info@dases.in</h4>
+        <h4>pkonalupes@gmail.com</h4>
         <p>We reply super fast</p>
       </div>
 
       <div className={styles.infoCard}>
         <div className={styles.iconBox}>📍</div>
-        <h4>Dehradun, India</h4>
-        <p>UPES Campus</p>
+        <h4>UPES Bidholi Campus</h4>
+        <p>Dehradun, India</p>
       </div>
     </div>
   </section>
