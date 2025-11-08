@@ -1,0 +1,46 @@
+.btn {
+  background: #5e8f4e; /* accurate green from your image */
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 600;
+  padding: 14px 90px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  font-family: sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* top-left corner lines */
+.btn::before,
+.btn::after {
+  content: "";
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  pointer-events: none;
+}
+
+/* top-left angled frame */
+.btn::before {
+  top: -23px;
+  left: -30px;
+  border-top: 3px solid #6b6b6b;
+  border-left: 3px solid #6b6b6b;
+  transform: rotate(-2deg);
+}
+
+/* bottom-right angled frame */
+.btn::after {
+  bottom: -23px;
+  right: -30px;
+  border-bottom: 3px solid #6b6b6b;
+  border-right: 3px solid #6b6b6b;
+  transform: rotate(2deg);
+}
+
+/* slight hover lift */
+.btn:hover {
+  transform: translateY(-2px);
+  transition: 0.2s ease-out;
+}

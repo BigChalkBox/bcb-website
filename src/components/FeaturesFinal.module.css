@@ -1,0 +1,248 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2%;
+    gap: 2rem;
+    position: relative;
+    background-color: #f8f2e7;
+
+}
+
+.innercontainer {
+    display: flex;
+    gap: 2rem;
+    max-width: 1440px;
+    background-color: #f8f2e7;
+    padding: 2rem;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    padding-bottom: 0;
+
+}
+
+.featureBox1 {
+    background-color: #f8f2e7;
+    border-radius: 20px;
+    padding: 2rem;
+    flex: 1;
+    color: #388d33;
+    font-family: Inter, sans-serif;
+    position: relative;
+}
+
+
+.featureBox1:hover {
+    background-color: #388d33;
+       border-radius: 20px 20px 0 0;
+    color: rgb(255, 255, 255);
+    font-family: Inter, sans-serif;
+    position: relative;
+    transform: scale(1.05);
+    transition: 0.3s all ease;
+
+}
+
+/* ✅ vertical glow separators */
+.featureBox1:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 20%;
+    right: -1rem; /* position in the gap */
+    width: 2px;
+    height: 50%;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0, 199, 56, 0.451),
+        transparent
+    );
+    filter: blur(1px);
+    opacity: 0.6;
+}
+
+
+.container2{
+
+        display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2%;
+    gap: 2rem;
+    position: relative;
+    background-color: #f8f2e7;
+
+}
+
+.innercontainer2 {
+    display: flex;
+    /* gap: 2rem; */
+    max-width: 1440px;
+    background-color: #f8f2e700;
+    padding: 5rem 0;
+    border: 2px solid #388d334c;
+    border-radius: 20px;
+    overflow: hidden;
+
+
+}
+
+
+
+.featureBox2 {
+    padding: 5% 4%;
+    color: #388d33;
+    font-family: Inter, sans-serif;
+    position: relative;
+}
+/* ✅ vertical glow separators */
+.featureBox2:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 10%;
+    right: -1rem; /* position in the gap */
+    width: 2px;
+    height: 80%;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0, 199, 56, 0.489),
+        transparent
+    );
+    filter: blur(1px);
+    opacity: 0.6;
+}
+
+
+.featureBox2:nth-child(2) {
+    padding:2% 7%;
+    text-align: center;
+}
+
+
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1.8px solid #e5e2d9;
+  background: #fffbee;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: Inter, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.text {
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(0,0,0,0.2);
+  display: inline-block;
+}
+
+.icon {
+  object-fit: contain;
+}
+
+/* hover effect like premium UI */
+.btn:hover {
+  background: #fff7dd;
+  border-color: #e0dccc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+
+
+/* ========================= */
+/*     RESPONSIVE LAYOUT     */
+/* ========================= */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .innercontainer,
+  .innercontainer2 {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .featureBox1:not(:last-child)::after,
+  .featureBox2:not(:last-child)::after {
+    display: none;
+  }
+
+  .featureBox1,
+  .featureBox2 {
+    padding: 1.8rem;
+    text-align: center;
+  }
+
+  .featureBox2:nth-child(2) {
+    padding: 1.8rem;
+  }
+}
+
+/* Mobile: clean stacked layout */
+@media (max-width: 768px) {
+
+  .container,
+  .container2 {
+    padding: 1.5rem;
+  }
+
+  .innercontainer,
+  .innercontainer2 {
+    padding: 1.8rem 1.2rem;
+    gap: 1.5rem;
+  }
+
+  .featureBox1,
+  .featureBox2 {
+    font-size: 0.95rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .innercontainer,
+  .innercontainer2 {
+    padding: 1.2rem;
+    border-radius: 16px;
+  }
+
+  .featureBox1,
+  .featureBox2 {
+    padding: 1.2rem;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}

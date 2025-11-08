@@ -1,0 +1,305 @@
+.section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 6%;
+  background: #f8f2e7;
+  font-family: Inter, sans-serif;
+  gap: 10%;
+  padding: 5%;
+
+}
+
+/* Left side wrapper */
+.left {
+  position: relative;
+  width: 55%;
+}
+
+/* Stacked background cards */
+.cardBack,
+.cardMid {
+  position: absolute;
+  width: 90%;
+  height: 85%;
+  background: #cdc8c4;
+  border-radius: 20px;
+  z-index: 1;
+  left: 30px;
+  bottom: -25px;
+  transform: rotate(4deg);
+}
+
+.cardMid {
+  background: #d6d2ce;
+  left: 15px;
+  bottom: -15px;
+  transform: rotate(2deg);
+}
+
+/* Main card */
+.cardMain {
+  position: relative;
+  z-index: 3;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+  
+}
+
+.logo {
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.quote {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+.userTitle {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* Right side content */
+.right {
+  width: 45%;
+}
+
+.tag {
+  color: #6fa765;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.heading {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.sub {
+  font-size: 17px;
+  opacity: 0.85;
+  line-height: 1.6;
+  max-width: 90%;
+  margin-bottom: 30px;
+}
+
+/* Arrows */
+.navBtns {
+  display: flex;
+  gap: 15px;
+}
+
+.navBtn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1.5px solid black;
+  font-size: 18px;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.navBtn:hover {
+  background: #f1efe9;
+}
+
+/* Flip (now diagonal throw-back instead of flip) */
+.flip {
+  animation: throwBackCard .5s ease forwards;
+}
+
+@keyframes throwBackCard {
+  0% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(20px, -25px) scale(0.97) rotate(-3deg);
+    opacity: .8;
+  }
+  100% {
+    transform: translate(45px, -55px) scale(0.94) rotate(-6deg);
+    opacity: 0;
+  }
+}
+
+/* Back stack movement */
+.stackMove {
+  transform: translateY(14px) rotate(4deg);
+  opacity: .75;
+}
+
+.stackMoveMid {
+  transform: translateY(7px) rotate(2deg);
+  opacity: .9;
+}
+
+/* ✅ Progress bar synced to timer */
+.progressWrapper {
+  width: 100%;
+  height: 4px;
+  background: rgba(0,0,0,0.09);
+  border-radius: 6px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  width: 100%;
+  background: #6b6be8;
+  animation: progressLinear 5s linear forwards;
+  border-radius: 6px;
+}
+
+@keyframes progressLinear {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+
+
+/* ========================= */
+/*         RESPONSIVE        */
+/* ========================= */
+
+/* Laptops / Tablets */
+@media (max-width: 1100px) {
+  .section {
+    gap: 6%;
+  }
+
+  .heading {
+    font-size: 36px;
+  }
+
+  .sub {
+    font-size: 16px;
+  }
+
+  .left {
+    width: 50%;
+  }
+
+  .right {
+    width: 50%;
+  }
+
+  .cardMain {
+    padding: 32px;
+  }
+}
+
+/* Tablets (stack layout) */
+@media (max-width: 900px) {
+  .section {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 5%;
+    gap: 3rem;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+  }
+
+  /* Center stacked cards */
+  .left {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cardBack,
+  .cardMid {
+    display: none;
+  }
+
+  .cardMain {
+    width: 90%;
+    padding: 32px;
+  }
+
+  .sub {
+    max-width: 100%;
+  }
+
+  .navBtns {
+    justify-content: center;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .heading {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .sub {
+    font-size: 15px;
+  }
+
+  .cardMain {
+    padding: 28px 24px;
+  }
+
+  .quote {
+    font-size: 16px;
+  }
+
+  .navBtns {
+    gap: 10px;
+  }
+
+  .navBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 420px) {
+  .heading {
+    font-size: 26px;
+  }
+
+  .cardMain {
+    width: 100%;
+    padding: 22px 18px;
+  }
+
+  .quote {
+    font-size: 15px;
+  }
+
+  .userRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .navBtn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+}

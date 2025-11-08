@@ -1,0 +1,69 @@
+
+.header {
+  background-color: var(--tan);
+  color: var(--space-cadet);
+  font-family: Inter,sans-serif;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--space-cadet);
+  letter-spacing: 2px;
+}
+
+.tagline {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--caput-mortuum);
+  margin-top: 1rem;
+  max-width: 400px;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  border-top: 2px solid var(--space-cadet);
+  padding-top: 1rem;
+}
+
+.nav a {
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--coffee);
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: var(--caput-mortuum);
+}
+
+.borderBar {
+  height: 15px;
+  background-image: linear-gradient(
+    90deg,
+    var(--space-cadet) 25%,
+    var(--tan) 25%,
+    var(--tan) 50%,
+    var(--space-cadet) 50%,
+    var(--space-cadet) 75%,
+    var(--tan) 75%,
+    var(--tan) 100%
+  );
+  background-size: 50px 100%;
+  margin-top: 1.5rem;
+  border-radius: 3px;
+}

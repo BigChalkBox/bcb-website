@@ -1,0 +1,297 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #f8f2e7, #f8f2e7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.contentWrapper {
+  position: relative;
+  max-width: 64rem;
+  width: 100%;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 3rem;
+  overflow: hidden;
+}
+
+/* Decorative leaves */
+.leafLeft {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8rem;
+  height: 16rem;
+  opacity: 0.3;
+}
+
+.leafRight {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10rem;
+  height: 18rem;
+  opacity: 0.3;
+}
+
+.leafSvg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Content */
+.content {
+  position: relative;
+  z-index: 10;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.subtitle {
+  color: #388d33;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  font-size: 3rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.titlePrimary {
+  color: #111827;
+}
+
+.titleAccent {
+  color: #388d33;
+}
+
+.description {
+  color: #4b5563;
+  margin-top: 1.5rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* FAQ List */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.faqItem {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faqButton {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.faqButton:hover {
+  background-color: #f9fafb;
+}
+
+.faqQuestion {
+  color: #111827;
+  font-weight: 500;
+  padding-right: 1rem;
+  flex: 1;
+}
+
+.faqIcon {
+  font-size: 1.5rem;
+  color: #4b5563;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  line-height: 1;
+}
+
+.faqAnswer {
+  padding: 0 1.5rem 1.25rem 1.5rem;
+}
+
+.faqAnswer p {
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.footerText {
+  color: #4b5563;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Button */
+.buttonWrapper {
+  text-align: center;
+}
+
+.viewAllButton {
+  background-color: #388d33;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.viewAllButton:hover {
+  background-color: #216a3b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contentWrapper {
+    padding: 2rem 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .leafLeft,
+  .leafRight {
+    display: none;
+  }
+}
+
+
+/* ========================= */
+/*   Enhanced Responsiveness */
+/* ========================= */
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0rem;
+  }
+
+  .contentWrapper {
+    padding: 1.5rem 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    line-height: 1.55;
+  }
+
+  .faqButton {
+    padding: 1rem 1.25rem;
+  }
+
+  .faqQuestion {
+    font-size: 0.95rem;
+  }
+
+  .faqIcon {
+    font-size: 1.25rem;
+  }
+
+  .faqAnswer {
+    padding: 0 1.25rem 1rem 1.25rem;
+  }
+
+  .footerText {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+
+  .viewAllButton {
+    padding: 0.65rem 1.6rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Even smaller screens */
+@media (max-width: 420px) {
+  .title {
+    font-size: 1.55rem;
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+  }
+
+  .faqList {
+    gap: 0.75rem;
+  }
+
+  .faqButton {
+    padding: 0.85rem 1rem;
+  }
+
+  .faqQuestion {
+    font-size: 0.9rem;
+  }
+
+  .faqIcon {
+    font-size: 1.1rem;
+  }
+
+  .faqAnswer {
+    padding: 0 1rem 0.9rem 1rem;
+  }
+
+  .footerText {
+    font-size: 0.9rem;
+  }
+
+  .viewAllButton {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+}
