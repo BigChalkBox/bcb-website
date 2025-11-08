@@ -1,12 +1,9 @@
 // src/app/DASESLanding/page.js
 "use client";
 
-import Header from '../../components/Header';
 import styles from './page.module.css';
-import Image from "next/image";
 
-import logo from '../../../public/logo/logo.png'
-import FeatureCircle from '../../components/';
+
 
 
 import FeatureCircle from '../../components/FeatureCircle';
