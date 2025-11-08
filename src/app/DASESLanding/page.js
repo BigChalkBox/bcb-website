@@ -3,6 +3,10 @@
 
 import styles from './page.module.css';
 
+import Image from "next/image";
+import logo from '/logo/logo.png';
+import Header from '../../components/Header';
+import Reviews from '../../components/Reviews';
 
 
 
