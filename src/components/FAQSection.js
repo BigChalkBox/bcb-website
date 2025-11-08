@@ -4,28 +4,29 @@ import styles from './FAQSection.module.css';
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(null);
 
-  const faqs = [
-    {
-        question: "What types of answers can DASES evaluate?",
-        answer:"DASES is designed for long-form, descriptive answers. It processes handwritten sheets using OCR and evaluates them using structured, rubric-aligned LLM scoring."
-    },
-    {
-        question: "Can educators review and adjust scores?",
-        answer:"Yes. Every evaluation includes a human-in-the-loop workflow—educators can review, calibrate, override, and finalize scores to ensure academic reliability."
-    },
-    {
-        question: "How does DASES ensure fairness and consistency?",
-        answer:"DASES uses standardized rubrics, transparent evaluation criteria, and bias-aware scoring to minimize subjectivity and maintain consistent assessment across cohorts."
-    },
-    {
-        question: "Is DASES suitable for large student cohorts?",
-        answer:"Absolutely. The platform is built for high-volume exam periods and institutional-level scale, ensuring fast processing without performance drop-offs."
-    },
-    {
-        question: "What reports or outputs do students receive?",
-        answer:"Students receive a professionally formatted, question-wise report that includes scores, rubric-aligned feedback, and constructive insights to support better learning."
-    }
-  ];
+const faqs = [
+  {
+    question: "What types of answers can DASES evaluate?",
+    answer: "DASES is designed for long-form, descriptive answers. It processes handwritten sheets using OCR and evaluates them using structured, rubric-aligned LLM scoring."
+  },
+  {
+    question: "Can educators review and adjust scores?",
+    answer: "Yes. Every evaluation includes a human-in-the-loop workflow. Educators can review, calibrate, override, and finalize scores to ensure academic reliability."
+  },
+  {
+    question: "How does DASES ensure fairness and consistency?",
+    answer: "DASES uses standardized rubrics, transparent evaluation criteria, and bias-aware scoring to minimize subjectivity and maintain consistent assessment across cohorts."
+  },
+  {
+    question: "Is DASES suitable for large student cohorts?",
+    answer: "Absolutely. The platform is built for high-volume exam periods and institutional-level scale, ensuring fast processing without performance drop-offs."
+  },
+  {
+    question: "What reports or outputs do students receive?",
+    answer: "Students receive a professionally formatted, question-wise report that includes scores, rubric-aligned feedback, and constructive insights to support better learning."
+  }
+];
+
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -70,7 +71,7 @@ export default function FAQSection() {
             <h1 className={styles.title}>
               <span className={styles.titlePrimary}>Got any questions?</span>
               <br />
-              <span className={styles.titlePrimary}>We've </span>
+              <span className={styles.titlePrimary}>We have </span>
               <span className={styles.titleAccent}>got answers</span>
             </h1>
             <p className={styles.description}>

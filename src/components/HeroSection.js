@@ -45,7 +45,7 @@ const HeroSection = () => {
               <Link href="/" className={styles.navLink}>Home</Link>
               <Link href="#about" className={styles.navLink}>About</Link>
               <Link href="#services" className={styles.navLink}>Services</Link>
-              <Link href="#faqs" className={styles.navLink}>FAQ's</Link>
+              <Link href="#faqs" className={styles.navLink}>FAQ&apos;s</Link>
               <Link href="#bookDemo" className={styles.navLink}>Contact</Link>
             </div>
 

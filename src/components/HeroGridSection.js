@@ -61,11 +61,11 @@ export default function HeroGridSection() {
                 <h1 className={styles.heading}>
                     Tired of the <br />  <span style={{color:'red'}} >Red</span> Pen Grind?
                 </h1>
-                <p className={styles.subtext}>
-                    Traditional evaluation is broken. It's slow, subjective, and drains valuable time from teaching.
-                    <br /><br />
-                    <strong>DASES</strong> fixes it by combining OCR, LLMs, and structured rubrics to deliver fast, accurate & unbiased grading.
-                </p>
+<p className={styles.subtext}>
+    Traditional evaluation is broken. It&apos;s slow, subjective, and drains valuable time from teaching.
+    <br /><br />
+    <strong>DASES</strong> fixes it by combining OCR, LLMs, and structured rubrics to deliver fast, accurate &amp; unbiased grading.
+</p>
 
                 <div className={styles.buttons}>
 
