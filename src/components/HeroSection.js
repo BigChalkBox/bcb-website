@@ -13,10 +13,9 @@ const HeroSection = () => {
 
   return (
     <>
-      <div className={styles.papahero}>
-        <div className={styles.heroContainer}>
 
-          {/* NAVBAR */}
+
+              {/* NAVBAR */}
           <nav className={styles.navbar}>
 
             {/* Logo */}
@@ -27,14 +26,14 @@ const HeroSection = () => {
                 width={120}
                 height={50}
                 priority
-              />
+                />
             </Link>
 
             {/* ✅ HAMBURGER BUTTON */}
             <div
               className={`${styles.hamburger} ${menuOpen ? styles.active : ''}`}
               onClick={() => setMenuOpen(!menuOpen)}
-            >
+              >
               <span></span>
               <span></span>
               <span></span>
@@ -52,6 +51,13 @@ const HeroSection = () => {
             {/* Sign in */}
             <Link href="/SignIn" className={styles.signIn}>SIGN IN</Link>
           </nav>
+
+
+
+      <div className={styles.papahero}>
+        <div className={styles.heroContainer}>
+
+
 
           {/* HERO CONTENT */}
           <div className={styles.innercontainer}>

@@ -3,15 +3,13 @@
 
 
 .papahero {
-  background-color: #f8f2e7;
-  max-height: 100vh;
+  min-height: calc(100vh - 100px); /* leave room for navbar */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
-
-
+  background-color: #f8f2e7;
 }
+
 
 .heroContainer {
   border-radius: 2%;
@@ -77,7 +75,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 2%;
-  /* background: #F8F2E7; */
+  background: #F8F2E7;
+  position: sticky;
   /* border-radius: 5%; */
   top: 0;
   z-index: 1000;
@@ -179,6 +178,14 @@
 
 /* Tablets (max 768px) */
 @media (max-width: 768px) {
+
+  .papahero {
+    min-height: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+
   .navbar {
     flex-direction: column;
     gap: 1rem;
