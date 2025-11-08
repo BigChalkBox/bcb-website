@@ -1,10 +1,17 @@
+.outerdiv{
+    background-color: #f8f2e7;
+
+}
 .section {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: clamp(2rem, 5vw, 4rem);
   padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 7vw, 7rem);
-  margin: 7% auto;
+  margin: 0% auto;
+  margin-top: -2%;
+  padding: 7% 2%;
+  background-color: #f8f2e7;
 }
 
 
@@ -25,9 +32,9 @@
 
 
 .subtitle1{
-  background: linear-gradient(45deg, #248cfb, #0b55f5);
+  background:#388d33;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent; 
   background-clip: text;
   font-size: clamp(1.3rem, 3vw, 2rem);
   margin-bottom: 0.5rem;
@@ -60,8 +67,8 @@
 
 
 .link {
-  color: #ffffff;
-  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  color: white;
+  background: #388d33;
   padding: clamp(0.75rem, 1.5vw, 1%);
   border-radius: 10px;
   font-weight: 500;

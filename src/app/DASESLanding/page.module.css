@@ -1,3 +1,4 @@
+
 /* src/app/DASESLanding/page.module.css */
 /* ===== CONTAINER & LAYOUT ===== */
 .container {
@@ -577,7 +578,7 @@
 .statNumber {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 800;
-  background: var(--gradient-primary);
+  background: #388d33;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -669,7 +670,7 @@
   background: var(--gradient-primary);
   color: white;
   text-align: center;
-  border-radius: 100px 100px 0px 0px;
+  /* border-radius: 100px 100px 0px 0px; */
 }
 
 
@@ -697,7 +698,7 @@
 
 .sectionAlt1 {
   padding: clamp(1rem, 2vw, 1rem) var(--spacing-lg);
-  background: var(--bg-tertiary);
+  background: #f8f2e7;
 }
 
 
@@ -1049,4 +1050,74 @@
     background: #e5e7eb;
     color: black;
   }
+}
+
+
+
+
+
+.ctaSection {
+  padding: 80px 20px;
+  text-align: center;
+  background: #f8f2e7;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.content {
+  max-width: 750px;
+  margin: auto;
+}
+
+.heading {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+.sub {
+  font-size: 1.15rem;
+  color: #475569;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.primaryBtn {
+  background: #519a4b;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: 0.2s ease;
+}
+
+.primaryBtn:hover {
+  background: #519a4b;
+}
+
+.secondaryBtn {
+  color: #519a4b;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 14px 20px;
+  transition: 0.2s ease;
+}
+
+.secondaryBtn:hover {
+  color: #1e3a8a;
+}
+
+.trust {
+  margin-top: 18px;
+  font-size: 0.95rem;
+  color: #64748b;
 }

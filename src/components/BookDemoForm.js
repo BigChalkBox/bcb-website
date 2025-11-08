@@ -74,102 +74,83 @@ export default function BookDemoForm() {
     }
   };
 
-  return (
-    <section id="bookDemo" className={styles.formSection}>
-      <div className={styles.formContainer}>
-        <h2 className={styles.formTitle}>Just a few quick details</h2>
-        <p>Experience DASES in action — see how AI transforms evaluation.</p>
+return (
+  <section id="bookDemo" className={styles.section}>
+    <div className={styles.wrapper}>
 
-        <hr></hr>
-
-        <br></br>
+      {/* Left Side — Form */}
+      <div className={styles.left}>
+        <h2 className={styles.heading}>Get In Touch</h2>
+        <p className={styles.sub}>
+          Drop your details & we’ll reach out quickly.
+        </p>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.row}>
-            <input
-              type="text"
-              name="full_name"
-              placeholder="Full Name"
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="designation"
-              placeholder="Designation / Role"
-              onChange={handleChange}
-              required
-            />
+            <input type="text"  className={styles.input} name="full_name" placeholder="Full Name" onChange={handleChange} required />
+            <input type="text"  className={styles.input} name="designation" placeholder="Designation / Role" onChange={handleChange} required />
           </div>
 
           <div className={styles.row}>
-            <input
-              type="text"
-              name="institution_name"
-              placeholder="Institution Name"
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="department"
-              placeholder="Department / Course"
-              onChange={handleChange}
-              required
-            />
+            <input type="text" className={styles.input}  name="institution_name" placeholder="Institution Name" onChange={handleChange} required />
+            <input type="text" className={styles.input}  name="department" placeholder="Department / Course" onChange={handleChange} required />
           </div>
 
           <div className={styles.row}>
-            <input
-              type="email"
-              name="email"
-              placeholder="Official Email"
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone Number"
-              onChange={handleChange}
-              required
-            />
+            <input type="email" className={styles.input}  name="email" placeholder="Official Email" onChange={handleChange} required />
+            <input type="tel" className={styles.input}  name="phone" placeholder="Phone Number" onChange={handleChange} required />
           </div>
 
           <div className={styles.row}>
-            <select name="demo_mode" onChange={handleChange} required>
+            <select name="demo_mode" className={styles.select} onChange={handleChange} required>
               <option value="">Select Demo Mode</option>
               <option value="Online">Online (Google Meet)</option>
               <option value="Offline">Offline (In-Person)</option>
             </select>
 
-            <input
-              type="date"
-              name="preferred_date"
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="time"
-              name="preferred_time"
-              onChange={handleChange}
-              required
-            />
+            <input type="date" className={styles.input}  name="preferred_date" onChange={handleChange} required />
+            <input type="time" className={styles.input}  name="preferred_time" onChange={handleChange} required />
           </div>
 
-          <textarea
-            name="comments"
-            placeholder="Any specific requirements or notes?"
-            onChange={handleChange}
-          ></textarea>
+          <textarea name="comments" className={styles.textarea}  placeholder="Message / Notes?" onChange={handleChange}></textarea>
 
-          <button type="submit" className={styles.submitButton}>
-            Submit Request
-          </button>
+          <button type="submit" className={styles.submitButton}>Submit</button>
 
           {status && <p className={styles.status}>{status}</p>}
         </form>
       </div>
-    </section>
-  );
+
+      {/* Right Side — Newsletter Card */}
+      <div className={styles.newsCard}>
+        <h3>Our Newsletters</h3>
+        <p>Get updates, success stories & more.</p>
+
+        <input type="email" placeholder="Email" className={styles.newsInput} />
+        <button className={styles.newsBtn}>Subscribe</button>
+      </div>
+    </div>
+
+    {/* Contact info boxes */}
+    <div className={styles.bottomCards}>
+      <div className={styles.infoCard}>
+        <div className={styles.iconBox}>📞</div>
+        <h4>(+91) 98765 43210</h4>
+        <p>Reach us anytime on call</p>
+      </div>
+
+      <div className={styles.infoCard}>
+        <div className={styles.iconBox}>📧</div>
+        <h4>info@dases.in</h4>
+        <p>We reply super fast</p>
+      </div>
+
+      <div className={styles.infoCard}>
+        <div className={styles.iconBox}>📍</div>
+        <h4>Dehradun, India</h4>
+        <p>UPES Campus</p>
+      </div>
+    </div>
+  </section>
+);
+
 }

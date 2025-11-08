@@ -11,6 +11,16 @@ import WhyDases from '@/components/WhyDASES';
 import Reviews from '@/components/Reviews';
 import Link from "next/link";
 import BookDemoForm from '@/components/BookDemoForm';
+import Topsec from '@/components/topsec';
+import DepthHover from "@/components/DepthHover";
+import HeroSection from '@/components/HeroSection';
+import HeaderFinal from '@/components/HeaderFinal';
+import SignInButton from '@/components/SignInButton';
+import HeroGridSection from '@/components/HeroGridSection';
+import FeaturesFinal from '@/components/FeaturesFinal';
+import TestimonialStack from '@/components/TestimonialStack';
+import FAQSection from '@/components/FAQSection';
+
 
 
 
@@ -26,10 +36,12 @@ export default function Home() {
 
 
     <>
-      <Header />
+
+      {/* <HeaderFinal/> */}
+      {/* <Header /> */}
       <div className={styles.container}>
         {/* Hero Section */}
-        <section className={styles.hero}>
+        {/* <section className={styles.hero}>
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
               From Handwritten Answers to <br />
@@ -106,12 +118,30 @@ export default function Home() {
             </div>
           </div>
 
-        </section>
+        </section> */}
+        {/* <Topsec /> */}
+
+        {/* <DepthHover /> */}
+
+
+
+        <HeroSection />
+
+
+        <HeroGridSection />
+
+
+        <FeaturesFinal />
 
 
 
 
-        <section className={styles.logoSection}>
+
+        <br />
+
+        {/* <SignInButton /> */}
+
+        {/* <section className={styles.logoSection}>
           <div className={styles.logoWrapper}>
             <Image
               src={logo}// put your logo in public/mylogo.png
@@ -123,6 +153,9 @@ export default function Home() {
             />
           </div>
           <h2 className={styles.caption}>Empowering educators with intelligent, automated, and fair evaluations!</h2>
+
+
+
 
 
           <div className={styles.buttonWrapper} >
@@ -156,10 +189,10 @@ export default function Home() {
 
               View Sample Report</button>
           </div>
-        </section>
+        </section> */}
 
         {/* How It Works */}
-        <section className={styles.section}>
+        {/* <section className={styles.section}>
           <div className={styles.sectionContent}>
 
             <div className={styles.sectionTitleHeading}>
@@ -194,12 +227,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Features Section */}
 
 
-        <div className={styles.sectionTitleHeading1}>
+        {/* <div className={styles.sectionTitleHeading1}>
 
           <h2 className={styles.sectionTitle}>Everything You Need, Done For You</h2>
           <p>Let DASES handle the workload while you stay in control.</p>
@@ -207,7 +240,7 @@ export default function Home() {
         </div>
 
 
-        <FeatureCircle />
+        <FeatureCircle /> */}
 
 
 
@@ -277,7 +310,7 @@ export default function Home() {
 
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
-                <div className={styles.statNumber}>10,000+</div>
+                <div className={styles.statNumber}>400+</div>
                 <div className={styles.statLabel}>Sheets Processed</div>
               </div>
 
@@ -287,7 +320,7 @@ export default function Home() {
               </div>
 
               <div className={styles.statCard}>
-                <div className={styles.statNumber}>500+</div>
+                <div className={styles.statNumber}>20+</div>
                 <div className={styles.statLabel}>Happy Educators</div>
               </div>
 
@@ -296,8 +329,12 @@ export default function Home() {
                 <div className={styles.statLabel}>Support Available</div>
               </div>
             </div>
-            <Reviews />
+            {/* <Reviews /> */}
+
+            <TestimonialStack />
+
           </div>
+            <FAQSection />
 
 
         </section>
@@ -309,25 +346,35 @@ export default function Home() {
 
 
         {/* Footer CTA */}
-        <section className={styles.ctaSection}>
-          <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Ready to Simplify Evaluation & Save Hours?</h2>
-            <p className={styles.ctaDescription}>
-              Join leading institutions that trust DASES for faster, fairer, and smarter assessments.
-            </p>
-            <button className={styles.primaryButton}
-              onClick={() => {
-                const el = document.getElementById("bookDemo");
-                el?.scrollIntoView({ behavior: "smooth" });
-                setTimeout(() => {
-                  el?.classList.add("highlight");
-                  setTimeout(() => el?.classList.remove("highlight"), 2000);
-                }, 700);
-              }}
 
-            >Book Your Free Demo</button>
-          </div>
-        </section>
+    <section className={styles.ctaSection}>
+      <div className={styles.content}>
+        <h2 className={styles.heading}>
+          Ready for the Future of Grading?
+        </h2>
+
+        <p className={styles.sub}>
+          Join the institutions transforming their assessment process.
+          Improve consistency, save time, and deliver deeper learning outcomes.
+        </p>
+
+        <div className={styles.actions}>
+          <Link href="#bookDemo" className={styles.primaryBtn}>
+            Book a Live Demonstration
+          </Link>
+
+          <Link href="/technical-abstract" className={styles.secondaryBtn}>
+            Read the Full Technical Abstract →
+          </Link>
+        </div>
+
+        <p className={styles.trust}>
+          Trusted by educators. Designed with academic integrity at the core.
+        </p>
+      </div>
+    </section>
+
+
 
       </div>
     </>

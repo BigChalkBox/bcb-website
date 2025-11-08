@@ -18,10 +18,10 @@ export default function Header() {
       // 1. On /DASESLanding page
       // 2. Screen width >= 770px
       if (pathname === "/DASESLanding" && window.innerWidth >= 770) {
-        if (window.scrollY > 1000) {
+        if (window.scrollY > 0) {
           setShowHeader(true);
         } else {
-          setShowHeader(false);
+          setShowHeader(true);
         }
       } else {
         // On mobile or other routes — always visible
