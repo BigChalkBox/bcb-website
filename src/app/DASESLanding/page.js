@@ -1,25 +1,28 @@
 // src/app/DASESLanding/page.js
 "use client";
 
-import Header from '@/components/Header';
+import Header from '../../components/Header';
 import styles from './page.module.css';
 import Image from "next/image";
 
 import logo from '../../../public/logo/logo.png'
-import FeatureCircle from '@/components/FeatureCircle';
-import WhyDases from '@/components/WhyDASES';
-import Reviews from '@/components/Reviews';
+import FeatureCircle from '../../components/';
+
+
+import FeatureCircle from '../../components/FeatureCircle';
+import WhyDases from '../../components/WhyDASES';
+import Reviews from '../../components/Reviews';
 import Link from "next/link";
-import BookDemoForm from '@/components/BookDemoForm';
-import Topsec from '@/components/topsec';
-import DepthHover from "@/components/DepthHover";
-import HeroSection from '@/components/HeroSection';
-import HeaderFinal from '@/components/HeaderFinal';
-import SignInButton from '@/components/SignInButton';
-import HeroGridSection from '@/components/HeroGridSection';
-import FeaturesFinal from '@/components/FeaturesFinal';
-import TestimonialStack from '@/components/TestimonialStack';
-import FAQSection from '@/components/FAQSection';
+import BookDemoForm from '../../components/BookDemoForm';
+// import Topsec from '../../components/topsec';
+// import DepthHover from "../../components/DepthHover";
+import HeroSection from '../../components/HeroSection';
+import HeaderFinal from '../../components/HeaderFinal';
+import SignInButton from '../../components/SignInButton';
+import HeroGridSection from '../../components/HeroGridSection';
+import FeaturesFinal from '../../components/FeaturesFinal';
+import TestimonialStack from '../../components/TestimonialStack';
+import FAQSection from '../../components/FAQSection';
 
 
 
