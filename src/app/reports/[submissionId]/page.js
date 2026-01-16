@@ -2,15 +2,10 @@
 
 import React, { useEffect, useState, use } from "react";
 import styles from "./Report.module.css";
-import { createClient } from "@supabase/supabase-js";
 import Latex from "react-latex-next";
+import { AlertTriangle, Loader2, Download, CheckCircle2, XCircle, Search } from "lucide-react";
 import "katex/dist/katex.min.css";
 import Image from "next/image";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 export default function ReportPage({ params }) {
   const { submissionId } = use(params);
@@ -23,51 +18,22 @@ export default function ReportPage({ params }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Step 1: Get evaluation + submission + paper_id
-        const { data: evalData, error: evalError } = await supabase
-          .from("evaluations")
-          .select(
-            `
-            evaluation_results,
-            submissions (
-              id,
-              student_name,
-              enrollment_no,
-              email,
-              paper_name,
-              submitted_at,
-              paper_id
-            )
-          `
-          )
-          .eq("submission_id", submissionId)
-          .single();
+        // Call the API route instead of querying Supabase directly
+        const response = await fetch(`/api/reports/${submissionId}`);
 
-        if (evalError) throw evalError;
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}`);
+        }
 
-        const parsedReport =
-          typeof evalData.evaluation_results === "string"
-            ? JSON.parse(evalData.evaluation_results)
-            : evalData.evaluation_results;
+        const data = await response.json();
 
-        setReport(parsedReport);
-        const subData = evalData.submissions;
-        setSubmission(subData);
+        if (data.error) {
+          throw new Error(data.error);
+        }
 
-        // Step 2: Get paper_data from papers table
-        const { data: paperDataRes, error: paperError } = await supabase
-          .from("papers")
-          .select("paper_data")
-          .eq("id", subData.paper_id)
-          .single();
-
-        if (paperError) throw paperError;
-
-        setPaperData(
-          typeof paperDataRes.paper_data === "string"
-            ? JSON.parse(paperDataRes.paper_data)
-            : paperDataRes.paper_data
-        );
+        setReport(data.report);
+        setSubmission(data.submission);
+        setPaperData(data.paperData);
       } catch (err) {
         console.error("Error fetching report data:", err);
         setReport(null);
@@ -109,55 +75,109 @@ export default function ReportPage({ params }) {
   if (!report || !paperData)
     return (
       <div className={styles.error}>
-        <div className={styles.errorIcon}>⚠️</div>
+        <div className={styles.errorIcon}>
+          <AlertTriangle size={48} style={{ color: '#f59e0b' }} />
+        </div>
         <h2>Report Not Found</h2>
         <p>No evaluation report or paper data found for this submission.</p>
       </div>
     );
 
-  // 🧩 Link evaluation_results with paper_data for isOr logic
   const questionsMap = new Map();
   for (const q of paperData.questions || []) questionsMap.set(q.qid, q);
 
-  const processed = new Set();
+  // 🔧 FIX: separate sets
+  const processedForMarks = new Set();
+  const processedForUI = new Set();
+
   let totalMarks = 0;
   let totalScore = 0;
 
-  // 🧮 Marks Calculation considering OR questions
+  // 🧮 Marks calculation (unchanged logic, safe fix)
   for (let i = 0; i < report.results.length; i++) {
-    if (processed.has(i)) continue;
+    if (processedForMarks.has(i)) continue;
+
     const q = report.results[i];
     const paperQ = questionsMap.get(q.qid);
+
     if (paperQ?.isOr) {
       const nextQ = report.results[i + 1];
+
       const attempted =
         q.studentImages?.length > 0
           ? q
           : nextQ?.studentImages?.length > 0
-          ? nextQ
-          : q;
+            ? nextQ
+            : q;
+
       totalMarks += attempted.marks || 0;
       totalScore += attempted.evaluation?.suggestedScore || 0;
-      processed.add(i + 1);
+
+      processedForMarks.add(i + 1);
     } else {
       totalMarks += q.marks || 0;
       totalScore += q.evaluation?.suggestedScore || 0;
     }
   }
 
-  totalScore = totalScore.toFixed(2);
+  const downloadPDF = async () => {
+    try {
+      setLoading(true); // Re-use loading state or create a valid one if needed
+      const response = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          submission,
+          report,
+          totalScore,
+          totalMarks,
+          paperData,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `DASES_Report_${submission.enrollment_no}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Failed to download PDF. Please check your internet connection and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
+
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerContent}>
-            <h1 className={styles.title}>Evaluation Report</h1>
-            <p className={styles.subtitle}>Detailed Assessment & Feedback</p>
+            <div className={styles.headerRow}>
+              <div className={styles.headerText}>
+                <h1 className={styles.title}>Evaluation Report</h1>
+                <p className={styles.subtitle}>Detailed Assessment & Feedback</p>
+              </div>
+              <button onClick={downloadPDF} className={styles.downloadBtn} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {loading ? (
+                  <><Loader2 className="animate-spin" size={16} /> Generating PDF...</>
+                ) : (
+                  <><Download size={16} /> Download Report PDF</>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* 🧾 Student Information */}
         {submission && (
           <div className={styles.studentInfo}>
             <div className={styles.sectionHeader}>
@@ -193,7 +213,6 @@ export default function ReportPage({ params }) {
           </div>
         )}
 
-        {/* Summary Section */}
         <div className={styles.summary}>
           <div className={styles.summaryCard}>
             <div className={styles.summaryLabel}>Total Questions</div>
@@ -210,47 +229,59 @@ export default function ReportPage({ params }) {
           <div className={styles.summaryCard}>
             <div className={styles.summaryLabel}>Percentage</div>
             <div className={styles.summaryValue}>
-              {totalMarks > 0 ? ((totalScore / totalMarks) * 100).toFixed(1) : 0}%
+              {totalMarks > 0
+                ? ((totalScore / totalMarks) * 100).toFixed(1)
+                : 0}
+              %
             </div>
           </div>
         </div>
 
-        {/* 🧠 Detailed Evaluation */}
         <div className={styles.questionsSection}>
           <div className={styles.sectionHeader}>
             <h2>Detailed Evaluation</h2>
           </div>
 
           {report.results.map((q, idx) => {
-            if (processed.has(idx)) return null;
+            if (processedForUI.has(idx)) return null;
+
             const paperQ = questionsMap.get(q.qid);
 
             if (paperQ?.isOr) {
               const nextQ = report.results[idx + 1];
-              processed.add(idx + 1);
+              processedForUI.add(idx + 1);
+
               return (
                 <div key={idx} className={styles.orBox}>
-                  <p className={styles.orHeader}>Attempt any one of the following (OR)</p>
+                  <p className={styles.orHeader}>
+                    Attempt any one of the following (OR)
+                  </p>
+
                   {[q, nextQ].map((ques, i) => {
                     const attempted = ques.studentImages?.length > 0;
+
                     return (
                       <div
                         key={i}
-                        className={`${styles.questionCard} ${
-                          attempted ? styles.attempted : styles.notAttempted
-                        }`}
+                        className={`${styles.questionCard} ${attempted
+                          ? styles.attempted
+                          : styles.notAttempted
+                          }`}
                       >
                         <div className={styles.qHeader}>
                           <div className={styles.qHeaderLeft}>
                             <span className={styles.qNum}>
                               Question {ques.qNumber}
                             </span>
-                            <span className={styles.qMarks}>{ques.marks} marks</span>
+                            <span className={styles.qMarks}>
+                              {ques.marks} marks
+                            </span>
                           </div>
                           <div className={styles.qScore}>
                             <span className={styles.scoreLabel}>Score:</span>
                             <span className={styles.scoreValue}>
-                              {ques.evaluation?.suggestedScore ?? "N/A"}/{ques.marks}
+                              {ques.evaluation?.suggestedScore ?? "N/A"}/
+                              {ques.marks}
                             </span>
                           </div>
                         </div>
@@ -266,25 +297,45 @@ export default function ReportPage({ params }) {
                               : styles.notAttemptedLabel
                           }
                         >
-                          {attempted ? "✅ Attempted" : "❌ Not Attempted"}
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            {attempted ? (
+                              <><CheckCircle2 size={16} style={{ color: '#10b981' }} /> Attempted</>
+                            ) : (
+                              <><XCircle size={16} style={{ color: '#ef4444' }} /> Not Attempted</>
+                            )}
+                          </span>
                         </p>
 
-                        {/* Criteria Breakdown */}
                         {ques.evaluation?.criteria?.length > 0 && (
                           <div className={styles.criteriaSection}>
                             <h4>Evaluation Breakdown</h4>
                             <div className={styles.criteriaList}>
                               {ques.evaluation.criteria.map((c, i) => (
-                                <div key={i} className={styles.criteriaItem}>
-                                  <div className={styles.criteriaHeader}>
-                                    <span className={styles.criterionName}>
+                                <div
+                                  key={i}
+                                  className={styles.criteriaItem}
+                                >
+                                  <div
+                                    className={styles.criteriaHeader}
+                                  >
+                                    <span
+                                      className={styles.criterionName}
+                                    >
                                       {c.criterion}
                                     </span>
-                                    <span className={styles.criterionMarks}>
+                                    <span
+                                      className={
+                                        styles.criterionMarks
+                                      }
+                                    >
                                       {c.obtained_marks}/{c.max_marks}
                                     </span>
                                   </div>
-                                  <div className={styles.criterionFeedback}>
+                                  <div
+                                    className={
+                                      styles.criterionFeedback
+                                    }
+                                  >
                                     {c.feedback}
                                   </div>
                                 </div>
@@ -299,6 +350,44 @@ export default function ReportPage({ params }) {
                             <p>{ques.evaluation.feedback}</p>
                           </div>
                         )}
+
+                        {ques.studentImages?.length > 0 && (
+                          <div className={styles.imagesSection}>
+                            <h4>
+                              Answer Sheets (
+                              {ques.studentImages.length})
+                            </h4>
+                            <div className={styles.imageGrid}>
+                              {ques.studentImages.map((img, i) => {
+                                const imgSrc = `https://crqheuuvsgtzejaestyj.supabase.co/storage/v1/object/public/submissions/${img}`;
+                                return (
+                                  <div
+                                    key={i}
+                                    className={styles.imageThumb}
+                                    onClick={() =>
+                                      openLightbox(imgSrc)
+                                    }
+                                  >
+                                    <Image
+                                      src={imgSrc}
+                                      fill
+                                      alt={`Answer page ${i + 1}`}
+                                    />
+                                    <div
+                                      className={
+                                        styles.imageOverlay
+                                      }
+                                    >
+                                      <span>
+                                        🔍 Click to enlarge
+                                      </span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -310,8 +399,12 @@ export default function ReportPage({ params }) {
               <div key={q.qid || idx} className={styles.questionCard}>
                 <div className={styles.qHeader}>
                   <div className={styles.qHeaderLeft}>
-                    <span className={styles.qNum}>Question {q.qNumber}</span>
-                    <span className={styles.qMarks}>{q.marks} marks</span>
+                    <span className={styles.qNum}>
+                      Question {q.qNumber}
+                    </span>
+                    <span className={styles.qMarks}>
+                      {q.marks} marks
+                    </span>
                   </div>
                   <div className={styles.qScore}>
                     <span className={styles.scoreLabel}>Score:</span>
@@ -325,27 +418,38 @@ export default function ReportPage({ params }) {
                   <Latex>{q.question}</Latex>
                 </div>
 
-                {/* Criteria */}
                 {q.evaluation?.criteria?.length > 0 && (
                   <div className={styles.criteriaSection}>
                     <h4>Evaluation Breakdown</h4>
                     <div className={styles.criteriaList}>
                       {q.evaluation.criteria.map((c, i) => (
-                        <div key={i} className={styles.criteriaItem}>
+                        <div
+                          key={i}
+                          className={styles.criteriaItem}
+                        >
                           <div className={styles.criteriaHeader}>
-                            <span className={styles.criterionName}>{c.criterion}</span>
-                            <span className={styles.criterionMarks}>
+                            <span
+                              className={styles.criterionName}
+                            >
+                              {c.criterion}
+                            </span>
+                            <span
+                              className={styles.criterionMarks}
+                            >
                               {c.obtained_marks}/{c.max_marks}
                             </span>
                           </div>
-                          <div className={styles.criterionFeedback}>{c.feedback}</div>
+                          <div
+                            className={styles.criterionFeedback}
+                          >
+                            {c.feedback}
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Feedback */}
                 {q.evaluation?.feedback && (
                   <div className={styles.feedbackBox}>
                     <h4>Overall Feedback</h4>
@@ -353,10 +457,11 @@ export default function ReportPage({ params }) {
                   </div>
                 )}
 
-                {/* Images */}
                 {q.studentImages?.length > 0 && (
                   <div className={styles.imagesSection}>
-                    <h4>Answer Sheets ({q.studentImages.length})</h4>
+                    <h4>
+                      Answer Sheets ({q.studentImages.length})
+                    </h4>
                     <div className={styles.imageGrid}>
                       {q.studentImages.map((img, i) => {
                         const imgSrc = `https://crqheuuvsgtzejaestyj.supabase.co/storage/v1/object/public/submissions/${img}`;
@@ -364,11 +469,19 @@ export default function ReportPage({ params }) {
                           <div
                             key={i}
                             className={styles.imageThumb}
-                            onClick={() => openLightbox(imgSrc)}
+                            onClick={() =>
+                              openLightbox(imgSrc)
+                            }
                           >
-                            <Image src={imgSrc} fill alt={`Answer page ${i + 1}`} />
+                            <Image
+                              src={imgSrc}
+                              fill
+                              alt={`Answer page ${i + 1}`}
+                            />
                             <div className={styles.imageOverlay}>
-                              <span>🔍 Click to enlarge</span>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <Search size={14} /> Click to enlarge
+                              </span>
                             </div>
                           </div>
                         );
@@ -382,16 +495,23 @@ export default function ReportPage({ params }) {
         </div>
 
         <div className={styles.footer}>
-          <p>Evaluated on {new Date(report.evaluatedAt).toLocaleString("en-IN")}</p>
+          <p>
+            Evaluated on{" "}
+            {new Date(report.evaluatedAt).toLocaleString("en-IN")}
+          </p>
           <p className={styles.footerNote}>
-            This is an automated evaluation report. For queries, contact your instructor.
+            This is an automated evaluation report. For queries,
+            contact your instructor.
           </p>
         </div>
       </div>
 
       {lightboxImage && (
         <div className={styles.lightbox} onClick={closeLightbox}>
-          <button className={styles.lightboxClose} onClick={closeLightbox}>
+          <button
+            className={styles.lightboxClose}
+            onClick={closeLightbox}
+          >
             ✕
           </button>
           <Image

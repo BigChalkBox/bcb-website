@@ -576,7 +576,6 @@ function blankQuestion() {
     qid: uuid(),
     text: "",
     marks: 0,
-    images: [],
     samples: [],
     isOr: false, // 🟩 CHANGE: Added isOr flag
   };
@@ -590,9 +589,36 @@ export default function QuestionEditor({
 }) {
   const [questions, setQuestions] = useState(initialQuestions);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null); // Toast notification
+  const [expandedQuestions, setExpandedQuestions] = useState({}); // Collapsible state
+  const [bulkGenExpanded, setBulkGenExpanded] = useState(false); // Bulk generation collapsible
+  const [bulkInstruction, setBulkInstruction] = useState(""); // Global instruction for bulk generation
+  const [bulkGenerating, setBulkGenerating] = useState(false); // Bulk generation status
+  const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 }); // Progress tracker
+  // 🆕 Bulk Rubric Generation State
+  const [bulkRubricGenExpanded, setBulkRubricGenExpanded] = useState(false);
+  const [bulkRubricGenerating, setBulkRubricGenerating] = useState(false);
+  const [bulkRubricProgress, setBulkRubricProgress] = useState({ current: 0, total: 0 });
   const router = useRouter();
 
-  useEffect(() => setQuestions(initialQuestions), [initialQuestions]);
+  useEffect(() => {
+    setQuestions(initialQuestions);
+    // Keep all questions collapsed on load
+    const expanded = {};
+    initialQuestions.forEach(q => { expanded[q.qid] = false; });
+    setExpandedQuestions(expanded);
+  }, [initialQuestions]);
+
+  // Toast helper
+  const showToast = (type, message) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 4000);
+  };
+
+  // Toggle question collapse
+  const toggleExpand = (qid) => {
+    setExpandedQuestions(prev => ({ ...prev, [qid]: !prev[qid] }));
+  };
 
   async function handleSaveAndReview() {
     if (!confirm("Are you sure you want to save and review the paper?")) return;
@@ -612,23 +638,30 @@ export default function QuestionEditor({
         questions: newQuestions,
       };
 
+      // Remove enriched fields that were added by GET but don't exist in DB
+      const { institute, teacher_name, ...paperToSave } = paper;
+
       const put = await fetch(`/api/papers/${paperId}`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          ...paper,
+          ...paperToSave,
           paper_data: updatedPaperData,
         }),
       });
 
       const putj = await put.json();
-      if (!putj.success) throw new Error("Failed to save");
+      if (!putj.success) {
+        console.error('API Error:', putj);
+        throw new Error(putj.error || putj.message || "Failed to save");
+      }
 
       setQuestions(newQuestions);
       onSaved?.(putj.data);
+      showToast('success', '✅ Saved successfully!');
     } catch (e) {
       console.error(e);
-      alert("Save error — check console.");
+      showToast('error', 'Save error — check console.');
     } finally {
       setSaving(false);
     }
@@ -691,6 +724,36 @@ export default function QuestionEditor({
     );
   }
 
+  // 🆕 Retry helper with exponential backoff
+  async function retryWithBackoff(fn, maxRetries = 3, initialDelay = 1000) {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (error) {
+        const isLastAttempt = attempt === maxRetries - 1;
+
+        // Check if error is retryable (503, 429, network errors, etc)
+        const isRetryable =
+          error.message?.includes('503') ||
+          error.message?.includes('429') ||
+          error.message?.includes('overload') ||
+          error.message?.includes('timeout') ||
+          error.message?.includes('network') ||
+          error.status === 503 ||
+          error.status === 429;
+
+        if (!isRetryable || isLastAttempt) {
+          throw error;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        const delay = initialDelay * Math.pow(2, attempt);
+        console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
   // 🟩 CHANGE: Toggle OR flag for a specific question
   function toggleOrFlag(qid) {
     setQuestions((prev) =>
@@ -700,74 +763,539 @@ export default function QuestionEditor({
     );
   }
 
+  // 🆕 Bulk Answer Generation
+  async function handleBulkGenerate() {
+    if (!bulkInstruction.trim()) {
+      alert("Please provide generation instructions.");
+      return;
+    }
+
+    if (!confirm(`Generate sample answers for all questions with instruction: "${bulkInstruction}"?`)) {
+      return;
+    }
+
+    // Helper function to convert URL to base64
+    async function urlToBase64(url) {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const buffer = await blob.arrayBuffer();
+
+      function arrayBufferToBase64(buffer) {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const chunkSize = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          const chunk = bytes.subarray(i, i + chunkSize);
+          binary += String.fromCharCode.apply(null, chunk);
+        }
+        return btoa(binary);
+      }
+
+      return {
+        data: arrayBufferToBase64(buffer),
+        mimeType: blob.type || "image/jpeg",
+      };
+    }
+
+    setBulkGenerating(true);
+
+    // Calculate total items to generate
+    // Count each sample that will be generated (questions with text will get samples)
+    let totalItems = 0;
+    questions.forEach(q => {
+      if (q.text?.trim()) {
+        // Each question with text will have samples generated
+        const sampleCount = q.samples && q.samples.length > 0 ? q.samples.length : 1;
+        totalItems += sampleCount;
+      }
+    });
+
+    setBulkProgress({ current: 0, total: totalItems });
+
+    let currentItem = 0;
+    const updatedQuestions = [...questions];
+
+    try {
+      for (let qIdx = 0; qIdx < updatedQuestions.length; qIdx++) {
+        const question = updatedQuestions[qIdx];
+
+        if (!question.text?.trim()) {
+          showToast('warning', `⚠️ Skipping Q${qIdx + 1} - no question text`);
+          continue;
+        }
+
+        if (!question.samples || question.samples.length === 0) {
+          // Create one sample if none exists
+          updatedQuestions[qIdx].samples = [blankSample()];
+        }
+
+        for (let sIdx = 0; sIdx < updatedQuestions[qIdx].samples.length; sIdx++) {
+          const sample = updatedQuestions[qIdx].samples[sIdx];
+
+          try {
+            const allPaths = [...(sample.instructionImages || [])];
+            const base64Images = await Promise.all(allPaths.map(urlToBase64));
+
+            // Wrap API call with retry logic
+            await retryWithBackoff(async () => {
+              const res = await fetch("/api/generate", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  prompt: question.text,
+                  instructions: bulkInstruction,
+                  images: base64Images,
+                  marks: question.marks || 0,
+                  n: 1,
+                }),
+              });
+
+              const j = await res.json();
+              if (!j.success) {
+                const error = new Error(j.error || "Generation failed");
+                error.status = res.status;
+                throw error;
+              }
+
+              const parsedSamples = [];
+
+              // Helper to extract actual answer from potentially JSON-wrapped strings
+              const extractAnswer = (ans) => {
+                if (typeof ans !== 'string') return String(ans);
+                let text = ans;
+                // If the answer is a JSON string, parse it and extract the answer
+                try {
+                  if (text.trim().startsWith('{') && text.trim().endsWith('}')) {
+                    const parsed = JSON.parse(text);
+                    text = parsed.answer1 || parsed.answer2 || parsed.answer ||
+                      parsed.content || parsed.text || Object.values(parsed)[0] || text;
+                  }
+                } catch (e) { /* Not JSON, use as is */ }
+                // Clean up escaping - handle all newline variants
+                return text
+                  .replace(/\\\\n/g, '\n')
+                  .replace(/\\n/g, '\n')
+                  .replace(/\\\\/g, '\\')
+                  .replace(/\\\$/g, '$');
+              };
+
+              (j.samples || []).forEach((s) => {
+                if (typeof s === "string") parsedSamples.push({ answer: extractAnswer(s), answerImages: [] });
+                else if (typeof s === "object")
+                  Object.values(s).forEach((ans) =>
+                    parsedSamples.push({ answer: extractAnswer(ans), answerImages: [] })
+                  );
+              });
+
+              if (parsedSamples.length > 0) {
+                updatedQuestions[qIdx].samples[sIdx].answer = parsedSamples[0].answer;
+                updatedQuestions[qIdx].samples[sIdx].answerImages = parsedSamples[0].answerImages || [];
+              }
+            });
+
+            currentItem++;
+            setBulkProgress({ current: currentItem, total: totalItems });
+
+          } catch (err) {
+            console.error(`Error generating answer for Q${qIdx + 1}, Variant ${sIdx + 1}:`, err);
+            showToast('error', `❌ Failed Q${qIdx + 1}, Variant ${sIdx + 1}`);
+          }
+        }
+      }
+
+      setQuestions(updatedQuestions);
+      showToast('success', `✅ Bulk generation complete! Generated ${currentItem} answer(s).`);
+
+    } catch (e) {
+      console.error(e);
+      showToast('error', '❌ Bulk generation error');
+    } finally {
+      setBulkGenerating(false);
+      setBulkProgress({ current: 0, total: 0 });
+    }
+  }
+
+  // 🆕 Bulk Rubric Generation
+  async function handleBulkRubricGenerate() {
+    if (!confirm(`Generate rubrics for all samples in all questions?`)) {
+      return;
+    }
+
+    setBulkRubricGenerating(true);
+
+    // Calculate total items to generate rubrics for
+    let totalItems = 0;
+    questions.forEach(q => {
+      if (q.samples && q.samples.length > 0) {
+        // Only count samples that have answers
+        q.samples.forEach(s => {
+          if (s.answer?.trim() || (s.answerImages && s.answerImages.length > 0)) {
+            totalItems++;
+          }
+        });
+      }
+    });
+
+    if (totalItems === 0) {
+      showToast('warning', '⚠️ No samples with answers found to generate rubrics for.');
+      setBulkRubricGenerating(false);
+      return;
+    }
+
+    setBulkRubricProgress({ current: 0, total: totalItems });
+
+    let currentItem = 0;
+    const updatedQuestions = [...questions];
+
+    try {
+      for (let qIdx = 0; qIdx < updatedQuestions.length; qIdx++) {
+        const question = updatedQuestions[qIdx];
+
+        if (!question.text?.trim()) {
+          showToast('warning', `⚠️ Skipping Q${qIdx + 1} - no question text`);
+          continue;
+        }
+
+        if (!question.samples || question.samples.length === 0) {
+          continue;
+        }
+
+        for (let sIdx = 0; sIdx < updatedQuestions[qIdx].samples.length; sIdx++) {
+          const sample = updatedQuestions[qIdx].samples[sIdx];
+
+          // Skip samples without answers
+          if (!sample.answer?.trim() && (!sample.answerImages || sample.answerImages.length === 0)) {
+            continue;
+          }
+
+          try {
+            // Wrap API call with retry logic
+            await retryWithBackoff(async () => {
+              const res = await fetch(`/api/papers/${paperId}/questions/${question.qid}/rubric`, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  sampleAnswer: sample.answer || "",
+                  maxMarks: question.marks || 0,
+                  sampleImages: sample.answerImages || [],
+                  questionText: question.text,
+                }),
+              });
+
+              const j = await res.json();
+
+              if (j.success && j.rubric && Array.isArray(j.rubric)) {
+                updatedQuestions[qIdx].samples[sIdx].rubric = {
+                  criteria: j.rubric.map(r => ({
+                    criterion: r.criteria,
+                    weight: r.max_marks
+                  }))
+                };
+              } else {
+                const error = new Error(j.error || "Failed to generate rubric");
+                error.status = res.status;
+                throw error;
+              }
+            });
+
+            currentItem++;
+            setBulkRubricProgress({ current: currentItem, total: totalItems });
+
+          } catch (err) {
+            console.error(`Error generating rubric for Q${qIdx + 1}, Variant ${sIdx + 1}:`, err);
+            showToast('error', `❌ Failed rubric Q${qIdx + 1}, Variant ${sIdx + 1}`);
+          }
+        }
+      }
+
+      setQuestions(updatedQuestions);
+      showToast('success', `✅ Bulk rubric generation complete! Generated ${currentItem} rubric(s).`);
+
+    } catch (e) {
+      console.error(e);
+      showToast('error', '❌ Bulk rubric generation error');
+    } finally {
+      setBulkRubricGenerating(false);
+      setBulkRubricProgress({ current: 0, total: 0 });
+    }
+  }
+
   return (
     <div className="question-editor">
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`qe-toast ${toast.type}`}>
+          <span>{toast.message}</span>
+          <button onClick={() => setToast(null)}>×</button>
+        </div>
+      )}
+
       <div className="question-editor-header">
-        <h3>Questions</h3>
+        <h3>📝 Questions & Sample Answers</h3>
         <div className="header-buttons">
-          <button onClick={addQuestion} className="btn btn-primary">
-            + Add Question
+          <button onClick={addQuestion} className="btn-icon btn-add">
+            <span className="icon">➕</span> Add Question
           </button>
           <button
             onClick={handleSaveAndReview}
             disabled={saving}
-            className="btn btn-success"
+            className="btn-icon btn-save"
           >
-            {saving ? "Saving…" : "💾 Save All"}
+            <span className="icon">💾</span> {saving ? "Saving…" : "Save & Review"}
           </button>
         </div>
       </div>
 
-      {questions.length === 0 && (
-        <div className="empty-state">No questions yet</div>
-      )}
-
-      {questions.map((q, idx) => (
-        <React.Fragment key={q.qid}>
-          <div className="question-container">
-            <div className="question-header">
-              <h4 className="question-title">
-                Question {idx + 1}{" "}
-                {q.isOr && <span className="or-label">(OR)</span>}
-              </h4>
-              <div className="or-toggle">
-                <label>
-  <input
-    type="checkbox"
-    checked={q.isOr}
-    onChange={() => toggleOrFlag(q.qid)}
-  />{" "}
-  {"Mark this as \"OR\" question"}
-</label>
-
+      {/* 🆕 Bulk Generation Sections - Grouped */}
+      {questions.length > 0 && (
+        <div className="bulk-actions-wrapper">
+          {/* Bulk Answer Generation */}
+          <div className="bulk-generation-section">
+            <div
+              className="bulk-gen-header"
+              onClick={() => setBulkGenExpanded(!bulkGenExpanded)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="bulk-gen-title">
+                <span className="expand-arrow">{bulkGenExpanded ? '▼' : '▶'}</span>
+                <h4>⚡ Bulk Answer Generation</h4>
               </div>
-              <button
-                onClick={() => deleteQuestion(q.qid)}
-                className="btn btn-danger btn-small"
-              >
-                Delete
-              </button>
+              <span className="bulk-gen-hint">Generate answers for all questions at once</span>
             </div>
 
-            <div className="question-content">
-              <QuestionCard
-                paperId={paperId}
-                question={q}
-                onQuestionChange={(payload) => updateQuestion(q.qid, payload)}
-                onFileUpload={handleFileUpload}
-                onSaveSingle={() => persistQuestions(questions)}
-              />
-            </div>
+            {bulkGenExpanded && (
+              <div className="bulk-gen-content">
+                <div className="form-group">
+                  <label className="form-label">
+                    Global Instruction for All Answers
+                  </label>
+                  <p className="field-description">
+                    Provide one instruction that will be applied to generate answers for all questions.
+                    Example: "generate simple theoretical answers" or "use practical examples with diagrams"
+                  </p>
+                  <textarea
+                    value={bulkInstruction}
+                    onChange={(e) => setBulkInstruction(e.target.value)}
+                    rows={2}
+                    className="form-textarea"
+                    placeholder="e.g., Focus on theoretical explanations with simple language..."
+                    disabled={bulkGenerating}
+                  />
+                </div>
+
+                <div className="bulk-gen-controls">
+                  <button
+                    onClick={handleBulkGenerate}
+                    disabled={bulkGenerating || !bulkInstruction.trim()}
+                    className="btn btn-generate"
+                  >
+                    {bulkGenerating
+                      ? `Generating... (${bulkProgress.current}/${bulkProgress.total})`
+                      : "✨ Generate All Answers"}
+                  </button>
+
+                  {bulkGenerating && (
+                    <div className="bulk-progress">
+                      <div className="progress-bar">
+                        <div
+                          className="progress-fill"
+                          style={{
+                            width: `${(bulkProgress.current / bulkProgress.total) * 100}%`
+                          }}
+                        />
+                      </div>
+                      <span className="progress-text">
+                        {bulkProgress.current} of {bulkProgress.total} completed
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <p className="ai-disclaimer">
+                  ⚠️ This will generate answers for ALL questions sequentially.
+                  Individual sample instructions will be overridden by this global instruction.
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* 🟩 CHANGE: Render "OR" divider when this question or the next one has isOr=true */}
-          {q.isOr && idx < questions.length - 1 && (
-            <div className="or-divider">
-              <span>— OR —</span>
+          {/* Divider between sections */}
+          <div className="bulk-divider"></div>
+
+          {/* 🆕 Bulk Rubric Generation Section */}
+          <div className="bulk-generation-section bulk-rubric-section">
+            <div
+              className="bulk-gen-header"
+              onClick={() => setBulkRubricGenExpanded(!bulkRubricGenExpanded)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="bulk-gen-title">
+                <span className="expand-arrow">{bulkRubricGenExpanded ? '▼' : '▶'}</span>
+                <h4>📋 Bulk Rubric Generation</h4>
+              </div>
+              <span className="bulk-gen-hint">Generate rubrics for all sample answers at once</span>
             </div>
-          )}
-        </React.Fragment>
-      ))}
+
+            {bulkRubricGenExpanded && (
+              <div className="bulk-gen-content">
+                <p className="field-description">
+                  This will generate evaluation rubrics for all samples that have answers.
+                  The rubric is generated based on the question text, sample answer, and maximum marks.
+                </p>
+
+                <div className="bulk-gen-controls">
+                  <button
+                    onClick={handleBulkRubricGenerate}
+                    disabled={bulkRubricGenerating}
+                    className="btn btn-generate"
+                  >
+                    {bulkRubricGenerating
+                      ? `Generating... (${bulkRubricProgress.current}/${bulkRubricProgress.total})`
+                      : "✨ Generate All Rubrics"}
+                  </button>
+
+                  {bulkRubricGenerating && (
+                    <div className="bulk-progress">
+                      <div className="progress-bar">
+                        <div
+                          className="progress-fill"
+                          style={{
+                            width: `${(bulkRubricProgress.current / bulkRubricProgress.total) * 100}%`
+                          }}
+                        />
+                      </div>
+                      <span className="progress-text">
+                        {bulkRubricProgress.current} of {bulkRubricProgress.total} completed
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <p className="ai-disclaimer">
+                  ⚠️ This will generate rubrics for ALL samples with answers sequentially.
+                  Existing rubrics will be replaced.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {questions.length === 0 && (
+        <div className="empty-state">
+          <span className="empty-icon">📋</span>
+          <p>No questions yet. Click "Add Question" to get started.</p>
+        </div>
+      )}
+
+      {(() => {
+        const elements = [];
+        let i = 0;
+
+        while (i < questions.length) {
+          const q = questions[i];
+          const isExpanded = expandedQuestions[q.qid] !== false;
+          const previewText = q.text?.substring(0, 80) || "No question text";
+
+          // Check if this starts an OR pair
+          if (q.isOr && i + 1 < questions.length) {
+            const q2 = questions[i + 1];
+            const isExpanded2 = expandedQuestions[q2.qid] !== false;
+            const previewText2 = q2.text?.substring(0, 80) || "No question text";
+
+            // Wrap both questions in ONE OR container
+            elements.push(
+              <div key={`or-pair-${q.qid}`} className="or-pair-container">
+                <div className="or-pair-label">⚡ OR Pair</div>
+
+                {/* First question in pair */}
+                <div className={`question-container ${isExpanded ? 'expanded' : 'collapsed'} in-or-pair`}>
+                  <div className="question-header-collapsible" onClick={() => toggleExpand(q.qid)}>
+                    <div className="header-left">
+                      <span className="expand-arrow">{isExpanded ? '▼' : '▶'}</span>
+                      <h4 className="question-title">
+                        Q{i + 1}
+                        <span className="or-badge">OR</span>
+                        <span className="marks-badge">{q.marks} marks</span>
+                      </h4>
+                      {!isExpanded && <span className="question-preview">{previewText}...</span>}
+                    </div>
+                    <div className="header-right" onClick={e => e.stopPropagation()}>
+                      <label className="or-checkbox">
+                        <input type="checkbox" checked={q.isOr} onChange={() => toggleOrFlag(q.qid)} /> OR
+                      </label>
+                      <button onClick={() => deleteQuestion(q.qid)} className="btn-icon btn-delete-small" title="Delete">🗑️</button>
+                    </div>
+                  </div>
+                  {isExpanded && (
+                    <div className="question-content">
+                      <QuestionCard paperId={paperId} question={q} onQuestionChange={(payload) => updateQuestion(q.qid, payload)} onFileUpload={handleFileUpload} onSaveSingle={() => persistQuestions(questions)} />
+                    </div>
+                  )}
+                </div>
+
+                {/* OR Divider */}
+                <div className="or-divider-inside">
+                  <span>— OR —</span>
+                </div>
+
+                {/* Second question in pair */}
+                <div className={`question-container ${isExpanded2 ? 'expanded' : 'collapsed'} in-or-pair`}>
+                  <div className="question-header-collapsible" onClick={() => toggleExpand(q2.qid)}>
+                    <div className="header-left">
+                      <span className="expand-arrow">{isExpanded2 ? '▼' : '▶'}</span>
+                      <h4 className="question-title">
+                        Q{i + 2}
+                        <span className="marks-badge">{q2.marks} marks</span>
+                      </h4>
+                      {!isExpanded2 && <span className="question-preview">{previewText2}...</span>}
+                    </div>
+                    <div className="header-right" onClick={e => e.stopPropagation()}>
+                      <button onClick={() => deleteQuestion(q2.qid)} className="btn-icon btn-delete-small" title="Delete">🗑️</button>
+                    </div>
+                  </div>
+                  {isExpanded2 && (
+                    <div className="question-content">
+                      <QuestionCard paperId={paperId} question={q2} onQuestionChange={(payload) => updateQuestion(q2.qid, payload)} onFileUpload={handleFileUpload} onSaveSingle={() => persistQuestions(questions)} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+            i += 2; // Skip both questions
+          } else {
+            // Regular question (not in OR pair)
+            elements.push(
+              <div key={q.qid} className={`question-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                <div className="question-header-collapsible" onClick={() => toggleExpand(q.qid)}>
+                  <div className="header-left">
+                    <span className="expand-arrow">{isExpanded ? '▼' : '▶'}</span>
+                    <h4 className="question-title">
+                      Q{i + 1}
+                      <span className="marks-badge">{q.marks} marks</span>
+                    </h4>
+                    {!isExpanded && <span className="question-preview">{previewText}...</span>}
+                  </div>
+                  <div className="header-right" onClick={e => e.stopPropagation()}>
+                    <label className="or-checkbox">
+                      <input type="checkbox" checked={q.isOr} onChange={() => toggleOrFlag(q.qid)} /> OR
+                    </label>
+                    <button onClick={() => deleteQuestion(q.qid)} className="btn-icon btn-delete-small" title="Delete">🗑️</button>
+                  </div>
+                </div>
+                {isExpanded && (
+                  <div className="question-content">
+                    <QuestionCard paperId={paperId} question={q} onQuestionChange={(payload) => updateQuestion(q.qid, payload)} onFileUpload={handleFileUpload} onSaveSingle={() => persistQuestions(questions)} />
+                  </div>
+                )}
+              </div>
+            );
+            i += 1;
+          }
+        }
+
+        return elements;
+      })()}
     </div>
   );
 }
@@ -780,6 +1308,10 @@ function QuestionCard({
   onFileUpload,
   onSaveSingle,
 }) {
+  // Clarity analysis state
+  const [clarityAnalysis, setClarityAnalysis] = useState(null);
+  const [analyzingClarity, setAnalyzingClarity] = useState(false);
+
   function setField(field, val) {
     onQuestionChange({ [field]: val });
   }
@@ -799,6 +1331,84 @@ function QuestionCard({
     if (!confirm("Remove this sample?")) return;
     const current = question.samples || [];
     onQuestionChange({ samples: current.filter((s) => s.id !== sid) });
+  }
+
+  // Clarity analysis handler with retry for 503 errors
+  async function analyzeClarity() {
+    if (!question.text?.trim()) {
+      alert("Please enter question text first.");
+      return;
+    }
+
+    const samples = question.samples || [];
+    if (!samples.length || !samples.some(s => s.answer?.trim())) {
+      alert("Please generate at least one sample answer first.");
+      return;
+    }
+
+    setAnalyzingClarity(true);
+    setClarityAnalysis(null);
+
+    const maxRetries = 3;
+    let attempt = 0;
+
+    while (attempt < maxRetries) {
+      try {
+        const res = await fetch("/api/analyze-clarity", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            question: question.text,
+            marks: question.marks || 0,
+            samples: samples.filter(s => s.answer?.trim()).map(s => ({
+              answer: s.answer,
+              answerImages: s.answerImages || []
+            }))
+          }),
+        });
+
+        // Handle 503 with retry
+        if (res.status === 503 || res.status === 429) {
+          attempt++;
+          if (attempt < maxRetries) {
+            const delay = 1000 * Math.pow(2, attempt); // Exponential backoff: 2s, 4s
+            console.log(`Got ${res.status}, retrying in ${delay}ms (attempt ${attempt}/${maxRetries})...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+        }
+
+        const data = await res.json();
+        if (data.success && data.analysis) {
+          setClarityAnalysis(data.analysis);
+          break; // Success, exit loop
+        } else {
+          // Non-retryable error
+          alert(data.error || "Failed to analyze clarity");
+          break;
+        }
+      } catch (err) {
+        console.error("Clarity analysis error:", err);
+        attempt++;
+        if (attempt >= maxRetries) {
+          alert("Error analyzing question clarity after multiple retries");
+          break;
+        }
+        // Wait before retry
+        const delay = 1000 * Math.pow(2, attempt);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+
+    setAnalyzingClarity(false);
+  }
+
+  // Accept suggested question
+  function acceptSuggestedQuestion() {
+    if (clarityAnalysis?.suggestedQuestion) {
+      setField("text", clarityAnalysis.suggestedQuestion);
+      setClarityAnalysis(null);
+    }
   }
 
   return (
@@ -830,33 +1440,17 @@ function QuestionCard({
         />
       </div>
 
-      {/* QUESTION IMAGES */}
-      <div className="form-group">
-        <label className="form-label">Question Images:</label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={(e) => onFileUpload(question.qid, e, "images")}
-          className="form-file"
-        />
-        <ImageThumbs
-          paths={question.images}
-          onDelete={(idx) =>
-            setField(
-              "images",
-              question.images.filter((_, i) => i !== idx)
-            )
-          }
-        />
-      </div>
 
-      {/* SAMPLES LIST */}
+
+      {/* ANSWER VARIANTS */}
       <div className="samples-section">
         <div className="samples-header">
-          <h4 className="samples-title">Sample Answers</h4>
+          <div className="samples-title-group">
+            <h4 className="samples-title">Answer Variants</h4>
+            <p className="samples-description">Add one or more valid answers for this question. Each variant will have its own rubric for evaluation.</p>
+          </div>
           <button onClick={addSample} className="btn btn-primary btn-small">
-            + Add Sample
+            + Add Variant
           </button>
         </div>
 
@@ -869,7 +1463,6 @@ function QuestionCard({
             paperId={paperId}
             questionId={question.qid}
             questionText={question.text}
-            questionImages={question.images}
             onChange={(payload) => updateSample(s.id, payload)}
             onDelete={() => deleteSample(s.id)}
             onFileUpload={(e, field) =>
@@ -878,6 +1471,75 @@ function QuestionCard({
           />
         ))}
       </div>
+
+      {/* CLARITY ANALYSIS SECTION */}
+      {(question.samples?.length > 0 && question.samples.some(s => s.answer?.trim())) && (
+        <div className="clarity-analysis-section">
+          <div className="clarity-header">
+            <h4>🔍 Question Clarity Check</h4>
+            <button
+              onClick={analyzeClarity}
+              disabled={analyzingClarity}
+              className="btn btn-analyze"
+            >
+              {analyzingClarity ? "Analyzing..." : "Analyze Clarity"}
+            </button>
+          </div>
+
+          {clarityAnalysis && (
+            <div className={`clarity-results ${clarityAnalysis.isUnambiguous ? 'clarity-success' : 'clarity-warning'}`}>
+              {clarityAnalysis.isUnambiguous ? (
+                <div className="clarity-status-good">
+                  <span className="status-icon">✅</span>
+                  <span>Question is clear and unambiguous!</span>
+                </div>
+              ) : (
+                <>
+                  <div className="clarity-status-warning">
+                    <span className="status-icon">⚠️</span>
+                    <span>Some issues found with question clarity</span>
+                  </div>
+
+                  {clarityAnalysis.issues?.length > 0 && (
+                    <div className="clarity-issues">
+                      <strong>Issues:</strong>
+                      <ul>
+                        {clarityAnalysis.issues.map((issue, idx) => (
+                          <li key={idx}>{issue}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {clarityAnalysis.reasoning && (
+                    <div className="clarity-reasoning">
+                      <strong>Analysis:</strong>
+                      <p>{clarityAnalysis.reasoning}</p>
+                    </div>
+                  )}
+
+                  {clarityAnalysis.suggestedQuestion && clarityAnalysis.suggestedQuestion !== question.text && (
+                    <div className="clarity-suggestion">
+                      <strong>Suggested Question:</strong>
+                      <div className="suggested-text">
+                        <Latex>{clarityAnalysis.suggestedQuestion}</Latex>
+                      </div>
+                      <div className="suggestion-actions">
+                        <button onClick={acceptSuggestedQuestion} className="btn btn-accept">
+                          ✓ Accept Suggestion
+                        </button>
+                        <button onClick={() => setClarityAnalysis(null)} className="btn btn-dismiss">
+                          ✕ Dismiss
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="save-section">
         <button onClick={onSaveSingle} className="btn btn-secondary">
@@ -896,7 +1558,6 @@ function SampleCard({
   paperId,
   questionId,
   questionText,
-  questionImages,
   onChange,
   onDelete,
   onFileUpload,
@@ -934,10 +1595,7 @@ function SampleCard({
 
     setGeneratingAnswer(true);
     try {
-      const allPaths = [
-        ...(questionImages || []),
-        ...(sample.instructionImages || []),
-      ];
+      const allPaths = [...(sample.instructionImages || [])];
       const base64Images = await Promise.all(allPaths.map(urlToBase64));
 
       const res = await fetch("/api/generate", {
@@ -956,11 +1614,30 @@ function SampleCard({
       if (!j.success) throw new Error("Generation failed");
 
       const parsedSamples = [];
+
+      // Helper to extract actual answer from potentially JSON-wrapped strings
+      const extractAnswer = (ans) => {
+        if (typeof ans !== 'string') return String(ans);
+        let text = ans;
+        try {
+          if (text.trim().startsWith('{') && text.trim().endsWith('}')) {
+            const parsed = JSON.parse(text);
+            text = parsed.answer1 || parsed.answer2 || parsed.answer ||
+              parsed.content || parsed.text || Object.values(parsed)[0] || text;
+          }
+        } catch (e) { /* Not JSON */ }
+        return text
+          .replace(/\\\\n/g, '\n')
+          .replace(/\\n/g, '\n')
+          .replace(/\\\\/g, '\\')
+          .replace(/\\\$/g, '$');
+      };
+
       (j.samples || []).forEach((s) => {
-        if (typeof s === "string") parsedSamples.push({ answer: s, answerImages: [] });
+        if (typeof s === "string") parsedSamples.push({ answer: extractAnswer(s), answerImages: [] });
         else if (typeof s === "object")
           Object.values(s).forEach((ans) =>
-            parsedSamples.push({ answer: ans, answerImages: [] })
+            parsedSamples.push({ answer: extractAnswer(ans), answerImages: [] })
           );
       });
 
@@ -1046,26 +1723,29 @@ function SampleCard({
   return (
     <div className="sample-card">
       <div className="sample-header">
-        <h5 className="sample-title">Sample {index + 1}</h5>
+        <h5 className="sample-title">Variant {index + 1}</h5>
         <button onClick={onDelete} className="btn btn-danger btn-small">
-          Delete Sample
+          Remove
         </button>
       </div>
 
-      {/* INSTRUCTIONS */}
+      {/* DASES AI GUIDANCE */}
       <div className="form-group">
-        <label className="form-label">Additional Instructions:</label>
+        <label className="form-label">DASES AI Guidance <span className="label-hint">(optional)</span></label>
+        <p className="field-description">Provide hints or specific instructions for DASES AI to generate this answer variant.</p>
         <textarea
           value={sample.instructions}
           onChange={(e) => onChange({ instructions: e.target.value })}
           rows={2}
           className="form-textarea"
+          placeholder="e.g., Focus on theoretical explanation, use simple language, include a worked example..."
         />
       </div>
 
-      {/* INSTRUCTION IMAGES */}
+      {/* REFERENCE IMAGES */}
       <div className="form-group">
-        <label className="form-label">Instruction Images:</label>
+        <label className="form-label">Reference Images <span className="label-hint">(optional)</span></label>
+        <p className="field-description">Upload diagrams, graphs, or figures that DASES AI should reference when generating the answer.</p>
         <input
           type="file"
           accept="image/*"
@@ -1090,34 +1770,36 @@ function SampleCard({
           disabled={generatingAnswer}
           className="btn btn-generate"
         >
-          {generatingAnswer ? "Generating…" : "Generate Answer"}
+          {generatingAnswer ? "Generating…" : "✨ Generate with DASES AI"}
         </button>
+        <span className="generation-hint">or write the answer manually below</span>
       </div>
+      <p className="ai-disclaimer">DASES AI can make mistakes. Always review generated content.</p>
 
       {/* ANSWER TEXT */}
       <div className="form-group">
-        <label className="form-label">Answer:</label>
+        <label className="form-label">Model Answer</label>
         <textarea
           value={sample.answer}
           onChange={(e) => onChange({ answer: e.target.value })}
           rows={4}
           className="form-textarea"
         />
-{sample.answer && (
-  <div className="latex-preview">
-    {sample.answer
-      .split(/\n{2,}/) // split on double or more newlines
-      .map((para, i) => (
-        <div key={i} style={{ marginBottom: "1em" }}>
-          {para.split(/\n/).map((line, j) => (
-            <div key={j}>
-              <Latex>{line}</Latex>
-            </div>
-          ))}
-        </div>
-      ))}
-  </div>
-)}
+        {sample.answer && (
+          <div className="latex-preview">
+            {sample.answer
+              .split(/\n{2,}/) // split on double or more newlines
+              .map((para, i) => (
+                <div key={i} style={{ marginBottom: "1em" }}>
+                  {para.split(/\n/).map((line, j) => (
+                    <div key={j}>
+                      <Latex>{line}</Latex>
+                    </div>
+                  ))}
+                </div>
+              ))}
+          </div>
+        )}
 
 
       </div>

@@ -88,7 +88,7 @@
 // app/api/extract/route.js
 import { NextResponse } from "next/server";
 import { createPartFromUri, GoogleGenAI } from "@google/genai";
-import { jsonrepair } from "jsonrepair"; 
+import { jsonrepair } from "jsonrepair";
 
 function extractJsonFromMarkdown(md) {
   // Robust extraction of JSON content from markdown code block
@@ -138,21 +138,42 @@ export async function POST(req) {
       throw new Error("File processing failed.");
     }
 
+    //     const prompt = `
+
+    // You are tasked with reviewing a set of questions intended for a university-level examination. Please carefully evaluate each question and provide feedback according to the following criteria:
+
+    // Appropriateness of Level: Check whether the question is genuinely suitable for a university examination. If it seems too easy, too vague, or not rigorous enough for that level, flag it and explain why. if not , just leave it, no fluff. we are not looking for a verbose response.
+
+    // analyse question in terms of ambiguity leading to multiple ways to solve it . instructor on the other hand might be trying to test a particular method as per the course objective . If you see such a scenario , mention that otherwise simply say , this looks ok .
+
+    // Return ONLY a JSON array with structure:
+
+    // if it is something related to maths then give latex in text rather than normal text.
+
+    // [{ "text": "...", "marks": 10, "suggestions": "..." }]
+
+    //     `;
+
+
     const prompt = `
+Extract all questions from this exam paper PDF.
 
-You are tasked with reviewing a set of questions intended for a university-level examination. Please carefully evaluate each question and provide feedback according to the following criteria:
+For each question, extract:
+- text: The complete question text (use LaTeX notation for math: $x^2$, \\frac{a}{b}, etc.)  
+- marks: The marks/points allocated for this question
 
-Appropriateness of Level: Check whether the question is genuinely suitable for a university examination. If it seems too easy, too vague, or not rigorous enough for that level, flag it and explain why. if not , just leave it, no fluff. we are not looking for a verbose response.
+Return ONLY a JSON array:
+[{ "text": "...", "marks": 10 }]
 
-analyse question in terms of ambiguity leading to multiple ways to solve it . instructor on the other hand might be trying to test a particular method as per the course objective . If you see such a scenario , mention that otherwise simply say , this looks ok .
+Rules:
+- Keep original LaTeX formatting if present
+- Extract exact question number text without modification
+- If marks are not clearly specified, use 0
+- Do not add suggestions or analysis (handled separately by QuickPass)
+- Ensure valid JSON output
+- If you encounter a question with OR part extract both of them as separate questions.
+`;
 
-Return ONLY a JSON array with structure:
-
-if it is something related to maths then give latex in text rather than normal text.
-
-[{ "text": "...", "marks": 10, "suggestions": "..." }]
-
-    `;
 
     // Prepare content
     const content = [prompt];
@@ -181,7 +202,7 @@ if it is something related to maths then give latex in text rather than normal t
       questions = JSON.parse(repaired);
     } catch (err) {
       console.error("❌ JSON parse failed:", err.message);
-      questions = [{ text: "Parsing failed", marks: 0, suggestions: text }];
+      questions = [{ text: "Parsing failed - please try again", marks: 0 }];
     }
 
     return NextResponse.json({ success: true, questions });

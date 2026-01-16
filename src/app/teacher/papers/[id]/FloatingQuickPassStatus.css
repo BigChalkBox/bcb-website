@@ -1,0 +1,367 @@
+/* Floating QuickPass Status Button & Panel */
+
+/* Floating Button (Bottom Right) */
+.floating-quickpass-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: none;
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.floating-quickpass-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(245, 158, 11, 0.6);
+}
+
+.floating-quickpass-btn.expanded {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.floating-icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.floating-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #dc2626;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+/* Floating Panel */
+.floating-quickpass-panel {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    width: 320px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    animation: slideInUp 0.3s ease;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.floating-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.floating-panel-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.close-floating-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-floating-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.help-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Help Modal */
+.help-modal {
+    margin-top: 12px;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    animation: slideInDown 0.3s ease;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.help-modal h4 {
+    margin: 0;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    font-size: 1rem;
+}
+
+.help-content {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.help-item {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.help-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.help-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.help-item p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.close-help-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 16px;
+    padding: 10px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-help-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+
+/* Health Score Mini */
+.floating-health-score {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-bottom: 1px solid #fbbf24;
+}
+
+.health-label {
+    font-size: 0.85rem;
+    color: #92400e;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.health-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #92400e;
+    margin-bottom: 8px;
+}
+
+.health-bar-mini {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.health-bar-fill-mini {
+    height: 100%;
+    transition: width 0.5s ease, background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+/* Metrics */
+.floating-metrics {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.floating-metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.metric-value {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #16A34A;
+}
+
+.metric-value.has-issues {
+    color: #dc2626;
+}
+
+/* Actions */
+.floating-actions {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.floating-action-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.floating-action-btn.reanalyze {
+    background: #6366f1;
+    color: white;
+}
+
+.floating-action-btn.reanalyze:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+}
+
+.floating-action-btn.approve {
+    background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+    color: white;
+}
+
+.floating-action-btn.approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.floating-action-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .floating-quickpass-btn {
+        bottom: 16px;
+        right: 16px;
+        width: 56px;
+        height: 56px;
+    }
+
+    .floating-icon {
+        font-size: 1.6rem;
+    }
+
+    .floating-quickpass-panel {
+        bottom: 84px;
+        right: 16px;
+        left: 16px;
+        width: auto;
+    }
+}

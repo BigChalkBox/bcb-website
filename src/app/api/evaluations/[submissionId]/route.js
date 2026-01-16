@@ -24,7 +24,7 @@ export const maxDuration = 300; // long processing allowed
 
 export async function POST(req, { params }) {
   try {
-    const { submissionId } = params;
+    const { submissionId } = await params;
     if (!submissionId)
       return NextResponse.json(
         { success: false, error: "Missing submissionId" },

@@ -1,0 +1,388 @@
+/* CoverageReport.module.css - Clean, Practical Styling */
+
+.reportContainer {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.closeBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.closeBtn:hover {
+    background: #e2e8f0;
+}
+
+/* Cards Grid */
+.cardsRow {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* Card Base */
+.card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Score Circle Card */
+.scoreCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.scoreCircle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.scoreCircle.good {
+    background: conic-gradient(#10b981 var(--percent), #e2e8f0 var(--percent));
+}
+
+.scoreCircle.average {
+    background: conic-gradient(#f59e0b var(--percent), #e2e8f0 var(--percent));
+}
+
+.scoreCircle.poor {
+    background: conic-gradient(#ef4444 var(--percent), #e2e8f0 var(--percent));
+}
+
+.scoreInner {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.scoreLabel {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.scoreTopics {
+    font-size: 12px;
+    color: #475569;
+    margin-top: 2px;
+}
+
+/* Recommendations */
+.recsCard {
+    display: flex;
+    flex-direction: column;
+}
+
+.sectionLabel {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 10px;
+}
+
+.recItem {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+    border-left: 4px solid;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.recItem.error {
+    border-left-color: #ef4444;
+}
+
+.recItem.warning {
+    border-left-color: #f59e0b;
+}
+
+.recItem.success {
+    border-left-color: #10b981;
+}
+
+.recItem.info {
+    border-left-color: #16A34A;
+}
+
+.recMessage {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+
+.recSuggestion {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Bloom's Taxonomy */
+.bloomsCard {
+    margin-bottom: 16px;
+}
+
+.bloomsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.qualityBadge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.qualityBadge.good {
+    background: #ecfdf5;
+    color: #16A34A;
+}
+
+.qualityBadge.average {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.qualityBadge.poor {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Skill Bars */
+.skillBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.skillLabel {
+    width: 70px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.skillTrack {
+    flex: 1;
+    height: 6px;
+    /* Sleeker */
+    background: #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.skillFill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.skillCount {
+    width: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    text-align: right;
+}
+
+/* Insights Box */
+.insightsBox {
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #16A34A;
+    margin-top: 12px;
+}
+
+.insightsSummary {
+    font-size: 12px;
+    color: #1e293b;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.insightsList {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.insightsList li {
+    margin-bottom: 3px;
+}
+
+/* Topic Details Accordion */
+.topicDetails {
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.topicSummary {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    padding: 12px 16px;
+    list-style: none;
+}
+
+.topicSummary:hover {
+    background: #f1f5f9;
+}
+
+.topicContent {
+    padding: 0 16px 16px;
+}
+
+.unitBlock {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.unitName {
+    width: 100%;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 4px;
+}
+
+.topicItem {
+    width: calc(50% - 4px);
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 6px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.topicItem:hover {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+}
+
+.statusDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.statusDot.covered {
+    background: #16A34A;
+    box-shadow: 0 0 0 2px #dcfce7;
+}
+
+.statusDot.partial {
+    background: #f59e0b;
+    box-shadow: 0 0 0 2px #fef3c7;
+}
+
+.statusDot.missing {
+    background: #cbd5e1;
+    /* Subtle grey for missing */
+}
+
+/* Text Colors */
+.topicItem.covered .topicName {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.topicItem.partial .topicName {
+    color: #1e293b;
+}
+
+.topicItem.missing .topicName {
+    color: #94a3b8;
+}
+
+/* Muted text */
+
+.topicName {
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.topicQuestions {
+    font-size: 10px;
+    color: #64748b;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 6px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .topicItem {
+        width: 100%;
+    }
+}

@@ -74,7 +74,7 @@
 
 
 .active {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #059669, #047857);
   color: white;
   box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }

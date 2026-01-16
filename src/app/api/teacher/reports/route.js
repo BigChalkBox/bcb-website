@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+
+// Service role client to bypass RLS
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function GET() {
   try {
-    // 🔐 Authenticate teacher
+    // 🔐 Authenticate teacher using user-scoped client
     const cookieStore = await cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
@@ -21,14 +28,19 @@ export async function GET() {
     }
 
     // 🧩 Step 1: Get all paper IDs belonging to this teacher
-    const { data: teacherPapers, error: paperError } = await supabase
+    const { data: teacherPapers, error: paperError } = await supabaseAdmin
       .from("papers")
       .select("id")
       .eq("teacher_id", user.id);
 
     if (paperError) throw paperError;
 
+    console.log("Teacher ID:", user.id);
+    console.log("Teacher Papers:", teacherPapers);
+
     const teacherPaperIds = teacherPapers.map((p) => p.id);
+
+    console.log("Teacher Paper IDs:", teacherPaperIds);
 
     if (teacherPaperIds.length === 0) {
       return NextResponse.json({
@@ -38,43 +50,72 @@ export async function GET() {
       });
     }
 
-    // 🧩 Step 2: Fetch evaluations for submissions linked to those papers
-    const { data, error } = await supabase
+    // 🧩 Step 2: Fetch all submissions for these papers
+    const { data: submissions, error: subError } = await supabaseAdmin
+      .from("submissions")
+      .select("id, student_name, enrollment_no, email, paper_id, paper_name, submitted_at")
+      .in("paper_id", teacherPaperIds);
+
+    console.log("Submissions query result:", submissions);
+    console.log("Submissions error:", subError);
+
+    if (subError) throw subError;
+
+    if (!submissions || submissions.length === 0) {
+      return NextResponse.json({
+        success: true,
+        data: [],
+        message: "No submissions found",
+      });
+    }
+
+    const submissionIds = submissions.map((s) => s.id);
+
+    // Create submission lookup map
+    const submissionMap = {};
+    submissions.forEach((s) => {
+      submissionMap[s.id] = s;
+    });
+
+    // 🧩 Step 3: Fetch evaluations for these submissions
+    const { data: evaluations, error: evalError } = await supabaseAdmin
       .from("evaluations")
-      .select(`
-        id,
-        submission_id,
-        status,
-        updated_at,
-        evaluation_results,
-        submissions (
-          student_name,
-          enrollment_no,
-          email,
-          paper_id,
-          paper_name,
-          submitted_at,
-          papers (
-            subject_name,
-            program,
-            semester,
-            exam_type,
-            exam_month_year,
-            teacher_id
-          )
-        )
-      `)
-      .in("submissions.paper_id", teacherPaperIds)
+      .select("id, submission_id, status, updated_at, evaluation_results")
+      .in("submission_id", submissionIds)
       .order("updated_at", { ascending: false });
 
-    if (error) throw error;
+    if (evalError) throw evalError;
 
-    // 🧠 Step 3: Group by paper_id
+    if (!evaluations || evaluations.length === 0) {
+      return NextResponse.json({
+        success: true,
+        data: [],
+        message: "No evaluations found",
+      });
+    }
+
+    // 🧩 Step 4: Fetch paper details
+    const { data: papers, error: papersError } = await supabaseAdmin
+      .from("papers")
+      .select("id, subject_name, program, semester, exam_type, exam_month_year, teacher_id")
+      .in("id", teacherPaperIds);
+
+    if (papersError) throw papersError;
+
+    // Create paper lookup map
+    const paperMap = {};
+    papers?.forEach((p) => {
+      paperMap[p.id] = p;
+    });
+
+    // 🧠 Step 5: Group by paper_id
     const grouped = {};
 
-    for (const row of data) {
-      const submission = row.submissions || {};
-      const paper = submission.papers || {};
+    for (const row of evaluations) {
+      const submission = submissionMap[row.submission_id];
+      if (!submission) continue;
+
+      const paper = paperMap[submission.paper_id];
       const paperId = submission.paper_id;
       if (!paperId) continue;
 
@@ -82,11 +123,11 @@ export async function GET() {
         grouped[paperId] = {
           paper_id: paperId,
           subject_name:
-            paper.subject_name || submission.paper_name || "Untitled Paper",
-          exam_type: paper.exam_type || "-",
-          exam_month_year: paper.exam_month_year || "-",
-          program: paper.program || "-",
-          semester: paper.semester || "-",
+            paper?.subject_name || submission.paper_name || "Untitled Paper",
+          exam_type: paper?.exam_type || "-",
+          exam_month_year: paper?.exam_month_year || "-",
+          program: paper?.program || "-",
+          semester: paper?.semester || "-",
           students: [],
         };
       }

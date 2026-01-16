@@ -1,0 +1,56 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{geometry}
+\geometry{top=2cm, bottom=2cm, left=2cm, right=2cm}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{progressbar} % Custom mock progress bar with tikz if needed, or simple rules
+
+% Define Colors
+\definecolor{navyblue}{RGB}{26,35,126}
+\definecolor{amber}{RGB}{255,143,0}
+\definecolor{dasesgreen}{RGB}{46,125,50}
+\definecolor{lightgrey}{RGB}{245,245,245}
+
+% Page Setup
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{DASES}}
+\rhead{\small Assessment Report}
+\cfoot{\thepage}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge \textbf{\textcolor{dasesgreen}{DASES}}}\\[0.5cm]
+    {\Large \textbf{Student Assessment Report}}\\[0.5cm]
+\end{center}
+
+\noindent
+\begin{tcolorbox}[colback=white,colframe=navyblue,title=\textbf{STUDENT INFORMATION}]
+    \begin{tabular}{ll}
+        \textbf{Name:} & {{STUDENT_NAME}} \\
+        \textbf{ID:} & {{ENROLLMENT_NO}} \\
+        \textbf{Paper:} & {{PAPER_NAME}} \\
+        \textbf{Date:} & {{SUBMISSION_DATE}} \\
+        \textbf{Score:} & \textcolor{dasesgreen}{\textbf{ {{TOTAL_SCORE}} / {{MAX_MARKS}} ({{PERCENTAGE}}\%)}}
+    \end{tabular}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+% Questions Loop Placeholder - The API will replace this section
+{{QUESTIONS_SECTION}}
+
+\vfill
+\noindent \textbf{Evaluated on:} {{EVALUATED_AT}} \\
+\textit{\small This is an automated report.}
+
+\end{document}

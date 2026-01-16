@@ -46,38 +46,45 @@
 }
 
 .formGroup input:focus {
-  border-color: #2563eb;
+  border-color: #15803D;
   outline: none;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-#button {
-  align-self: flex-start;
-  background-color: #2563eb;
+.form button[type="submit"] {
+  align-self: center;
+  background-color: #15803D;
   color: white;
   border: none;
   padding: 0.7rem 1.4rem;
   border-radius: 6px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
 }
 
-#button:hover {
-  background-color: #1d4ed8;
+.form button[type="submit"]:hover {
+  background-color: #166534;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
 }
 
-#button:disabled {
+.form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.form button[type="submit"]:disabled {
   background-color: #94a3b8;
   cursor: not-allowed;
+  transform: none;
 }
 
 .subListHeader {
   font-size: 1.5rem;
   margin-bottom: 1rem;
   color: #111827;
-  border-bottom: 2px solid #2563eb;
+  border-bottom: 2px solid #15803D;
   padding-bottom: 0.3rem;
 }
 
@@ -106,13 +113,35 @@
 }
 
 .table a {
-  color: #2563eb;
+  color: #15803D;
   text-decoration: none;
 }
 
 .table a:hover {
   text-decoration: underline;
 }
+
+.viewButton {
+  background-color: #15803D;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  font-family: inherit;
+}
+
+.viewButton:hover {
+  background-color: #166534;
+  transform: translateY(-1px);
+}
+
+.viewButton:active {
+  transform: translateY(0);
+}
+
 
 @media (max-width: 700px) {
   .form {

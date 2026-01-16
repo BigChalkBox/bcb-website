@@ -11,20 +11,75 @@ export async function GET(_req, { params }) {
   try {
     const { id } = await params;
 
-    const { data, error } = await supabase
+    // 1. Fetch paper
+    const { data: paper, error: paperError } = await supabase
       .from("papers")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (error || !data) {
+    if (paperError || !paper) {
+      console.error("Paper fetch error:", paperError);
       return NextResponse.json(
         { success: false, error: "Paper not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, data });
+    console.log("Paper fetched, teacher_id:", paper.teacher_id);
+
+    // 2. Fetch teacher profile and institution
+    let teacherName = null;
+    let instituteName = null;
+
+    if (paper.teacher_id) {
+      // Get teacher profile
+      const { data: profile, error: profileError } = await supabase
+        .from("teacher_profiles")
+        .select("full_name, department")
+        .eq("id", paper.teacher_id)
+        .single();
+
+      console.log("Teacher profile query result:", { profile, error: profileError });
+
+      if (profile) {
+        teacherName = profile.full_name;
+      }
+
+      // Get institution via users table
+      const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("institution_id")
+        .eq("id", paper.teacher_id)
+        .single();
+
+      console.log("User query result:", { user, error: userError });
+
+      if (user?.institution_id) {
+        const { data: institution, error: institutionError } = await supabase
+          .from("institutions")
+          .select("name")
+          .eq("id", user.institution_id)
+          .single();
+
+        console.log("Institution query result:", { institution, error: institutionError });
+
+        if (institution) {
+          instituteName = institution.name;
+        }
+      }
+    }
+
+    console.log("Final enriched data:", { teacherName, instituteName });
+
+    // Enrich paper data
+    const enrichedData = {
+      ...paper,
+      institute: instituteName,
+      teacher_name: teacherName,
+    };
+
+    return NextResponse.json({ success: true, data: enrichedData });
   } catch (err) {
     console.error("Error fetching paper:", err);
     return NextResponse.json(

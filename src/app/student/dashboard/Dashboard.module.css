@@ -3,7 +3,7 @@
 .container {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: linear-gradient(135deg, #F5EFE6 0%, #E6DCC8 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
 }
 
@@ -14,18 +14,18 @@
   justify-content: center;
   min-height: 100vh;
   font-size: 1.2rem;
-  color: #64748b;
+  color: #059669;
   font-weight: 500;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: linear-gradient(135deg, #F5EFE6 0%, #E6DCC8 100%);
 }
 
 /* ========== SIDEBAR ========== */
 .sidebar {
   width: 300px;
-  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+  background: linear-gradient(180deg, #047857 0%, #059669 50%, #16A34A 100%);
   color: white;
   padding: 2rem 0;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 20px rgba(45, 80, 22, 0.2);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -90,7 +90,7 @@
 
 .editButton {
   background: white;
-  color: #1e40af;
+  color: #047857;
   border: none;
   padding: 0.75rem 1.25rem;
   border-radius: 10px;
@@ -187,7 +187,7 @@
 }
 
 .welcome p strong {
-  color: #3b82f6;
+  color: #059669;
   font-weight: 700;
 }
 
@@ -206,8 +206,8 @@
   font-weight: 700;
 }
 
-.assigned > p,
-.reports > p {
+.assigned>p,
+.reports>p {
   color: #64748b;
   font-size: 1rem;
   padding: 2rem;
@@ -237,7 +237,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(180deg, #059669, #16A34A);
   transform: scaleY(0);
   transition: transform 0.3s ease;
 }
@@ -296,7 +296,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, #10b981, #059669);
+  background: linear-gradient(180deg, #059669, #047857);
   transform: scaleY(0);
   transition: transform 0.3s ease;
 }
@@ -337,7 +337,7 @@
 
 /* ========== BUTTONS ========== */
 .primaryButton {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: white;
   border: none;
   padding: 0.7rem 1.25rem;
@@ -347,11 +347,11 @@
   font-size: 0.9rem;
   transition: all 0.3s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 2px 8px rgba(74, 124, 47, 0.25);
 }
 
 .primaryButton:hover {
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.35);
   transform: translateY(-1px);
 }
 
@@ -360,7 +360,7 @@
 }
 
 .secondaryButton {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #16A34A 0%, #4ADE80 100%);
   color: white;
   border: none;
   padding: 0.7rem 1.25rem;
@@ -370,11 +370,11 @@
   font-size: 0.9rem;
   transition: all 0.3s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.25);
 }
 
 .secondaryButton:hover {
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.35);
   transform: translateY(-1px);
 }
 
@@ -451,9 +451,9 @@
 .feedbackTextarea:focus,
 .ratingSelect:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #059669;
   background: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px rgba(74, 124, 47, 0.1);
 }
 
 .feedbackTextarea {
@@ -501,13 +501,13 @@
 }
 
 .modalActions button[type="submit"] {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.3);
 }
 
 .modalActions button[type="submit"]:hover {
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 16px rgba(74, 124, 47, 0.4);
   transform: translateY(-2px);
 }
 
@@ -527,6 +527,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -537,6 +538,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -548,6 +550,7 @@
     opacity: 0;
     transform: translateY(40px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -559,6 +562,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

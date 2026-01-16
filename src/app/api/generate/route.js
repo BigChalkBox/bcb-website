@@ -158,6 +158,17 @@ function parseLLMOutput(raw) {
     });
     parsed = newObj;
   }
+
+  // Clean LaTeX delimiters: fix escaped $ signs from LLM output
+  Object.keys(parsed).forEach(key => {
+    if (typeof parsed[key] === 'string') {
+      parsed[key] = parsed[key]
+        .replace(/\\\$/g, '$')  // \$ -> $
+        .replace(/\\texttt\{/g, '\\texttt{')  // Ensure proper \texttt
+        .replace(/\\\\/g, '\\');  // Extra escaping fix
+    }
+  });
+
   return parsed;
 }
 
@@ -171,11 +182,42 @@ export async function POST(req) {
     n = 1,
   } = body;
 
-  let textPrompt = `You are an expert examiner. Write answer to the question in ${n} way${n > 1 ? "s" : ""}. Return ONLY one JSON object. Do NOT include explanations, comments, or markdown fences. DO NOT WRAP IT IN ANYTHING. JUST TEXT OUTPUT. The JSON must follow schema:
-- Keys must be named "answer1", "answer2", ... sequentially.
-- If 1 answer, output only {"answer1": "<string>"}.
-- Do not use any formatting.
+  let textPrompt = `You are an expert examiner writing a MODEL ANSWER for university exams. Write a comprehensive, well-structured answer worth ${marks} marks.
+
+=== FORMAT RULES - FOLLOW EXACTLY ===
+
+**USE MARKDOWN ONLY - NO LATEX FOR TEXT**
+
+**WHEN LISTING MULTIPLE POINTS (CRITICAL):**
+If the question asks for "5 things" or "multiple items" or "list":
+1. **Point 1 Title:** Explanation of first point
+2. **Point 2 Title:** Explanation of second point
+3. **Point 3 Title:** Explanation of third point
+(etc.)
+
+ALWAYS use numbered format "1. **Title:** description" for lists!
+
+**FORMATTING:**
+- ## for main headings
+- **bold** for key terms and titles
+- *italic* for emphasis
+- Use proper Markdown numbered lists (1. 2. 3.)
+- Use bullet points (- item) only for sub-items
+
+**NEVER USE:**
+- \\textbf{}, \\begin{itemize}, \\item, or ANY LaTeX commands for text
+- Wall of text without structure
+- Paragraphs without bold key terms
+
+**LaTeX ONLY FOR MATH:**
+- Inline: $x^2 + y^2$
+- Display: $$formula$$
+
+**OUTPUT:**
+Return ONLY valid JSON: {"answer1": "<your answer>"}
+No markdown fences, no extra text.
 `;
+
   textPrompt += `\nQuestion: ${prompt}\n`;
   textPrompt += `Additional instructions: ${instructions || "None"}\n`;
   textPrompt += `Maximum marks: ${marks}\n`;

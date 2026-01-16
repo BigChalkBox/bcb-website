@@ -16,7 +16,7 @@ export async function POST(req, { params }) {
   try {
     const { id } = params; // ✅ no await here
     const body = await req.json();
-    let { questions } = body;
+    let { questions, intelligence } = body; // Accept intelligence
 
     // ensure unique qids
     questions = questions.map((q) => ({
@@ -28,7 +28,10 @@ export async function POST(req, { params }) {
       .from("papers")
       .update({
         status: "que-final",
-        paper_data: { questions },
+        paper_data: {
+          questions,
+          intelligence: intelligence || null, // Save QuickPass analysis
+        },
         finalized_at: new Date().toISOString(),
       })
       .eq("id", id)

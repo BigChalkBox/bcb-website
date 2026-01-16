@@ -3,17 +3,17 @@
 .container {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: linear-gradient(135deg, #F5EFE6 0%, #E6DCC8 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
 }
 
 /* ========== SIDEBAR ========== */
 .sidebar {
   width: 280px;
-  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+  background: linear-gradient(180deg, #15803D 0%, #16A34A 50%, #16A34A 100%);
   color: white;
   padding: 2rem 0;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 20px rgba(45, 80, 22, 0.2);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -72,6 +72,38 @@
   transform: scaleY(1);
 }
 
+.navItemWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navItemDemo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.navItemDemo:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Demo Button */
+.demoButton {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.demoButton:hover {
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4) !important;
+}
+
 /* ========== MAIN CONTENT ========== */
 .main {
   flex: 1;
@@ -101,7 +133,7 @@
 }
 
 .actions button {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -109,7 +141,7 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.3);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -132,7 +164,7 @@
 
 .actions button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(74, 124, 47, 0.4);
 }
 
 .actions button:active {
@@ -151,7 +183,7 @@
   font-weight: 700;
 }
 
-.papers > p {
+.papers>p {
   color: #64748b;
   font-size: 1rem;
   padding: 2rem;
@@ -180,7 +212,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(180deg, #16A34A, #16A34A);
   transform: scaleY(0);
   transition: transform 0.3s ease;
 }
@@ -254,13 +286,13 @@
 }
 
 .primaryButton {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 2px 8px rgba(74, 124, 47, 0.25);
 }
 
 .primaryButton:hover {
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.35);
   transform: translateY(-1px);
 }
 
@@ -319,9 +351,9 @@
 .form input:focus,
 .form textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #16A34A;
   background: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px rgba(74, 124, 47, 0.1);
 }
 
 .form textarea {
@@ -344,7 +376,7 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #3b82f6;
+  accent-color: #16A34A;
 }
 
 .form p {
@@ -375,13 +407,13 @@
 }
 
 .modalActions button[type="submit"] {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.3);
 }
 
 .modalActions button[type="submit"]:hover {
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 16px rgba(74, 124, 47, 0.4);
   transform: translateY(-2px);
 }
 
@@ -401,6 +433,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -411,6 +444,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -422,6 +456,7 @@
     opacity: 0;
     transform: translateY(40px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -433,6 +468,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

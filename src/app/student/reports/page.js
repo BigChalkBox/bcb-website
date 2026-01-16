@@ -20,12 +20,14 @@ export default function StudentReportsPage() {
         return;
       }
 
+      // Fetch all submissions for this student
       const { data: submissions, error: submissionsError } = await supabase
         .from("submissions")
-        .select("id")
+        .select("id, paper_name, submitted_at")
         .eq("email", user.email);
 
       if (submissionsError || !submissions?.length) {
+        console.log("No submissions found:", submissionsError);
         setReports([]);
         setLoading(false);
         return;
@@ -33,18 +35,27 @@ export default function StudentReportsPage() {
 
       const submissionIds = submissions.map((s) => s.id);
 
+      // Create a lookup map for submissions
+      const submissionMap = {};
+      submissions.forEach((s) => {
+        submissionMap[s.id] = s;
+      });
+
+      // Fetch evaluations for these submissions
       const { data: evals, error: evalError } = await supabase
         .from("evaluations")
-        .select("submission_id, status, evaluation_results, submissions(paper_name, submitted_at)")
+        .select("submission_id, status, evaluation_results")
         .in("submission_id", submissionIds);
 
       if (evalError) {
-        console.error("Error fetching reports:", evalError);
+        console.error("Error fetching evaluations:", evalError);
         setLoading(false);
         return;
       }
 
-      const formattedReports = evals.map((e) => {
+      console.log("Fetched evaluations:", evals);
+
+      const formattedReports = evals?.map((e) => {
         let totalMarks = 0;
         let totalScore = 0;
 
@@ -59,10 +70,12 @@ export default function StudentReportsPage() {
           );
         }
 
+        const submission = submissionMap[e.submission_id];
+
         return {
           submission_id: e.submission_id,
-          paper_name: e.submissions?.paper_name || "Untitled Paper",
-          submitted_at: e.submissions?.submitted_at,
+          paper_name: submission?.paper_name || "Untitled Paper",
+          submitted_at: submission?.submitted_at,
           score: totalScore,
           total: totalMarks,
           feedback:
@@ -70,8 +83,9 @@ export default function StudentReportsPage() {
             "No feedback available yet.",
           status: e.status || "Pending",
         };
-      });
+      }) || [];
 
+      console.log("Formatted reports:", formattedReports);
       setReports(formattedReports);
       setLoading(false);
     };

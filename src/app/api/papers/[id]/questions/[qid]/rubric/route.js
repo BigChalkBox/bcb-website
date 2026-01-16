@@ -52,33 +52,89 @@ export async function POST(req, { params }) {
     const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     /* ----------------------- Build multimodal prompt ----------------------- */
+    //     const parts = [
+    //       {
+    //         text: `You are given a question, a sample answer, and the maximum marks for the question.
+    // Question: ${questionText}
+    // Sample Answer (Text): ${sampleAnswer || "None"}
+    // Maximum Marks: ${maxMarks}
+
+    // Output strictly valid JSON:
+
+    // {
+    //   "rubric": [
+    //     { "criteria": "Criteria description", "max_marks": <number> }
+    //   ]
+    // }
+
+    // Rules:
+    // - Break down the answer into key components.
+    // - Make criteria measurable.
+    // - Make criteria in a way that is
+    // - Consider diagrams, flowcharts, and numeric steps if present.
+    // - Identify the important points in the answer and generate a scoring rubric.
+    // - The scoring rubric is a JSON object containing the criteria and maximum marks for having that point in the answer.
+    // - Total must equal ${maxMarks}
+    // - The sum of max_marks should be equal to the total marks for the question.
+    // `
+    //       }
+    //     ];
+
+
+
+
     const parts = [
       {
-        text: `You are given a question, a sample answer, and the maximum marks for the question.
+        text: `You are given a question, a sample answer, and the maximum marks.
+
+Your task is to generate a **general evaluation rubric** suitable for CA examination checking.
+
+Inputs:
 Question: ${questionText}
-Sample Answer (Text): ${sampleAnswer || "None"}
+Sample Answer (for reference only): ${sampleAnswer || "None"}
 Maximum Marks: ${maxMarks}
 
-Output strictly valid JSON:
+IMPORTANT GUIDELINES:
+- Use the sample answer ONLY to understand:
+  • the expected flow of the answer
+  • the key concepts, provisions, and logical structure
+- The rubric must remain **generic and flexible**, so that:
+  • alternative valid examples
+  • different wording
+  • different ordering (if conceptually correct)
+  can still score full marks.
+- Focus on **what is being tested**, not **how it is phrased**.
+- Do not OVERFIT to the sample answer. The rubric should apply broadly to any correct answer to the question.
+
+Rubric Design Rules:
+- Break the answer into key conceptual components.
+- Each criterion should describe a **measurable learning outcome** (e.g., "Correct identification of limits", "Explanation of regulatory provision").
+- Avoid mentioning:
+  • specific examples
+  • exact figures unless legally mandatory
+  • verbatim phrases from the sample answer
+- Follow the logical flow implied by the sample answer, but NOT word-to-word.
+- If the answer involves:
+  • legal provisions → include reference to section/regulation understanding
+  • lists → allow any correct items, not fixed ones
+  • procedures → reward correct sequence and completeness
+- Consider diagrams, flowcharts, or structured presentation where relevant.
+
+Output strictly valid JSON in the format:
 
 {
   "rubric": [
-    { "criteria": "Criteria description", "max_marks": <number> }
+    { "criteria": "Clear, general criterion description", "max_marks": <number> }
   ]
 }
 
-Rules:
-- Break down the answer into key components.
-- Make criteria measurable.
-- Make criteria in a way that is
-- Consider diagrams, flowcharts, and numeric steps if present.
-- Identify the important points in the answer and generate a scoring rubric.
-- The scoring rubric is a JSON object containing the criteria and maximum marks for having that point in the answer.
-- Total must equal ${maxMarks}
-- The sum of max_marks should be equal to the total marks for the question.
+Constraints:
+- Total of all max_marks MUST equal ${maxMarks}
+- Do NOT include explanations, commentary, or text outside JSON.
 `
       }
     ];
+
 
     // ✅ Attach images
     for (const imgPath of sampleImages) {
@@ -105,26 +161,26 @@ Rules:
 
 
     // 🪶 Debug log (safe payload preview)
-console.log(
-  "\n📦 GEMINI PAYLOAD PREVIEW:",
-  JSON.stringify(
-    {
-      model: "gemini-2.5-flash",
-      contents: [
+    console.log(
+      "\n📦 GEMINI PAYLOAD PREVIEW:",
+      JSON.stringify(
         {
-          role: "user",
-          parts: parts.map((p) =>
-            p.text
-              ? { text: p.text.slice(0, 500) + (p.text.length > 500 ? "..." : "") } // truncate text
-              : { inlineData: { mimeType: p.inlineData.mimeType, data: "[base64 omitted]" } }
-          ),
+          model: "gemini-2.5-flash",
+          contents: [
+            {
+              role: "user",
+              parts: parts.map((p) =>
+                p.text
+                  ? { text: p.text.slice(0, 500) + (p.text.length > 500 ? "..." : "") } // truncate text
+                  : { inlineData: { mimeType: p.inlineData.mimeType, data: "[base64 omitted]" } }
+              ),
+            },
+          ],
         },
-      ],
-    },
-    null,
-    2
-  )
-);
+        null,
+        2
+      )
+    );
 
 
 
@@ -140,44 +196,44 @@ console.log(
 
     raw = raw.replace(/^```(json)?\s*/, "").replace(/```$/, "").trim();
 
-let rubricObj;
-try {
-  // 🧹 1. Remove code fences and trim
-  raw = raw.replace(/^```(json)?/i, "").replace(/```$/i, "").trim();
-
-  // 🧹 2. Try direct JSON parse first
-  try {
-    rubricObj = JSON.parse(raw);
-  } catch {
-    // 🧹 3. Try to sanitize backslashes and retry
-    const sanitized = raw
-      .replace(/\\(?!["\\/bfnrtu])/g, "\\\\")
-      .replace(/\n/g, "\\n")
-      .replace(/\r/g, "\\r");
+    let rubricObj;
     try {
-      rubricObj = JSON.parse(sanitized);
-    } catch {
-      // 🧹 4. If it’s already a JS object literal, use Function() to safely eval it
-      rubricObj = Function('"use strict"; return (' + raw + ')')();
-    }
-  }
+      // 🧹 1. Remove code fences and trim
+      raw = raw.replace(/^```(json)?/i, "").replace(/```$/i, "").trim();
 
-  // ✅ Validate structure
-  if (!rubricObj.rubric || !Array.isArray(rubricObj.rubric)) {
-    throw new Error("Invalid rubric structure");
-  }
-} catch (parseErr) {
-  console.error("❌ Parse Error:", parseErr);
-  console.log("💾 Raw JSON that failed:", raw);
-  return NextResponse.json(
-    {
-      success: false,
-      error: "Failed to parse rubric JSON (Gemini output likely JS literal or malformed JSON)",
-      raw,
-    },
-    { status: 500 }
-  );
-}
+      // 🧹 2. Try direct JSON parse first
+      try {
+        rubricObj = JSON.parse(raw);
+      } catch {
+        // 🧹 3. Try to sanitize backslashes and retry
+        const sanitized = raw
+          .replace(/\\(?!["\\/bfnrtu])/g, "\\\\")
+          .replace(/\n/g, "\\n")
+          .replace(/\r/g, "\\r");
+        try {
+          rubricObj = JSON.parse(sanitized);
+        } catch {
+          // 🧹 4. If it’s already a JS object literal, use Function() to safely eval it
+          rubricObj = Function('"use strict"; return (' + raw + ')')();
+        }
+      }
+
+      // ✅ Validate structure
+      if (!rubricObj.rubric || !Array.isArray(rubricObj.rubric)) {
+        throw new Error("Invalid rubric structure");
+      }
+    } catch (parseErr) {
+      console.error("❌ Parse Error:", parseErr);
+      console.log("💾 Raw JSON that failed:", raw);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to parse rubric JSON (Gemini output likely JS literal or malformed JSON)",
+          raw,
+        },
+        { status: 500 }
+      );
+    }
 
     // ✅ Check marks
     const totalMarks = rubricObj.rubric.reduce((sum, item) => sum + (item.max_marks || 0), 0);

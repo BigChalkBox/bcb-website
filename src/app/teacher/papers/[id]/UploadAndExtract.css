@@ -2,9 +2,9 @@
 
 /* Global container */
 .upload-container {
-  max-width: 800px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .drag-drop-zone:hover {
-  border-color: #2563eb;
+  border-color: #15803D;
 }
 
 .file-input {
@@ -167,9 +167,9 @@
 }
 
 .edit-mode-btn.active {
-  background-color: #2563eb;
+  background-color: #15803D;
   color: white;
-  border-color: #2563eb;
+  border-color: #15803D;
 }
 
 .edit-mode-btn:disabled {
@@ -244,7 +244,7 @@
 
 .rich-text-editor:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: #15803D;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -282,9 +282,9 @@
 }
 
 .toolbar-btn.active {
-  background-color: #2563eb;
+  background-color: #15803D;
   color: white;
-  border-color: #2563eb;
+  border-color: #15803D;
 }
 
 .toolbar-btn:disabled {
@@ -334,20 +334,112 @@
 }
 
 .finalize-btn:hover {
-  background-color: #059669;
+  background-color: #16A34A;
   transform: translateY(-1px);
 }
 
-/* Finalized message */
-.final-message {
-  padding: 16px;
-  background-color: #d1fae5;
-  border: 1px solid #10b981;
-  border-radius: 8px;
-  display: inline-block;
+/* =================== TOAST NOTIFICATION =================== */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+  font-weight: 500;
+}
+
+.toast-notification.success {
+  background: linear-gradient(135deg, #10b981 0%, #16A34A 100%);
+  color: white;
+}
+
+.toast-notification.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.toast-notification button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast-notification button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* =================== FINALIZED SUCCESS =================== */
+.finalized-success {
+  text-align: center;
+  padding: 40px;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border-radius: 16px;
+  border: 2px solid #10b981;
+}
+
+.finalized-success .success-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.finalized-success h3 {
   color: #065f46;
+  font-size: 1.5rem;
+  margin: 0 0 8px 0;
+}
+
+.finalized-success p {
+  color: #15803D;
+  font-size: 1rem;
+  margin: 0 0 24px 0;
+}
+
+.continue-btn {
+  background: linear-gradient(135deg, #15803D 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.1rem;
   font-weight: 600;
-  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s ease;
+}
+
+.continue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.continue-btn:active {
+  transform: translateY(0);
 }
 
 
@@ -386,9 +478,9 @@
 }
 
 .math-toggle-btn.active {
-  background-color: #3b82f6;
+  background-color: #16A34A;
   color: white;
-  border-color: #3b82f6;
+  border-color: #16A34A;
 }
 
 .math-categories {
@@ -446,7 +538,7 @@
 
 .math-symbol-btn:hover {
   background-color: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: #16A34A;
 }
 
 .math-symbol-btn:active {
@@ -487,7 +579,7 @@
 
 .latex-cmd-btn:hover {
   background-color: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: #16A34A;
 }
 
 /* Enhanced toolbar */
@@ -508,4 +600,199 @@
   height: 20px;
   background-color: #d1d5db;
   margin: 0 4px;
+}
+
+/* =================== OR QUESTION VISUAL INDICATOR =================== */
+.question-card.or-question {
+  border: 3px dashed #f59e0b !important;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+  position: relative;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+.or-indicator-label {
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+  z-index: 10;
+}
+
+/* =================== QUESTION NUMBER INPUT =================== */
+.question-number-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(59, 130, 246, 0.08);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.question-label-static {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #16A34A;
+  margin: 0;
+}
+
+.question-number-input {
+  width: 60px;
+  padding: 6px 8px;
+  border: 2px solid #16A34A;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  color: #16A34A;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.question-number-input:hover:not(:disabled) {
+  border-color: #15803D;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.question-number-input:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+}
+
+.question-number-input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =================== DELETE QUESTION BUTTON =================== */
+.delete-question-btn {
+  padding: 6px 12px;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  background: #fef2f2;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.delete-question-btn:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.15);
+}
+
+.delete-question-btn:active {
+  background: #fecaca;
+}
+
+/* Update or-toggle to allow for delete button */
+.or-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+/* =================== ACTION BUTTONS =================== */
+.add-question-container {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.add-question-btn {
+  background: white;
+  border: 2px dashed #cbd5e1;
+  color: #475569;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-question-btn:hover {
+  border-color: #16A34A;
+  color: #16A34A;
+  background: #f0fdf4;
+}
+
+.quickpass-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+  align-items: center;
+}
+
+.quickpass-analyze-btn {
+  background: white;
+  color: #d97706;
+  border: 1px solid #fcd34d;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quickpass-analyze-btn:hover:not(:disabled) {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+.quickpass-analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.coverage-analyze-btn {
+  background: white;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(14, 165, 233, 0.1);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coverage-analyze-btn:hover:not(:disabled) {
+  background: #f0f9ff;
+  border-color: #0ea5e9;
+  transform: translateY(-1px);
+}
+
+.coverage-analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }

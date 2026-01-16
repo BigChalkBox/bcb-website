@@ -35,7 +35,7 @@ function appendToLog(data) {
 
 export async function POST(request, { params }) {
     try {
-        const { submissionId } = params;
+        const { submissionId } = await params;
         if (!submissionId)
             return Response.json({ success: false, error: "submissionId required" }, { status: 400 });
 
@@ -228,7 +228,7 @@ ${rubricText || "[No rubric available]"}
             }).join("\n\n---\n\n");
 
             const prompt = `
-You are a fair and expert exam evaluator.
+You are a VERY STRICT and expert exam evaluator.
 
 You are given one student's handwritten answer (as images) for a specific question.
 
@@ -241,6 +241,7 @@ Your tasks are:
 4. Award marks per criterion, give feedback per criterion, and compute the total score.
 5. Be generous in partial credit for correct reasoning.
 6. If the handwriting or answer is blank/unreadable, give minimal marks and explain.
+7. BE STRICT: Do not award marks for any criterion not clearly met.
 
 Return STRICTLY valid JSON (no markdown, no commentary) structured as:
 {

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import styles from "./SubmissionsPage.module.css";
-import Link from "next/link";
 
 export default function SubmissionsPage() {
   const { id: paperId } = useParams();
@@ -152,13 +151,19 @@ export default function SubmissionsPage() {
                 <td>{sub.enrollment_no}</td>
                 <td>{sub.email}</td>
                 <td>
-                  <Link
-                    href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/submissions/${sub.file_path}`}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    className={styles.viewButton}
+                    onClick={() => {
+                      const pdfUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/submissions/${sub.file_path}`;
+                      const fileName = sub.file_path.split('/').pop();
+                      window.open(
+                        `/view-pdf?url=${encodeURIComponent(pdfUrl)}&name=${encodeURIComponent(fileName)}`,
+                        '_blank'
+                      );
+                    }}
                   >
                     📎 View
-                  </Link>
+                  </button>
                 </td>
                 <td>
                   {sub.submitted_at

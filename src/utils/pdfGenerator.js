@@ -387,7 +387,7 @@ export const downloadPaperAsPDF = async (paper) => {
     const safeSplitText = (text, maxWidth) => pdf.splitTextToSize(text || "", maxWidth);
 
     /* ---------- LATEX PROCESSING ---------- */
-    
+
     const hasLatex = (text) => {
       if (!text) return false;
       return /\$|\\\(|\\\[|\\begin|\\end|\\frac|\\int|\\sum|\\sqrt|\\alpha|\\beta|\\gamma|\\delta|\\theta|\\pi|\\omega|\\lambda|\\sigma|\\mu|\\infty|\\partial|\\nabla|\\Delta|\\times|\\div|\\pm|\\geq|\\leq|\\neq|\\approx|\\equiv|\\in|\\subset|\\cup|\\cap|\\mathbb|\\text\{|pmatrix|bmatrix|matrix|\\lim|\\sin|\\cos|\\tan|\\log|\\left|\\right/.test(text);
@@ -396,48 +396,48 @@ export const downloadPaperAsPDF = async (paper) => {
     // ✅ CRITICAL: Fix LaTeX errors AND enable auto-scaling brackets
     const normalizeLatex = (latex) => {
       if (!latex) return "";
-      
+
       let fixed = latex;
-      
+
       // Fix: "end{pmatrix}" → "\end{pmatrix}"
       fixed = fixed.replace(/([^\\])end\{pmatrix\}/g, "$1\\end{pmatrix}");
       fixed = fixed.replace(/^end\{pmatrix\}/g, "\\end{pmatrix}");
-      
+
       // Fix: "end{bmatrix}" → "\end{bmatrix}"
       fixed = fixed.replace(/([^\\])end\{bmatrix\}/g, "$1\\end{bmatrix}");
       fixed = fixed.replace(/^end\{bmatrix\}/g, "\\end{bmatrix}");
-      
+
       // ✅ CRITICAL FIX: Convert pmatrix to auto-scaling delimiters
       // This makes brackets scale properly to matrix height
       fixed = fixed.replace(/\\begin\{pmatrix\}/g, "\\left(\\begin{matrix}");
       fixed = fixed.replace(/\\end\{pmatrix\}/g, "\\end{matrix}\\right)");
-      
+
       // Same for bmatrix
       fixed = fixed.replace(/\\begin\{bmatrix\}/g, "\\left[\\begin{matrix}");
       fixed = fixed.replace(/\\end\{bmatrix\}/g, "\\end{matrix}\\right]");
-      
+
       // Normalize spacing in matrices
       fixed = fixed.replace(/\\\\\s*/g, " \\\\ ");
       fixed = fixed.replace(/\s+/g, " ").trim();
-      
+
       return fixed;
     };
 
     // ✅ Smart LaTeX delimiter parser
     const processLatexText = (text) => {
       if (!text) return "";
-      
+
       const parts = [];
       let currentPos = 0;
       let i = 0;
-      
+
       while (i < text.length) {
         // Display math $$...$$
         if (text[i] === "$" && text[i + 1] === "$") {
           if (i > currentPos) {
             parts.push({ type: "text", content: text.substring(currentPos, i) });
           }
-          
+
           const endIdx = text.indexOf("$$", i + 2);
           if (endIdx !== -1) {
             const latex = text.substring(i + 2, endIdx);
@@ -447,13 +447,13 @@ export const downloadPaperAsPDF = async (paper) => {
             continue;
           }
         }
-        
+
         // Inline math $...$
         if (text[i] === "$") {
           if (i > currentPos) {
             parts.push({ type: "text", content: text.substring(currentPos, i) });
           }
-          
+
           const endIdx = text.indexOf("$", i + 1);
           if (endIdx !== -1) {
             const latex = text.substring(i + 1, endIdx);
@@ -463,14 +463,14 @@ export const downloadPaperAsPDF = async (paper) => {
             continue;
           }
         }
-        
+
         i++;
       }
-      
+
       if (currentPos < text.length) {
         parts.push({ type: "text", content: text.substring(currentPos) });
       }
-      
+
       return parts;
     };
 
@@ -547,7 +547,7 @@ export const downloadPaperAsPDF = async (paper) => {
           tempDiv.style.overflow = "visible";
 
           const parts = processLatexText(text);
-          
+
           if (questionNumber) {
             const qNumSpan = document.createElement("strong");
             qNumSpan.textContent = `Q${questionNumber}. `;
@@ -663,15 +663,14 @@ export const downloadPaperAsPDF = async (paper) => {
     drawBorderedRect(margin, yPosition, contentWidth, headerHeight + 20);
 
     drawTextCentered(
-      paper.universityFullName || "UNIVERSITY OF PETROLEUM AND ENERGY STUDIES",
+      paper.institute || paper.universityFullName || "UNIVERSITY OF PETROLEUM AND ENERGY STUDIES",
       pageWidth / 2,
       yPosition + 18,
       13,
       true
     );
     drawTextCentered(
-      `${paper.exam_type || paper.examType || "Summer"} Examination, ${
-        paper.exam_month_year || paper.examMonthYear || "July 2025"
+      `${paper.exam_type || paper.examType || "Summer"} Examination, ${paper.exam_month_year || paper.examMonthYear || "July 2025"
       }`,
       pageWidth / 2,
       yPosition + 36,
@@ -687,11 +686,11 @@ export const downloadPaperAsPDF = async (paper) => {
       },
       {
         left: `Program: ${paper.program || "N/A"}`,
-        right: `Time: ${paper.timeAllowed || "N/A"}`,
+        right: `Time: ${paper.time_allowed || paper.timeAllowed || "N/A"}`,
       },
       {
         left: `Course Code: ${paper.subject_code || paper.subjectCode || "N/A"}`,
-        right: `Max. Marks: ${paper.maxMarks || "N/A"}`,
+        right: `Max. Marks: ${paper.max_marks || paper.maxMarks || "N/A"}`,
       },
     ];
     infoRows.forEach((r, i) => {
@@ -718,7 +717,32 @@ export const downloadPaperAsPDF = async (paper) => {
 
     /* ---------- QUESTIONS RENDERING ---------- */
     const questions = paper.paper_data?.questions || paper.questions || [];
-    const grouped = groupQuestionsBySection(questions, paper.sectionConfig);
+
+    // 🔧 Merge coverage analysis mappings into questions for CO automation
+    const enrichQuestionsWithCOMapping = (questions, coverageAnalysis) => {
+      if (!coverageAnalysis?.mappings || !Array.isArray(coverageAnalysis.mappings)) {
+        console.warn('No coverage mappings found - CO numbering will fall back to sequential');
+        return questions;
+      }
+
+      const enrichedQuestions = questions.map((q, index) => {
+        const mapping = coverageAnalysis.mappings.find(m => m.question_index === index);
+        if (mapping && mapping.mapped_topics && mapping.mapped_topics.length > 0) {
+          return {
+            ...q,
+            mapped_topics: mapping.mapped_topics,
+            co_confidence: mapping.confidence,
+          };
+        }
+        return q;
+      });
+
+      console.log(`✅ Enriched ${enrichedQuestions.filter(q => q.mapped_topics).length}/${questions.length} questions with CO mappings`);
+      return enrichedQuestions;
+    };
+
+    const enrichedQuestions = enrichQuestionsWithCOMapping(questions, paper.coverage_analysis);
+    const grouped = groupQuestionsBySection(enrichedQuestions, paper.sectionConfig);
     const sectionOrder = paper.sectionOrder || Object.keys(grouped);
 
     let globalQuestionCounter = 1;
@@ -871,8 +895,34 @@ export const downloadPaperAsPDF = async (paper) => {
           });
           currentX += marksWidth;
 
+          // Extract CO numbers for both questions in OR pair
+          let co1Number = globalQuestionCounter;
+          if (q.mapped_topics && q.mapped_topics.length > 0) {
+            const firstTopic = q.mapped_topics[0];
+            const unitMatch = firstTopic.match(/u(\d+)/);
+            if (unitMatch) {
+              co1Number = parseInt(unitMatch[1]);
+            }
+          }
+
+          let co2Number = globalQuestionCounter + 1;
+          if (nextQ.mapped_topics && nextQ.mapped_topics.length > 0) {
+            const firstTopic = nextQ.mapped_topics[0];
+            const unitMatch = firstTopic.match(/u(\d+)/);
+            if (unitMatch) {
+              co2Number = parseInt(unitMatch[1]);
+            }
+          }
+
           drawBorderedRect(currentX, startY, coWidth, finalHeight);
-          pdf.text(`CO${globalQuestionCounter}`, currentX + coWidth / 2, midY, {
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(10);
+          // Display CO for first question (aligned top)
+          pdf.text(`CO${co1Number}`, currentX + coWidth / 2, midY - 20, {
+            align: "center",
+          });
+          // Display CO for second question (aligned bottom)
+          pdf.text(`CO${co2Number}`, currentX + coWidth / 2, midY + 20, {
             align: "center",
           });
 
@@ -884,8 +934,19 @@ export const downloadPaperAsPDF = async (paper) => {
 
         /* ---------- NORMAL QUESTION ---------- */
         const marks = typeof q.marks === "number" ? q.marks : defaultMarks;
-        const co =
-          typeof coMapping === "function" ? coMapping(globalQuestionCounter, q) : coMapping;
+
+        // Extract unit number from mapped topics for CO mapping
+        let coNumber = globalQuestionCounter; // fallback to sequential
+        if (q.mapped_topics && q.mapped_topics.length > 0) {
+          // Topics are like "u1-t1", "u5-t2" - extract the unit number
+          const firstTopic = q.mapped_topics[0];
+          const unitMatch = firstTopic.match(/u(\d+)/);
+          if (unitMatch) {
+            coNumber = parseInt(unitMatch[1]);
+          }
+        }
+
+        const co = typeof coMapping === "function" ? coMapping(coNumber, q) : `CO${coNumber}`;
 
         let questionText = q.text || "";
         if (q.options && Array.isArray(q.options) && q.options.length > 0) {
@@ -983,7 +1044,7 @@ const prettifySectionKey = (key) =>
 
 const groupQuestionsBySection = (questions = [], sectionConfig = {}) => {
   const grouped = {};
-  
+
   if (sectionConfig && Object.keys(sectionConfig).length > 0) {
     Object.keys(sectionConfig).forEach((k) => (grouped[k] = []));
   } else {

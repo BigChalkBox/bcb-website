@@ -3,33 +3,33 @@
 .container {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: linear-gradient(135deg, #F5EFE6 0%, #E6DCC8 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  overflow: hidden;
 }
 
 /* ========== LOADER ========== */
 .loader {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 24px;
   min-height: 100vh;
   font-size: 1.2rem;
-  color: #64748b;
-  font-weight: 500;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-  position: relative;
+  color: #16A34A;
+  font-weight: 600;
+  background: linear-gradient(135deg, #F5EFE6 0%, #E6DCC8 100%);
 }
 
 .loader::before {
   content: '';
   width: 60px;
   height: 60px;
-  border: 4px solid #e2e8f0;
-  border-top-color: #3b82f6;
+  border: 4px solid rgba(22, 163, 74, 0.2);
+  border-top-color: #16A34A;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  position: absolute;
-  top: calc(50% - 50px);
 }
 
 @keyframes spin {
@@ -53,23 +53,48 @@
 /* ========== SIDEBAR ========== */
 .sidebar {
   width: 300px;
-  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+  min-width: 300px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #15803D 0%, #16A34A 50%, #16A34A 100%);
   color: white;
   padding: 2rem 0;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 20px rgba(45, 80, 22, 0.2);
   position: sticky;
   top: 0;
   height: 100vh;
   overflow-y: auto;
 }
 
-.logo {
-  font-size: 1.75rem;
-  font-weight: 700;
+.logoContainer {
   padding: 0 2rem 2rem;
   margin: 0 0 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  letter-spacing: -0.5px;
+  width: max-content;
+  max-width: 100%;
+}
+
+.brandName {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.subBrand {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-top: 4px;
+  white-space: nowrap;
 }
 
 /* ========== WORKFLOW STEPS ========== */
@@ -85,12 +110,15 @@
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
+  color: white;
   background: rgba(255, 255, 255, 0.05);
-  border: 2px solid transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Very subtle fill */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  /* The requested outline */
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(4px);
 }
 
 .steps li::before {
@@ -106,31 +134,36 @@
 }
 
 .steps li:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
-  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .steps li.active {
   background: white;
-  color: #1e40af;
+  color: #15803D;
   border-color: white;
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
   transform: translateX(8px);
 }
 
 .steps li.active::before {
-  background: #3b82f6;
+  background: #16A34A;
   transform: scaleY(1);
 }
 
 /* ========== MAIN CONTENT ========== */
 .main {
   flex: 1;
+  min-width: 0;
   padding: 2.5rem 3rem;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh;
 }
 
 /* ========== HEADER ========== */
@@ -153,7 +186,7 @@
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, #15803D, #16A34A);
 }
 
 .header h1 {
@@ -187,7 +220,7 @@
 }
 
 .finalActions button {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
@@ -195,7 +228,7 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.3);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -218,21 +251,32 @@
 
 .finalActions button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 20px rgba(74, 124, 47, 0.4);
 }
 
 .finalActions button:active {
   transform: translateY(0);
 }
 
+/* QuickPass Button Styling */
+.quickpassBtn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
+}
+
+.quickpassBtn:hover {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5) !important;
+}
+
+
 /* ========== FINAL NOTICE ========== */
 .finalNotice {
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  background: linear-gradient(135deg, #ecfccb 0%, #d9f99d 100%);
   padding: 3rem;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
-  border: 2px solid #6ee7b7;
+  box-shadow: 0 4px 12px rgba(19, 209, 2, 0.15);
+  border: 2px solid #4ADE80;
   animation: fadeInUp 0.6s ease 0.1s backwards;
 }
 
@@ -246,14 +290,14 @@
 
 .finalNotice p {
   font-size: 1.15rem;
-  color: #047857;
+  color: #15803D;
   margin: 0 0 2rem;
   font-weight: 500;
   line-height: 1.6;
 }
 
 .backBtn {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
@@ -261,7 +305,7 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 1.05rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.3);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -283,9 +327,122 @@
 }
 
 .backBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(74, 124, 47, 0.5);
 }
+
+/* =================== QUICKPASS SIDEBAR SECTION =================== */
+.quickpassSidebarSection {
+  margin-top: 2rem;
+  padding: 0 1.5rem;
+}
+
+.quickpassToggle {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.quickpassToggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.quickpassContent {
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* QuickPass Sidebar Panel Styles - Scoped under .quickpassContent */
+.quickpassContent .qpSidebarPanel {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quickpassContent .qpHealthMini {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.quickpassContent .qpHealthLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.quickpassContent .qpHealthValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.quickpassContent .qpHealthBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.quickpassContent .qpMetricsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quickpassContent .qpMetricItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+}
+
+.quickpassContent .qpMetricLabel {
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.quickpassContent .qpMetricValue {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.quickpassContent .qpMetricValueIssues {
+  color: #dc2626;
+}
+
 
 .backBtn:active {
   transform: translateY(0);
@@ -297,6 +454,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

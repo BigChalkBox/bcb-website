@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import styles from "./HeaderSub.module.css";
-import logo from "../../public/logo/navbar-logo.png"; // ✅ Update if your logo is elsewhere
+import logo from "../../public/logo/NavLogo.png"; // Updated to user's preferred logo
 
 export default function Header() {
   const [loading, setLoading] = useState(false);

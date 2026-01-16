@@ -1,0 +1,581 @@
+"use client";
+import React, { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Latex from "react-latex-next";
+import "katex/dist/katex.min.css";
+import "./UploadAndExtract.css";
+import "./QuickPassReview.css";
+import { PaperHealthBar, ApprovalPanel, QuestionIssues } from "./QuickPassReviewComponents";
+
+export default function UploadAndExtract({ paperId, initialPaper }) {
+  const [loading, setLoading] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [finalized, setFinalized] = useState(false);
+  const [editModes, setEditModes] = useState({});
+  const [analyzing, setAnalyzing] = useState(false);
+  const [intelligence, setIntelligence] = useState(null);
+  const router = useRouter();
+  const richTextRefs = useRef({});
+  const dragItem = useRef();
+  const dragOverItem = useRef();
+
+  /* ---------------- File Upload & Extraction ---------------- */
+  async function handleUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLoading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("paperId", paperId);
+      const res = await fetch("/api/extract", { method: "POST", body: fd });
+      const j = await res.json();
+
+      if (j.success) {
+        const normalized = j.questions.map((q, i) => ({
+          qid: q.qid || `${Date.now()}-${i}`,
+          text: q.text ?? "",
+          marks: q.marks ?? "",
+          suggestions: q.suggestions ?? null,
+          isOr: false,
+        }));
+        setQuestions(normalized);
+        const modes = {};
+        normalized.forEach((q) => (modes[q.qid] = "latex"));
+        setEditModes(modes);
+      } else {
+        alert("Extraction failed: " + j.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Upload error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /* ---------------- Add New Question ---------------- */
+  const addNewQuestion = () => {
+    const newQ = {
+      qid: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+      text: "",
+      marks: "",
+      suggestions: null,
+      isOr: false,
+    };
+    setQuestions((prev) => [...prev, newQ]);
+    setEditModes((prev) => ({ ...prev, [newQ.qid]: "latex" }));
+  };
+
+  /* ---------------- Finalize ---------------- */
+  function handleFinalize() {
+    setFinalized(true);
+    const withQids = questions.map((q, i) => ({
+      qid: q.qid || `${Date.now()}-${i}`,
+      ...q,
+    }));
+
+    fetch(`/api/papers/${paperId}/finalize`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ questions: withQids }),
+    })
+      .then((res) => res.json())
+      .then((j) => {
+        if (!j.success) {
+          alert("Save failed: " + j.error);
+          setFinalized(false);
+        } else {
+          router.push(`/teacher/papers/${paperId}`);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Save error");
+        setFinalized(false);
+      });
+  }
+
+  /* ---------------- Rich Text Helpers ---------------- */
+  const toggleEditMode = (qid, mode) => {
+    setEditModes((prev) => ({ ...prev, [qid]: mode }));
+  };
+
+  const handleRichTextChange = (qid, content) => {
+    const updated = questions.map((q) =>
+      q.qid === qid ? { ...q, text: content } : q
+    );
+    setQuestions(updated);
+  };
+
+  const executeCommand = (command, value = null) => {
+    document.execCommand(command, false, value);
+  };
+
+  const RichTextToolbar = ({ disabled }) => (
+    <div className="rich-text-toolbar">
+      {["bold", "italic", "underline"].map((cmd) => (
+        <button
+          key={cmd}
+          className="toolbar-btn"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => executeCommand(cmd)}
+          disabled={disabled}
+          title={cmd}
+        >
+          {cmd[0].toUpperCase()}
+        </button>
+      ))}
+      <button
+        onClick={() => executeCommand("insertUnorderedList")}
+        className="toolbar-btn"
+      >
+        • List
+      </button>
+      <button
+        onClick={() => executeCommand("insertOrderedList")}
+        className="toolbar-btn"
+      >
+        1. List
+      </button>
+      <button
+        onClick={() => executeCommand("superscript")}
+        className="toolbar-btn"
+      >
+        x²
+      </button>
+      <button
+        onClick={() => executeCommand("subscript")}
+        className="toolbar-btn"
+      >
+        x₂
+      </button>
+    </div>
+  );
+
+  /* ---------------- Drag and Drop Handlers ---------------- */
+  const handleDragStart = (index) => (dragItem.current = index);
+  const handleDragEnter = (index) => (dragOverItem.current = index);
+  const handleDrop = () => {
+    const copy = [...questions];
+    const dragItemContent = copy[dragItem.current];
+    copy.splice(dragItem.current, 1);
+    copy.splice(dragOverItem.current, 0, dragItemContent);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setQuestions(copy);
+  };
+
+  /* ---------------- OR Toggle ---------------- */
+  const toggleOrFlag = (qid) => {
+    setQuestions((prev) =>
+      prev.map((q) => (q.qid === qid ? { ...q, isOr: !q.isOr } : q))
+    );
+  };
+
+  /* ---------------- Render ---------------- */
+  return (
+    <div className="upload-container">
+      <div className="upload-card">
+        <h2 className="upload-title">📄 Upload Question Paper PDF</h2>
+
+        <div className="drag-drop-zone">
+          <input
+            type="file"
+            accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+            onChange={handleUpload}
+            className="file-input"
+          />
+          <p className="drag-drop-text">
+            Select a file to extract questions automatically
+          </p>
+          <p className="supported-formats">
+            <strong>Supported formats:</strong> PDF, DOCX, TXT
+          </p>
+        </div>
+
+        {loading && (
+          <div className="loading-feedback">
+            <p>⏳ Extracting questions from file... this may take a few seconds</p>
+          </div>
+        )}
+
+        {questions.length > 0 && (
+          <>
+            {/* Paper Health Bar */}
+            {intelligence?.quickpass && (
+              <PaperHealthBar intelligence={intelligence} />
+            )}
+
+            {/* 2-Column Layout: Questions + Approval Panel */}
+            <div className={intelligence?.quickpass ? "quickpass-layout" : ""}>
+              <div className="questions-column">
+                <div className="extracted-questions">
+                  <h3 className="extracted-title">
+                    📝 Extracted Questions ({questions.length})
+                  </h3>
+
+                  {questions.map((q, i) => (
+                    <div
+                      key={q.qid || i}
+                      className={`question-card ${finalized ? "finalized" : ""}`}
+                      draggable={!finalized}
+                      onDragStart={() => handleDragStart(i)}
+                      onDragEnter={() => handleDragEnter(i)}
+                      onDragEnd={handleDrop}
+                      onDragOver={(e) => e.preventDefault()}
+                    >
+                      <div className="question-header">
+                        <label className="question-label">
+                          {q.isOr ? `OR Question ${i + 1}` : `Question ${i + 1}`}
+                        </label>
+
+                        <div className="marks-group">
+                          <span className="marks-label">Marks:</span>
+                          <input
+                            type="number"
+                            value={q.marks ?? ""}
+                            disabled={finalized}
+                            onChange={(e) => {
+                              const updated = [...questions];
+                              updated[i].marks =
+                                e.target.value === ""
+                                  ? ""
+                                  : Number(e.target.value);
+                              setQuestions(updated);
+                            }}
+                            className="marks-input"
+                          />
+                        </div>
+                      </div>
+
+                      {/* OR Toggle */}
+                      <div className="or-toggle">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={q.isOr}
+                            onChange={() => toggleOrFlag(q.qid)}
+                            disabled={finalized}
+                          />{" "}
+                          {"Mark this as \"OR\" question"}
+                        </label>
+
+                      </div>
+
+                      {/* Editing Controls */}
+                      <div className="editing-controls">
+                        <span
+                          style={{
+                            fontSize: "14px",
+                            color: "#6b7280",
+                            marginRight: "8px",
+                          }}
+                        >
+                          Edit Mode:
+                        </span>
+                        <button
+                          className={`edit-mode-btn ${editModes[q.qid] === "latex" ? "active" : ""
+                            }`}
+                          onClick={() => toggleEditMode(q.qid, "latex")}
+                          disabled={finalized}
+                        >
+                          📝 LaTeX
+                        </button>
+                        <button
+                          className={`edit-mode-btn ${editModes[q.qid] === "rich" ? "active" : ""
+                            }`}
+                          onClick={() => toggleEditMode(q.qid, "rich")}
+                          disabled={finalized}
+                        >
+                          ✨ Rich Text
+                        </button>
+                      </div>
+
+                      {/* Editor + Preview */}
+                      <div className="side-by-side">
+                        <div className="editor-section">
+                          <p className="section-title">
+                            {editModes[q.qid] === "latex"
+                              ? "LaTeX Editor:"
+                              : "Rich Text Editor:"}
+                          </p>
+
+                          {editModes[q.qid] === "latex" ? (
+                            <textarea
+                              value={q.text ?? ""}
+                              onChange={(e) => {
+                                const updated = [...questions];
+                                updated[i].text = e.target.value;
+                                setQuestions(updated);
+                              }}
+                              disabled={finalized}
+                              placeholder="Question text will appear here..."
+                              className="textarea-question"
+                            />
+                          ) : (
+                            <>
+                              <RichTextToolbar disabled={finalized} />
+                              <div
+                                ref={(el) => (richTextRefs.current[q.qid] = el)}
+                                contentEditable={!finalized}
+                                className="rich-text-editor"
+                                dangerouslySetInnerHTML={{
+                                  __html: q.text || "",
+                                }}
+                                onInput={(e) => {
+                                  handleRichTextChange(q.qid, e.target.innerHTML);
+                                }}
+                                style={{
+                                  cursor: finalized ? "not-allowed" : "text",
+                                }}
+                              />
+                            </>
+                          )}
+                        </div>
+
+                        {/* Preview Section */}
+                        <div className="preview-section">
+                          <p className="section-title">
+                            {editModes[q.qid] === "latex"
+                              ? "LaTeX Preview:"
+                              : "HTML Preview:"}
+                          </p>
+                          <div className="latex-preview">
+                            {editModes[q.qid] === "latex" ? (
+                              q.text ? (
+                                <Latex>{q.text}</Latex>
+                              ) : (
+                                <em>Preview will appear here...</em>
+                              )
+                            ) : (
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html:
+                                    q.text ||
+                                    "<em>Preview will appear here...</em>",
+                                }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {q.suggestions && (
+                        <div className="suggestion-box">
+                          <p>
+                            💡 <strong>Suggestion:</strong> {q.suggestions}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* QuickPass View Issues Button */}
+                      {intelligence?.quickpass && (
+                        <QuestionIssues
+                          qid={q.qid}
+                          questionIndex={i}
+                          intelligence={intelligence}
+                          onApplySuggestion={(warning) => {
+                            console.log('Apply suggestion:', warning);
+                            alert(`Suggestion: ${warning.suggestion}`);
+                          }}
+                        />
+                      )}
+                    </div>
+                  ))}
+
+                  {/* ➕ Add New Question */}
+                  {!finalized && (
+                    <div className="add-question-container">
+                      <button onClick={addNewQuestion} className="add-question-btn">
+                        ➕ Add New Question
+                      </button>
+                    </div>
+                  )}
+
+                  {/* ⚡ QuickPass Analysis */}
+                  {!finalized && (
+                    <div className="quickpass-container">
+                      <button
+                        onClick={async () => {
+                          if (questions.length === 0) {
+                            alert("No questions to analyze. Please extract questions first.");
+                            return;
+                          }
+                          setAnalyzing(true);
+                          setShowAnalysis(true);
+                          try {
+                            const res = await fetch(`/api/papers/${paperId}/quickpass/analyze`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ questions }), // Send current questions from state
+                            });
+                            const json = await res.json();
+                            if (json.success) {
+                              setIntelligence(json.intelligence);
+                            } else {
+                              alert("❌ Analysis failed: " + json.error);
+                              setShowAnalysis(false);
+                            }
+                          } catch (err) {
+                            console.error("Analysis error:", err);
+                            alert("Error running analysis");
+                            setShowAnalysis(false);
+                          } finally {
+                            setAnalyzing(false);
+                          }
+                        }}
+                        className="quickpass-analyze-btn"
+                        disabled={analyzing}
+                      >
+                        {analyzing ? "⏳ Analyzing..." : "⚡ Analyze with QuickPass"}
+                      </button>
+
+
+                    </div>
+                  )}
+
+                  {/* ✅ Finalize */}
+                  <div className="finalize-container">
+                    {!finalized ? (
+                      <button onClick={handleFinalize} className="finalize-btn">
+                        ✅ Finalize Questions
+                      </button>
+                    ) : (
+                      <div className="final-message">
+                        <p>✅ Questions finalized! Proceed to next phase.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+        )}
+              </div>
+            </div>
+            );
+}
+
+            /**
+             * QuickPassSummary - Shows overall analysis summary
+             */
+            function QuickPassSummary({intelligence}) {
+  const qp = intelligence;
+            const totalWarnings =
+            qp.ambiguity.flags.length +
+            qp.or_conflicts.issues.length +
+            qp.marks_effort.warnings.length +
+            qp.duplicates.pairs.length;
+
+            const criticalIssues =
+    qp.ambiguity.flags.filter((f) => f.severity === "high").length +
+            qp.or_conflicts.issues.length;
+
+            return (
+            <div className="quickpass-summary-card">
+              <div className={`safety-status ${qp.overall_safe ? "safe" : "warning"}`}>
+                {qp.overall_safe
+                  ? "✅ Paper appears safe"
+                  : `⚠️ ${criticalIssues} critical issue${criticalIssues === 1 ? "" : "s"} found`}
+              </div>
+              <div className="summary-stats">
+                <span className={qp.ambiguity.safe ? "stat-safe" : "stat-warn"}>
+                  {qp.ambiguity.flags.length} ambiguity
+                </span>
+                <span className={qp.or_conflicts.safe ? "stat-safe" : "stat-warn"}>
+                  {qp.or_conflicts.issues.length} OR conflicts
+                </span>
+                <span className={qp.marks_effort.safe ? "stat-safe" : "stat-warn"}>
+                  {qp.marks_effort.warnings.length} marks issues
+                </span>
+                <span className={qp.duplicates.safe ? "stat-safe" : "stat-warn"}>
+                  {qp.duplicates.pairs.length} duplicates
+                </span>
+              </div>
+              <p className="summary-hint">
+                💡 Warnings appear below each affected question
+              </p>
+            </div>
+            );
+}
+
+            /**
+             * QuickPassWarningsForQuestion - Shows warnings for a specific question
+             */
+            function QuickPassWarningsForQuestion({qid, questionIndex, intelligence}) {
+  const qp = intelligence;
+            const warnings = [];
+
+  // Collect all warnings for this question
+  qp.ambiguity.flags.forEach((flag) => {
+    if (flag.qid === qid || flag.qid === `q_${questionIndex}` || flag.qid === `Q${questionIndex + 1}`) {
+              warnings.push({
+                type: "ambiguity",
+                severity: flag.severity,
+                issue: flag.issue,
+                suggestion: flag.suggestion,
+              });
+    }
+  });
+
+  qp.marks_effort.warnings.forEach((warn) => {
+    if (warn.qid === qid || warn.qid === `q_${questionIndex}` || warn.qid === `Q${questionIndex + 1}`) {
+              warnings.push({
+                type: "marks",
+                severity: "medium",
+                issue: warn.reason,
+                suggestion: `Adjust from ${warn.allocated_marks} to ${warn.recommended_marks} marks`,
+              });
+    }
+  });
+
+  // OR conflicts (match by pair)
+  qp.or_conflicts.issues.forEach((issue) => {
+    if (issue.pair.includes(qid)) {
+              warnings.push({
+                type: "or_conflict",
+                severity: "high",
+                issue: issue.issue,
+                suggestion: issue.recommendation,
+              });
+    }
+  });
+
+  // Duplicates (match by pair)
+  qp.duplicates.pairs.forEach((dup) => {
+    if (dup.pair.includes(qid)) {
+              warnings.push({
+                type: "duplicate",
+                severity: "medium",
+                issue: dup.explanation,
+                suggestion: "Consider removing one or modifying to test different aspects",
+              });
+    }
+  });
+
+            if (warnings.length === 0) return null;
+
+            return (
+            <div className="quickpass-warnings-inline">
+              {warnings.map((warning, idx) => (
+                <div key={idx} className={`inline-warning severity-${warning.severity}`}>
+                  <div className="warning-icon">
+                    {warning.severity === "high" ? "🔴" : warning.severity === "medium" ? "🟡" : "🔵"}
+                  </div>
+                  <div className="warning-content">
+                    <div className="warning-title">
+                      <strong>
+                        {warning.type === "ambiguity" && "Ambiguity Detected"}
+                        {warning.type === "marks" && "Marks Allocation Issue"}
+                        {warning.type === "or_conflict" && "OR Question Imbalance"}
+                        {warning.type === "duplicate" && "Duplicate Content"}
+                      </strong>
+                      <span className="severity-tag">{warning.severity}</span>
+                    </div>
+                    <p className="warning-text">{warning.issue}</p>
+                    <p className="warning-fix">💡 {warning.suggestion}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            );
+}

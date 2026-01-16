@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
+import { CheckCircle2, XCircle, FileText, ClipboardList, Upload, BookOpen, Play } from "lucide-react";
 import styles from "./Dashboard.module.css";
 import { downloadPaperAsPDF } from "@/utils/pdfGenerator";
 import { downloadCompleteQuestionPaper } from "@/utils/completePdfGenerator";
@@ -30,8 +31,8 @@ export default function TeacherDashboard() {
       body: JSON.stringify(formData),
     });
     const result = await res.json();
-    if (result.error) setMessage("❌ " + result.error);
-    else setMessage("✅ Paper created!");
+    if (result.error) setMessage(result.error);
+    else setMessage("Paper created!");
     setFormData({});
   };
 
@@ -95,8 +96,14 @@ export default function TeacherDashboard() {
           <h2 className={styles.logo}>DASES Teacher</h2>
           <nav className={styles.nav}>
             <Link href="/teacher/dashboard">Dashboard</Link>
-            <Link href="/teacher/evaluations">Evaluations</Link> {/* ✅ new */}
+            <Link href="/teacher/demo" className={styles.navItemDemo}>
+              <Play size={16} /> Try Demo
+            </Link>
+            <Link href="/teacher/evaluations">Evaluations</Link>
             <Link href="/teacher/reports">Reports</Link>
+            <Link href="/teacher/curricula" className={styles.navItemWithIcon}>
+              <BookOpen size={16} /> Manage Curricula
+            </Link>
             <Link href="/teacher/answer-sheets">Answer Sheet Generator</Link>
             <Link href="/teacher/settings">Settings</Link>
           </nav>
@@ -109,6 +116,11 @@ export default function TeacherDashboard() {
             <h2>Quick Actions</h2>
             <div className={styles.actions}>
               <button onClick={() => setModalOpen(true)}>+ Upload New Paper</button>
+              <Link href="/teacher/demo">
+                <button className={styles.demoButton}>
+                  <Play size={16} /> Try Demo
+                </button>
+              </Link>
             </div>
           </section>
 
@@ -131,7 +143,17 @@ export default function TeacherDashboard() {
                   </p>
                   <p>Max Marks: {paper.max_marks}</p>
                   <p>Status: {paper.status}</p>
-                  <p>Active: {paper.is_active ? "✅ Yes" : "❌ No"}</p>
+                  <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    Active: {paper.is_active ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <CheckCircle2 size={16} style={{ color: '#10b981' }} /> Yes
+                      </span>
+                    ) : (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <XCircle size={16} style={{ color: '#ef4444' }} /> No
+                      </span>
+                    )}
+                  </p>
                   <div className={styles.paperActions}>
                     {paper.status !== "final" ? (
                       <Link href={`/teacher/papers/${paper.id}`}>
@@ -143,19 +165,25 @@ export default function TeacherDashboard() {
                           className={`${styles.buttonBase} ${styles.primaryButton}`}
                           onClick={() => downloadPaperAsPDF(paper)}
                         >
-                          📄 Download PDF
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <FileText size={16} /> Download PDF
+                          </span>
                         </button>
 
                         <button
                           className={`${styles.buttonBase} ${styles.primaryButton}`}
                           onClick={() => downloadCompleteQuestionPaper(paper, { includeAll: true })}
                         >
-                          📋 Download Complete Paper
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <ClipboardList size={16} /> Download Complete Paper
+                          </span>
                         </button>
 
 
                         <button onClick={() => handleUploadSubmissions(paper.id)}>
-                          ⬆️ Upload Submissions
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Upload size={16} /> Upload Submissions
+                          </span>
                         </button>
                       </>
                     )}

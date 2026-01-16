@@ -4,44 +4,52 @@
   background: #fff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 12px rgba(45, 80, 22, 0.1);
 }
+
 .detailsBox {
-  background: #f7f7f7;
+  background: #F5EFE6;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
+
 .uploadForm {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .uploadForm input {
   padding: 0.6rem;
-  border: 1px solid #ddd;
+  border: 1px solid #E6DCC8;
   border-radius: 6px;
 }
+
 .uploadForm button {
-  background: #0070f3;
+  background: #059669;
   color: white;
   border: none;
   padding: 0.8rem;
   border-radius: 6px;
   cursor: pointer;
 }
+
 .uploadForm button:disabled {
-  background: gray;
+  background: #4ADE80;
 }
+
 .message {
   margin-top: 1rem;
   font-weight: 500;
 }
+
 .errorText {
   color: red;
   font-weight: 600;
 }
+
 .successText {
-  color: green;
+  color: #047857;
   font-weight: 600;
 }
