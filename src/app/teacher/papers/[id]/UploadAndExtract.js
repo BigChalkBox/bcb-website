@@ -627,7 +627,7 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
                       <div className={`${styles.card} ${styles.bloomsCard}`}>
                         <div className={styles.bloomsHeader}>
                           <div className={styles.sectionLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <Brain size={16} /> Bloom's Taxonomy Analysis
+                            <Brain size={16} /> Bloom&apos;s Taxonomy Analysis
                           </div>
                           <span className={`${styles.qualityBadge} ${coverage.blooms.insights?.quality === 'Good' ? styles.good :
                             coverage.blooms.insights?.quality === 'Average' ? styles.average : styles.poor

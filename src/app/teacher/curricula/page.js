@@ -475,7 +475,7 @@ export default function CurriculaManagement() {
 
                             <div className={styles.modalBody}>
                                 <p className={styles.modalSubtitle}>
-                                    Share "<strong>{sharingCurriculum?.subject_name}</strong>" with another teacher
+                                    Share &quot;<strong>{sharingCurriculum?.subject_name}</strong>&quot; with another teacher
                                 </p>
 
                                 <label className={styles.modalLabel}>

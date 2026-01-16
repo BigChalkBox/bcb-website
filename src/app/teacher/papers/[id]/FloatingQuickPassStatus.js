@@ -113,7 +113,7 @@ export function FloatingQuickPassStatus({ intelligence, onReanalyze, onApprove, 
                                 </div>
                                 <div className="help-item">
                                     <div className="help-title">🔁 Duplicates</div>
-                                    <p>Detects questions that test the same concept or skill. Prevents students from getting "free marks" through repetition.</p>
+                                    <p>Detects questions that test the same concept or skill. Prevents students from getting &quot;free marks&quot; through repetition.</p>
                                 </div>
                                 <div className="help-item">
                                     <div className="help-title">✏️ Marking</div>

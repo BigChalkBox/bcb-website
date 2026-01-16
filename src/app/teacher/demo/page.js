@@ -726,7 +726,7 @@ export default function DemoPage() {
                                             {/* OR Toggle */}
                                             <label className={styles.orToggle}>
                                                 <input type="checkbox" checked={q.isOr} onChange={() => toggleOrFlag(q.qid)} />
-                                                Mark as "OR" question (pairs with next)
+                                                Mark as &quot;OR&quot; question (pairs with next)
                                                 <HelpTip tip="Enable this if students can choose between this question and the next one. Only the higher score will count toward the total." />
                                             </label>
 

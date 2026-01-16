@@ -1071,7 +1071,7 @@ export default function QuestionEditor({
                   </label>
                   <p className="field-description">
                     Provide one instruction that will be applied to generate answers for all questions.
-                    Example: "generate simple theoretical answers" or "use practical examples with diagrams"
+                    Example: &quot;generate simple theoretical answers&quot; or &quot;use practical examples with diagrams&quot;
                   </p>
                   <textarea
                     value={bulkInstruction}
@@ -1184,7 +1184,7 @@ export default function QuestionEditor({
       {questions.length === 0 && (
         <div className="empty-state">
           <span className="empty-icon">📋</span>
-          <p>No questions yet. Click "Add Question" to get started.</p>
+          <p>No questions yet. Click &quot;Add Question&quot; to get started.</p>
         </div>
       )}
 
