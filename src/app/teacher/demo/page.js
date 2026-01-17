@@ -9,9 +9,9 @@ import remarkGfm from "remark-gfm";
 import { PDFDocument } from "pdf-lib";
 import styles from "./Demo.module.css";
 
-// --- PDF Compression Helper ---
-// Reduces PDF file size by re-saving without unnecessary data
-async function compressPDF(file, maxSizeMB = 4) {
+// --- PDF Compression with Image Compression ---
+// Renders each page as a compressed JPEG image, then rebuilds PDF
+async function compressPDF(file, maxSizeMB = 4, jpegQuality = 0.6) {
     const maxBytes = maxSizeMB * 1024 * 1024;
 
     // If file is already small enough, return as-is
@@ -20,37 +20,72 @@ async function compressPDF(file, maxSizeMB = 4) {
         return file;
     }
 
-    console.log(`Compressing PDF from ${(file.size / 1024 / 1024).toFixed(2)}MB...`);
+    console.log(`Compressing PDF from ${(file.size / 1024 / 1024).toFixed(2)}MB with JPEG quality ${jpegQuality}...`);
 
     try {
+        // Dynamically import pdfjs-dist to avoid SSR issues
+        const pdfjsLib = await import('pdfjs-dist');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
         const arrayBuffer = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(arrayBuffer, {
-            ignoreEncryption: true,
-            updateMetadata: false
-        });
 
-        // Remove metadata to reduce size
-        pdfDoc.setTitle('');
-        pdfDoc.setAuthor('');
-        pdfDoc.setSubject('');
-        pdfDoc.setKeywords([]);
-        pdfDoc.setProducer('');
-        pdfDoc.setCreator('');
+        // Load PDF with pdf.js for rendering
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdfDoc = await loadingTask.promise;
+        const numPages = pdfDoc.numPages;
 
-        // Save with compression
-        const compressedBytes = await pdfDoc.save({
-            useObjectStreams: true,
-            addDefaultPage: false,
-        });
+        // Create new PDF with pdf-lib
+        const newPdfDoc = await PDFDocument.create();
 
+        // Process each page
+        for (let i = 1; i <= numPages; i++) {
+            const page = await pdfDoc.getPage(i);
+            const viewport = page.getViewport({ scale: 1.5 }); // Slightly reduced scale for smaller size
+
+            // Create canvas to render page
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            // Render page to canvas
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+
+            // Convert canvas to JPEG blob with compression
+            const jpegBlob = await new Promise(resolve => {
+                canvas.toBlob(resolve, 'image/jpeg', jpegQuality);
+            });
+
+            // Embed compressed image in new PDF
+            const jpegBytes = await jpegBlob.arrayBuffer();
+            const jpegImage = await newPdfDoc.embedJpg(new Uint8Array(jpegBytes));
+
+            // Add page with the compressed image
+            const newPage = newPdfDoc.addPage([viewport.width, viewport.height]);
+            newPage.drawImage(jpegImage, {
+                x: 0,
+                y: 0,
+                width: viewport.width,
+                height: viewport.height
+            });
+
+            console.log(`Compressed page ${i}/${numPages}`);
+        }
+
+        // Save the new compressed PDF
+        const compressedBytes = await newPdfDoc.save();
         const compressedBlob = new Blob([compressedBytes], { type: 'application/pdf' });
-        const compressedFile = new File([compressedBlob], file.name, { type: 'application/pdf' });
+        let compressedFile = new File([compressedBlob], file.name, { type: 'application/pdf' });
 
         console.log(`Compressed to ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`);
 
-        // If still too large, warn but continue
-        if (compressedFile.size > maxBytes) {
-            console.warn(`Warning: PDF still larger than ${maxSizeMB}MB after compression`);
+        // If still too large, try again with lower quality
+        if (compressedFile.size > maxBytes && jpegQuality > 0.3) {
+            console.log('Still too large, trying lower quality...');
+            return compressPDF(file, maxSizeMB, jpegQuality - 0.15);
         }
 
         return compressedFile;
