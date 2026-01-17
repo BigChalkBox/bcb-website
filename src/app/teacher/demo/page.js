@@ -6,96 +6,8 @@ import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { PDFDocument } from "pdf-lib";
 import styles from "./Demo.module.css";
 
-// --- PDF Compression with Image Compression ---
-// Renders each page as a compressed JPEG image, then rebuilds PDF
-async function compressPDF(file, maxSizeMB = 4, jpegQuality = 0.6) {
-    const maxBytes = maxSizeMB * 1024 * 1024;
-
-    // If file is already small enough, return as-is
-    if (file.size <= maxBytes) {
-        console.log(`PDF already under ${maxSizeMB}MB (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
-        return file;
-    }
-
-    console.log(`Compressing PDF from ${(file.size / 1024 / 1024).toFixed(2)}MB with JPEG quality ${jpegQuality}...`);
-
-    try {
-        // Dynamically import pdfjs-dist legacy build to avoid SSR issues
-        const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
-        // Use unpkg which has all versions (cdnjs may not have latest)
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/legacy/build/pdf.worker.min.mjs`;
-
-        const arrayBuffer = await file.arrayBuffer();
-
-        // Load PDF with pdf.js for rendering
-        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-        const pdfDoc = await loadingTask.promise;
-        const numPages = pdfDoc.numPages;
-
-        // Create new PDF with pdf-lib
-        const newPdfDoc = await PDFDocument.create();
-
-        // Process each page
-        for (let i = 1; i <= numPages; i++) {
-            const page = await pdfDoc.getPage(i);
-            const viewport = page.getViewport({ scale: 1.5 }); // Slightly reduced scale for smaller size
-
-            // Create canvas to render page
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-
-            // Render page to canvas
-            await page.render({
-                canvasContext: context,
-                viewport: viewport
-            }).promise;
-
-            // Convert canvas to JPEG blob with compression
-            const jpegBlob = await new Promise(resolve => {
-                canvas.toBlob(resolve, 'image/jpeg', jpegQuality);
-            });
-
-            // Embed compressed image in new PDF
-            const jpegBytes = await jpegBlob.arrayBuffer();
-            const jpegImage = await newPdfDoc.embedJpg(new Uint8Array(jpegBytes));
-
-            // Add page with the compressed image
-            const newPage = newPdfDoc.addPage([viewport.width, viewport.height]);
-            newPage.drawImage(jpegImage, {
-                x: 0,
-                y: 0,
-                width: viewport.width,
-                height: viewport.height
-            });
-
-            console.log(`Compressed page ${i}/${numPages}`);
-        }
-
-        // Save the new compressed PDF
-        const compressedBytes = await newPdfDoc.save();
-        const compressedBlob = new Blob([compressedBytes], { type: 'application/pdf' });
-        let compressedFile = new File([compressedBlob], file.name, { type: 'application/pdf' });
-
-        console.log(`Compressed to ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`);
-
-        // If still too large, try again with lower quality
-        if (compressedFile.size > maxBytes && jpegQuality > 0.3) {
-            console.log('Still too large, trying lower quality...');
-            return compressPDF(file, maxSizeMB, jpegQuality - 0.15);
-        }
-
-        return compressedFile;
-    } catch (err) {
-        console.error('PDF compression failed:', err);
-        // Return original file if compression fails
-        return file;
-    }
-}
 
 // --- Tooltip Component ---
 const Tooltip = ({ text, children }) => (
@@ -556,14 +468,18 @@ export default function DemoPage() {
         const file = e.target.files?.[0];
         if (!file || !paperId) return;
 
+        // Simple file size check - Vercel has 4.5MB limit
+        const maxSizeMB = 4;
+        const fileSizeMB = file.size / (1024 * 1024);
+        if (fileSizeMB > maxSizeMB) {
+            showToast("error", `File too large (${fileSizeMB.toFixed(1)}MB). Please upload a PDF under ${maxSizeMB}MB.`);
+            return;
+        }
+
         setLoading((l) => ({ ...l, submit: true }));
         try {
-            // Compress PDF to reduce file size (Vercel has 4.5MB limit)
-            showToast("success", "Compressing PDF...");
-            const compressedFile = await compressPDF(file, 4);
-
             const fd = new FormData();
-            fd.append("file", compressedFile);
+            fd.append("file", file);
             fd.append("student_name", "Demo Student");
             fd.append("enrollment_no", `DEMO-${Date.now()}`);
             fd.append("email", "demo@example.com");
