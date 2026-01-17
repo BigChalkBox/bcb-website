@@ -2,6 +2,9 @@
 import DOMMatrix from "dommatrix";
 import { Path2D } from "path2d";
 
+// Force bundle of @napi-rs/canvas (required by pdfjs-dist)
+import "@napi-rs/canvas";
+
 // Apply Polyfills immediately
 if (typeof globalThis.DOMMatrix === "undefined") {
   globalThis.DOMMatrix = DOMMatrix;
