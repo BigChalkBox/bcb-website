@@ -9,8 +9,8 @@ const nextConfig = {
       },
     ],
   },
-  // Force sharp to be treated as external package for Vercel compatibility
-  serverExternalPackages: ['sharp'],
+  // External packages that need native binaries
+  serverExternalPackages: ['sharp', 'pdf2pic'],
 };
 
 export default nextConfig;
