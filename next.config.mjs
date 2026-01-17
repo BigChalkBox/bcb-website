@@ -10,7 +10,7 @@ const nextConfig = {
     ],
   },
   // External packages that need native binaries
-  serverExternalPackages: ['sharp', 'canvas', 'pdfjs-dist'],
+  serverExternalPackages: ['sharp', 'canvas', 'pdfjs-dist', '@napi-rs/canvas'],
 };
 
 export default nextConfig;
