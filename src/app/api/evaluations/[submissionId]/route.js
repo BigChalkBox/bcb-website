@@ -1,3 +1,36 @@
+// Polyfills for Node.js (required for pdfjs-dist on Vercel)
+import { DOMMatrix } from "dommatrix";
+import { Path2D } from "path2d";
+
+// Polyfill DOMMatrix
+if (typeof globalThis.DOMMatrix === "undefined") {
+  globalThis.DOMMatrix = DOMMatrix;
+}
+
+// Polyfill Path2D
+if (typeof globalThis.Path2D === "undefined") {
+  globalThis.Path2D = Path2D;
+}
+
+// Polyfill ImageData
+if (typeof globalThis.ImageData === "undefined") {
+  globalThis.ImageData = class ImageData {
+    constructor(data, width, height) {
+      if (arguments.length === 2) {
+        // ImageData(width, height)
+        this.width = data;
+        this.height = width;
+        this.data = new Uint8ClampedArray(this.width * this.height * 4);
+      } else if (arguments.length === 3) {
+        // ImageData(data, width, height)
+        this.data = data;
+        this.width = width;
+        this.height = height;
+      }
+    }
+  };
+}
+
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
