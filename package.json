@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "npm rebuild sharp || true"
   },
   "dependencies": {
     "@google/genai": "^1.21.0",
@@ -32,6 +33,7 @@
     "react-markdown": "^10.1.0",
     "react-slick": "^0.31.0",
     "remark-gfm": "^4.0.1",
+    "sharp": "^0.33.5",
     "slick-carousel": "^1.8.1",
     "svg2pdf.js": "^2.6.0",
     "three": "^0.180.0"

@@ -1,15 +1,15 @@
 {
     "functions": {
-        "src/app/api/papers/[id]/submissions/route.js": {
+        "app/api/papers/[id]/submissions/route.js": {
             "maxDuration": 60
         },
-        "src/app/api/evaluations/[submissionId]/route.js": {
+        "app/api/evaluations/[submissionId]/route.js": {
             "maxDuration": 300
         },
-        "src/app/api/evaluations/[submissionId]/evaluate/route.js": {
+        "app/api/evaluations/[submissionId]/evaluate/route.js": {
             "maxDuration": 300
         },
-        "src/app/api/extract/route.js": {
+        "app/api/extract/route.js": {
             "maxDuration": 60
         }
     }
