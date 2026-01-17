@@ -6,11 +6,10 @@ import Header from "@/components/HeaderSub";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize Supabase client for uploads
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+// Initialize Authenticated Supabase client
+const supabase = createClientComponentClient();
 
 export default function EvaluationsPage() {
   const [papers, setPapers] = useState([]);
