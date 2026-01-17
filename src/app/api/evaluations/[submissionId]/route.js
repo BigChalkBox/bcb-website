@@ -1,42 +1,13 @@
-// Polyfills for Node.js (required for pdfjs-dist on Vercel)
-import DOMMatrix from "dommatrix";
-import { Path2D } from "path2d";
-
-// Polyfill DOMMatrix
-if (typeof globalThis.DOMMatrix === "undefined") {
-  globalThis.DOMMatrix = DOMMatrix;
-}
-
-// Polyfill Path2D
-if (typeof globalThis.Path2D === "undefined") {
-  globalThis.Path2D = Path2D;
-}
-
-// Polyfill ImageData
-if (typeof globalThis.ImageData === "undefined") {
-  globalThis.ImageData = class ImageData {
-    constructor(data, width, height) {
-      if (arguments.length === 2) {
-        // ImageData(width, height)
-        this.width = data;
-        this.height = width;
-        this.data = new Uint8ClampedArray(this.width * this.height * 4);
-      } else if (arguments.length === 3) {
-        // ImageData(data, width, height)
-        this.data = data;
-        this.width = width;
-        this.height = height;
-      }
-    }
-  };
-}
-
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
-
+import fs from "fs/promises";
+import path from "path";
+import { tmpdir } from "os";
+import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
-import { pdf } from "pdf-to-img";
+import { fromPath } from "pdf2pic";
+import { execSync } from "child_process";
 
 // ⚙️ Initialize Supabase + Gemini
 const supabase = createClient(
@@ -80,33 +51,54 @@ export async function POST(req, { params }) {
     if (fileError || !fileData?.signedUrl)
       throw new Error("Failed to generate signed URL for submission file");
 
-    // ⬇️ Download PDF as buffer
+    // ⬇️ Download PDF to temp directory
+    const tempDir = path.join(tmpdir(), `eval_${uuidv4()}`);
+    await fs.mkdir(tempDir, { recursive: true });
+    const pdfPath = path.join(tempDir, "input.pdf");
+
     const res = await fetch(fileData.signedUrl);
     if (!res.ok)
       throw new Error(`Failed to download PDF (status: ${res.status})`);
 
     const arrayBuffer = await res.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
-    console.log("📘 PDF downloaded successfully, size:", pdfBuffer.length, "bytes");
+    await fs.writeFile(pdfPath, Buffer.from(arrayBuffer));
+    console.log("📘 PDF downloaded successfully →", pdfPath);
 
-    // � Convert PDF to images using pdf-to-img
-    const pdfDocument = await pdf(pdfBuffer, { scale: 2.0 });
-    console.log(`📚 Processing PDF pages...`);
+    // 📄 Initialize pdf2pic converter
+    const convert = fromPath(pdfPath, {
+      density: 200,
+      saveFilename: "page",
+      savePath: tempDir,
+      format: "png",
+      width: 1200,
+      height: 1600,
+    });
 
+    // 🔢 Get total number of pages
+    let totalPages = 1;
+    try {
+      const output = execSync(`pdfinfo "${pdfPath}" | grep Pages`).toString();
+      const match = output.match(/\d+/);
+      if (match) totalPages = parseInt(match[0], 10);
+    } catch {
+      console.warn("⚠️ Unable to count pages accurately, defaulting to 1");
+    }
+
+    console.log(`📚 Processing ${totalPages} pages...`);
     const results = [];
-    let pageNumber = 0;
 
-    for await (const imageBuffer of pdfDocument) {
-      pageNumber++;
-      console.log(`🖼️ Processing page ${pageNumber}...`);
+    for (let i = 1; i <= totalPages; i++) {
+      console.log(`🖼️ Converting page ${i}...`);
+      const output = await convert(i);
+      const imagePath = output?.path;
+      if (!imagePath) throw new Error(`Failed to convert page ${i}`);
 
-      // Convert Uint8Array to Buffer if needed
-      const imgBuffer = Buffer.isBuffer(imageBuffer) ? imageBuffer : Buffer.from(imageBuffer);
+      const imageBuffer = await fs.readFile(imagePath);
 
-      // ✂️ Crop top 25% for question number detection
-      const metadata = await sharp(imgBuffer).metadata();
+      // ✂️ Crop top 25%
+      const metadata = await sharp(imageBuffer).metadata();
       const cropHeight = Math.floor(metadata.height * 0.25);
-      const croppedBuffer = await sharp(imgBuffer)
+      const croppedBuffer = await sharp(imageBuffer)
         .extract({
           left: 0,
           top: 0,
@@ -146,14 +138,7 @@ Return valid JSON:
 
       let question_no = null;
       try {
-        // Clean up markdown if present
-        let cleanJson = rawText;
-        if (cleanJson.startsWith("```json")) cleanJson = cleanJson.slice(7);
-        if (cleanJson.startsWith("```")) cleanJson = cleanJson.slice(3);
-        if (cleanJson.endsWith("```")) cleanJson = cleanJson.slice(0, -3);
-        cleanJson = cleanJson.trim();
-
-        const parsed = JSON.parse(cleanJson);
+        const parsed = JSON.parse(rawText);
         question_no = parsed?.question_no || null;
       } catch {
         const match = rawText.match(/\d+/);
@@ -162,22 +147,17 @@ Return valid JSON:
 
       // 🗂️ Upload full page image to Supabase in question folder
       const qFolder = question_no ? `q${question_no}` : "unassigned";
-      const uploadPath = `${submissionId}/${qFolder}/page_${pageNumber}.png`;
+      const uploadPath = `${submissionId}/${qFolder}/page_${i}.png`;
 
       const { error: uploadErr } = await supabase.storage
         .from("submissions")
-        .upload(uploadPath, imgBuffer, {
-          upsert: true,
-          contentType: "image/png"
-        });
+        .upload(uploadPath, imageBuffer, { upsert: true });
 
       if (uploadErr)
-        console.error(`⚠️ Upload error (page ${pageNumber}):`, uploadErr.message);
-      else
-        console.log(`✅ Uploaded page ${pageNumber} to ${uploadPath}`);
+        console.error(`⚠️ Upload error (page ${i}):`, uploadErr.message);
 
       results.push({
-        page: pageNumber,
+        page: i,
         question_no,
         uploaded_to: uploadPath,
         rawText,
@@ -186,7 +166,7 @@ Return valid JSON:
 
     console.log(`✅ OCR extraction & upload complete for ${results.length} pages.`);
 
-    // ✅ Update evaluation status in Supabase
+    // ✅ NEW: Update evaluation status in Supabase
     const { error: upsertError } = await supabase
       .from("evaluations")
       .upsert(
@@ -201,8 +181,7 @@ Return valid JSON:
 
     if (upsertError)
       console.error("⚠️ Failed to update evaluation status:", upsertError.message);
-    else
-      console.log(`📊 Evaluation status set to 'Pages Detected' for ${submissionId}`);
+    else console.log(`📊 Evaluation status set to 'Pages Detected' for ${submissionId}`);
 
     return NextResponse.json({ success: true, data: results });
   } catch (err) {
