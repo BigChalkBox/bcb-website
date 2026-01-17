@@ -35,20 +35,22 @@ export async function POST(req) {
             );
         }
 
-        // Convert base64 to buffer
+        // Convert base64 to buffer and detect type
+        const isJpeg = imageBase64.startsWith("data:image/jpeg");
         const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
         const buffer = Buffer.from(base64Data, "base64");
 
-        // Determine folder
+        // Determine folder and filename
         const qFolder = questionNo ? `q${questionNo}` : "unassigned";
-        const uploadPath = `${submissionId}/${qFolder}/page_${pageNumber}.png`;
+        const ext = isJpeg ? "jpg" : "png";
+        const uploadPath = `${submissionId}/${qFolder}/page_${pageNumber}.${ext}`;
 
         // Upload to Supabase Storage
         const { error: uploadErr } = await supabase.storage
             .from("submissions")
             .upload(uploadPath, buffer, {
                 upsert: true,
-                contentType: "image/png",
+                contentType: isJpeg ? "image/jpeg" : "image/png",
             });
 
         if (uploadErr) {

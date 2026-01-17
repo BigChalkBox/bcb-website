@@ -540,7 +540,7 @@ export default function DemoPage() {
                 setDetectProgress(`Processing page ${i}/${numPages}...`);
 
                 const page = await pdfDoc.getPage(i);
-                const viewport = page.getViewport({ scale: 2.0 });
+                const viewport = page.getViewport({ scale: 1.5 });
 
                 const canvas = document.createElement("canvas");
                 canvas.width = viewport.width;
@@ -556,7 +556,7 @@ export default function DemoPage() {
                 croppedCanvas.height = cropHeight;
                 const croppedCtx = croppedCanvas.getContext("2d");
                 croppedCtx.drawImage(canvas, 0, 0, viewport.width, cropHeight, 0, 0, viewport.width, cropHeight);
-                const croppedBase64 = croppedCanvas.toDataURL("image/png");
+                const croppedBase64 = croppedCanvas.toDataURL("image/jpeg", 0.85);
 
                 // Detect question number
                 setDetectProgress(`Detecting Q number for page ${i}...`);
@@ -570,7 +570,7 @@ export default function DemoPage() {
 
                 // Upload full image via server API
                 setDetectProgress(`Uploading page ${i}...`);
-                const fullBase64 = canvas.toDataURL("image/png");
+                const fullBase64 = canvas.toDataURL("image/jpeg", 0.8);
                 const uploadRes = await fetch("/api/upload-page-image", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

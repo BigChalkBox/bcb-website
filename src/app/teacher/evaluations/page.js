@@ -127,7 +127,7 @@ export default function EvaluationsPage() {
 
         // Get page
         const page = await pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 });
+        const viewport = page.getViewport({ scale: 1.5 });
 
         // Create canvas
         const canvas = document.createElement("canvas");
@@ -143,7 +143,7 @@ export default function EvaluationsPage() {
 
         // Convert full page to blob
         const fullBlob = await new Promise((resolve) =>
-          canvas.toBlob(resolve, "image/png")
+          canvas.toBlob(resolve, "image/jpeg", 0.8)
         );
 
         // Crop top 25% for question detection
@@ -159,7 +159,7 @@ export default function EvaluationsPage() {
         );
 
         // Convert cropped to base64
-        const croppedBase64 = croppedCanvas.toDataURL("image/png");
+        const croppedBase64 = croppedCanvas.toDataURL("image/jpeg", 0.85);
 
         // 4. Send to API for question detection
         setDetectProgress(`Detecting Q number for page ${i}...`);
@@ -173,7 +173,7 @@ export default function EvaluationsPage() {
         console.log(`📝 Page ${i}: Q${questionNo || "?"}`);
 
         // 5. Upload full image via server API (bypasses RLS)
-        const fullBase64 = canvas.toDataURL("image/png");
+        const fullBase64 = canvas.toDataURL("image/jpeg", 0.8);
 
         setDetectProgress(`Uploading page ${i}...`);
         const uploadRes = await fetch("/api/upload-page-image", {
