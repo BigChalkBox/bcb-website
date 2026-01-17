@@ -62,15 +62,20 @@ export async function POST(req, { params }) {
     // Define NodeCanvasFactory for Node.js environment
     class NodeCanvasFactory {
       create(width, height) {
-        const canvas = createCanvas(width, height);
+        // Ensure dimensions are integers to avoid native binding errors
+        const w = Math.floor(width);
+        const h = Math.floor(height);
+        console.log(`🎨 Creating canvas ${w}x${h}`);
+        const canvas = createCanvas(w, h);
         const context = canvas.getContext("2d");
         return { canvas, context };
       }
 
       reset(canvasAndContext, width, height) {
-        canvasAndContext.canvas.width = width;
-        canvasAndContext.canvas.height = height;
+        canvasAndContext.canvas.width = Math.floor(width);
+        canvasAndContext.canvas.height = Math.floor(height);
       }
+
 
       destroy(canvasAndContext) {
         canvasAndContext.canvas.width = 0;
