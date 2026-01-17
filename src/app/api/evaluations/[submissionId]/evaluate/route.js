@@ -2,8 +2,6 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { createClient } from "@supabase/supabase-js";
-import fs from "fs";
-import path from "path";
 
 const genAI = new GoogleGenAI({
     apiKey: process.env.GOOGLE_API_KEY,
@@ -15,22 +13,9 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// 🧾 Log file path
-const LOG_FILE_PATH = path.resolve("./gemini_eval.log");
-
-// 🔧 Helper: Append structured logs safely
+// 🔧 Helper: Log to console (Vercel filesystem is read-only)
 function appendToLog(data) {
-    try {
-        const timestamp = new Date().toISOString();
-        const entry = `\n\n=== [${timestamp}] Gemini Evaluation Log ===\n${JSON.stringify(
-            data,
-            null,
-            2
-        )}\n==========================================\n`;
-        fs.appendFileSync(LOG_FILE_PATH, entry, "utf8");
-    } catch (err) {
-        console.error("Failed to write to gemini_eval.log:", err);
-    }
+    console.log("[GEMINI_EVAL]", JSON.stringify(data, null, 2));
 }
 
 export async function POST(request, { params }) {
