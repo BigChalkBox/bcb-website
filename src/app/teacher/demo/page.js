@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "@/components/HeaderSub";
 import { FileText, CheckCircle2, Zap, Loader2, ChevronDown, ChevronRight, Upload, AlertTriangle, Download, Sparkles, ClipboardList, Edit3, BookOpen, AlertCircle, RefreshCw, HelpCircle } from "lucide-react";
 import "katex/dist/katex.min.css";
@@ -96,8 +96,25 @@ export default function DemoPage() {
     const [sampleImages, setSampleImages] = useState({}); // { qid: [url1, url2, ...] }
     const [rubrics, setRubrics] = useState({});
     const [submissionId, setSubmissionId] = useState(null);
+    const [submissionFilePath, setSubmissionFilePath] = useState(null);
     const [evaluationResult, setEvaluationResult] = useState(null);
     const [editingAnswer, setEditingAnswer] = useState({});
+    const [detectProgress, setDetectProgress] = useState("");
+    const pdfJsLoaded = useRef(false);
+
+    // Load pdf.js from CDN
+    useEffect(() => {
+        if (pdfJsLoaded.current) return;
+        const script = document.createElement("script");
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+        script.onload = () => {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+            pdfJsLoaded.current = true;
+            console.log("✅ pdf.js loaded");
+        };
+        document.head.appendChild(script);
+    }, []);
 
     // --- Step Visibility & Loading ---
     const [currentStep, setCurrentStep] = useState(1);
@@ -486,6 +503,7 @@ export default function DemoPage() {
 
             const json = await fetchFormDataWithRetry(`/api/papers/${paperId}/submissions`, fd);
             setSubmissionId(json.submission.id);
+            setSubmissionFilePath(json.submission.file_path);
             setStepCompleted((s) => ({ ...s, 3: true }));
             setCurrentStep(4);
             showToast("success", "Answer sheet submitted!");
@@ -496,21 +514,85 @@ export default function DemoPage() {
         }
     };
 
-    // --- Step 4: Evaluate ---
-    // --- Step 4: Evaluate (now includes detection step) ---
+    // --- Step 4: Evaluate (CLIENT-SIDE PDF PROCESSING) ---
     const handleEvaluate = async () => {
-        if (!submissionId || !paperId) return;
+        if (!submissionId || !paperId || !submissionFilePath) return;
+        if (!pdfJsLoaded.current) {
+            showToast("error", "PDF.js is still loading. Please wait a moment.");
+            return;
+        }
+
         setLoading((l) => ({ ...l, evaluate: true }));
         try {
-            // Step 1: Run detection first (converts PDF pages, detects questions, creates evaluation record)
+            // Step 1: Load PDF using browser pdf.js
             showToast("success", "Processing PDF pages...");
-            await fetchWithRetry(`/api/evaluations/${submissionId}`, {
+            setDetectProgress("Loading PDF...");
+
+            const pdfUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/submissions/${submissionFilePath}`;
+            const loadingTask = window.pdfjsLib.getDocument(pdfUrl);
+            const pdfDoc = await loadingTask.promise;
+            const numPages = pdfDoc.numPages;
+
+            const results = [];
+
+            // Step 2: Process each page
+            for (let i = 1; i <= numPages; i++) {
+                setDetectProgress(`Processing page ${i}/${numPages}...`);
+
+                const page = await pdfDoc.getPage(i);
+                const viewport = page.getViewport({ scale: 2.0 });
+
+                const canvas = document.createElement("canvas");
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                const ctx = canvas.getContext("2d");
+
+                await page.render({ canvasContext: ctx, viewport }).promise;
+
+                // Crop top 25% for detection
+                const cropHeight = Math.floor(viewport.height * 0.25);
+                const croppedCanvas = document.createElement("canvas");
+                croppedCanvas.width = viewport.width;
+                croppedCanvas.height = cropHeight;
+                const croppedCtx = croppedCanvas.getContext("2d");
+                croppedCtx.drawImage(canvas, 0, 0, viewport.width, cropHeight, 0, 0, viewport.width, cropHeight);
+                const croppedBase64 = croppedCanvas.toDataURL("image/png");
+
+                // Detect question number
+                setDetectProgress(`Detecting Q number for page ${i}...`);
+                const detectRes = await fetch("/api/detect-question", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ image: croppedBase64 }),
+                });
+                const detectJson = await detectRes.json();
+                const questionNo = detectJson.question_no;
+
+                // Upload full image via server API
+                setDetectProgress(`Uploading page ${i}...`);
+                const fullBase64 = canvas.toDataURL("image/png");
+                const uploadRes = await fetch("/api/upload-page-image", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ submissionId, questionNo, pageNumber: i, imageBase64: fullBase64 }),
+                });
+                const uploadJson = await uploadRes.json();
+
+                results.push({ page: i, question_no: questionNo, uploaded_to: uploadJson.path || "" });
+            }
+
+            // Step 3: Update evaluation status
+            setDetectProgress("Updating database...");
+            await fetch(`/api/evaluations/${submissionId}`, {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "Pages Detected", result: { total_pages: results.length, pages: results } }),
             });
 
             showToast("success", "Pages detected! Starting evaluation...");
 
-            // Step 2: Run actual evaluation
+            // Step 4: Run actual evaluation
+            setDetectProgress("Running AI evaluation...");
             const json = await fetchWithRetry(`/api/evaluations/${submissionId}/evaluate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -523,6 +605,7 @@ export default function DemoPage() {
             showToast("error", err.message);
         } finally {
             setLoading((l) => ({ ...l, evaluate: false }));
+            setDetectProgress("");
         }
     };
 
