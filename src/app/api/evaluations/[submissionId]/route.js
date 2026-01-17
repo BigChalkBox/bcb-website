@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
-import { v4 as uuidv4 } from "uuid";
+
 import sharp from "sharp";
+import { pdf } from "pdf-to-img";
 
 // ⚙️ Initialize Supabase + Gemini
 const supabase = createClient(
@@ -16,44 +17,6 @@ const genAI = new GoogleGenAI({
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // long processing allowed
-
-// Helper function to render PDF page to PNG buffer using pdfjs-dist + node-canvas
-async function renderPdfPageToPng(pdfBuffer, pageNum, scale = 2.0) {
-  // Dynamic import to avoid SSR issues
-  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const { createCanvas } = await import("canvas");
-
-  // Load the PDF document
-  const loadingTask = pdfjsLib.getDocument({ data: pdfBuffer });
-  const pdfDoc = await loadingTask.promise;
-
-  // Get the specific page
-  const page = await pdfDoc.getPage(pageNum);
-  const viewport = page.getViewport({ scale });
-
-  // Create a canvas with node-canvas
-  const canvas = createCanvas(viewport.width, viewport.height);
-  const context = canvas.getContext("2d");
-
-  // Render the page to the canvas
-  await page.render({
-    canvasContext: context,
-    viewport: viewport,
-  }).promise;
-
-  // Convert canvas to PNG buffer
-  const pngBuffer = canvas.toBuffer("image/png");
-
-  return pngBuffer;
-}
-
-// Helper function to get total pages in PDF
-async function getPdfPageCount(pdfBuffer) {
-  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const loadingTask = pdfjsLib.getDocument({ data: pdfBuffer });
-  const pdfDoc = await loadingTask.promise;
-  return pdfDoc.numPages;
-}
 
 export async function POST(req, { params }) {
   try {
@@ -93,22 +56,24 @@ export async function POST(req, { params }) {
     const pdfBuffer = Buffer.from(arrayBuffer);
     console.log("📘 PDF downloaded successfully, size:", pdfBuffer.length, "bytes");
 
-    // 🔢 Get total number of pages
-    const totalPages = await getPdfPageCount(pdfBuffer);
-    console.log(`📚 Processing ${totalPages} pages...`);
+    // � Convert PDF to images using pdf-to-img
+    const pdfDocument = await pdf(pdfBuffer, { scale: 2.0 });
+    console.log(`📚 Processing PDF pages...`);
 
     const results = [];
+    let pageNumber = 0;
 
-    for (let i = 1; i <= totalPages; i++) {
-      console.log(`🖼️ Converting page ${i}...`);
+    for await (const imageBuffer of pdfDocument) {
+      pageNumber++;
+      console.log(`🖼️ Processing page ${pageNumber}...`);
 
-      // Render page to PNG using pdfjs-dist + node-canvas
-      const imageBuffer = await renderPdfPageToPng(pdfBuffer, i, 2.0);
+      // Convert Uint8Array to Buffer if needed
+      const imgBuffer = Buffer.isBuffer(imageBuffer) ? imageBuffer : Buffer.from(imageBuffer);
 
       // ✂️ Crop top 25% for question number detection
-      const metadata = await sharp(imageBuffer).metadata();
+      const metadata = await sharp(imgBuffer).metadata();
       const cropHeight = Math.floor(metadata.height * 0.25);
-      const croppedBuffer = await sharp(imageBuffer)
+      const croppedBuffer = await sharp(imgBuffer)
         .extract({
           left: 0,
           top: 0,
@@ -164,22 +129,22 @@ Return valid JSON:
 
       // 🗂️ Upload full page image to Supabase in question folder
       const qFolder = question_no ? `q${question_no}` : "unassigned";
-      const uploadPath = `${submissionId}/${qFolder}/page_${i}.png`;
+      const uploadPath = `${submissionId}/${qFolder}/page_${pageNumber}.png`;
 
       const { error: uploadErr } = await supabase.storage
         .from("submissions")
-        .upload(uploadPath, imageBuffer, {
+        .upload(uploadPath, imgBuffer, {
           upsert: true,
           contentType: "image/png"
         });
 
       if (uploadErr)
-        console.error(`⚠️ Upload error (page ${i}):`, uploadErr.message);
+        console.error(`⚠️ Upload error (page ${pageNumber}):`, uploadErr.message);
       else
-        console.log(`✅ Uploaded page ${i} to ${uploadPath}`);
+        console.log(`✅ Uploaded page ${pageNumber} to ${uploadPath}`);
 
       results.push({
-        page: i,
+        page: pageNumber,
         question_no,
         uploaded_to: uploadPath,
         rawText,
