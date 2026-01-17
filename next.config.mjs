@@ -10,7 +10,7 @@ const nextConfig = {
     ],
   },
   // External packages that need native binaries
-  serverExternalPackages: ['sharp', 'pdf2pic'],
+  serverExternalPackages: ['sharp', 'canvas', 'pdfjs-dist'],
 };
 
 export default nextConfig;

@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
-import fs from "fs/promises";
-import path from "path";
-import { tmpdir } from "os";
 import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
-import { fromPath } from "pdf2pic";
-import { execSync } from "child_process";
 
 // ⚙️ Initialize Supabase + Gemini
 const supabase = createClient(
@@ -21,6 +16,44 @@ const genAI = new GoogleGenAI({
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // long processing allowed
+
+// Helper function to render PDF page to PNG buffer using pdfjs-dist + node-canvas
+async function renderPdfPageToPng(pdfBuffer, pageNum, scale = 2.0) {
+  // Dynamic import to avoid SSR issues
+  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const { createCanvas } = await import("canvas");
+
+  // Load the PDF document
+  const loadingTask = pdfjsLib.getDocument({ data: pdfBuffer });
+  const pdfDoc = await loadingTask.promise;
+
+  // Get the specific page
+  const page = await pdfDoc.getPage(pageNum);
+  const viewport = page.getViewport({ scale });
+
+  // Create a canvas with node-canvas
+  const canvas = createCanvas(viewport.width, viewport.height);
+  const context = canvas.getContext("2d");
+
+  // Render the page to the canvas
+  await page.render({
+    canvasContext: context,
+    viewport: viewport,
+  }).promise;
+
+  // Convert canvas to PNG buffer
+  const pngBuffer = canvas.toBuffer("image/png");
+
+  return pngBuffer;
+}
+
+// Helper function to get total pages in PDF
+async function getPdfPageCount(pdfBuffer) {
+  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const loadingTask = pdfjsLib.getDocument({ data: pdfBuffer });
+  const pdfDoc = await loadingTask.promise;
+  return pdfDoc.numPages;
+}
 
 export async function POST(req, { params }) {
   try {
@@ -51,51 +84,28 @@ export async function POST(req, { params }) {
     if (fileError || !fileData?.signedUrl)
       throw new Error("Failed to generate signed URL for submission file");
 
-    // ⬇️ Download PDF to temp directory
-    const tempDir = path.join(tmpdir(), `eval_${uuidv4()}`);
-    await fs.mkdir(tempDir, { recursive: true });
-    const pdfPath = path.join(tempDir, "input.pdf");
-
+    // ⬇️ Download PDF as buffer
     const res = await fetch(fileData.signedUrl);
     if (!res.ok)
       throw new Error(`Failed to download PDF (status: ${res.status})`);
 
     const arrayBuffer = await res.arrayBuffer();
-    await fs.writeFile(pdfPath, Buffer.from(arrayBuffer));
-    console.log("📘 PDF downloaded successfully →", pdfPath);
-
-    // 📄 Initialize pdf2pic converter
-    const convert = fromPath(pdfPath, {
-      density: 200,
-      saveFilename: "page",
-      savePath: tempDir,
-      format: "png",
-      width: 1200,
-      height: 1600,
-    });
+    const pdfBuffer = Buffer.from(arrayBuffer);
+    console.log("📘 PDF downloaded successfully, size:", pdfBuffer.length, "bytes");
 
     // 🔢 Get total number of pages
-    let totalPages = 1;
-    try {
-      const output = execSync(`pdfinfo "${pdfPath}" | grep Pages`).toString();
-      const match = output.match(/\d+/);
-      if (match) totalPages = parseInt(match[0], 10);
-    } catch {
-      console.warn("⚠️ Unable to count pages accurately, defaulting to 1");
-    }
-
+    const totalPages = await getPdfPageCount(pdfBuffer);
     console.log(`📚 Processing ${totalPages} pages...`);
+
     const results = [];
 
     for (let i = 1; i <= totalPages; i++) {
       console.log(`🖼️ Converting page ${i}...`);
-      const output = await convert(i);
-      const imagePath = output?.path;
-      if (!imagePath) throw new Error(`Failed to convert page ${i}`);
 
-      const imageBuffer = await fs.readFile(imagePath);
+      // Render page to PNG using pdfjs-dist + node-canvas
+      const imageBuffer = await renderPdfPageToPng(pdfBuffer, i, 2.0);
 
-      // ✂️ Crop top 25%
+      // ✂️ Crop top 25% for question number detection
       const metadata = await sharp(imageBuffer).metadata();
       const cropHeight = Math.floor(metadata.height * 0.25);
       const croppedBuffer = await sharp(imageBuffer)
@@ -138,7 +148,14 @@ Return valid JSON:
 
       let question_no = null;
       try {
-        const parsed = JSON.parse(rawText);
+        // Clean up markdown if present
+        let cleanJson = rawText;
+        if (cleanJson.startsWith("```json")) cleanJson = cleanJson.slice(7);
+        if (cleanJson.startsWith("```")) cleanJson = cleanJson.slice(3);
+        if (cleanJson.endsWith("```")) cleanJson = cleanJson.slice(0, -3);
+        cleanJson = cleanJson.trim();
+
+        const parsed = JSON.parse(cleanJson);
         question_no = parsed?.question_no || null;
       } catch {
         const match = rawText.match(/\d+/);
@@ -151,10 +168,15 @@ Return valid JSON:
 
       const { error: uploadErr } = await supabase.storage
         .from("submissions")
-        .upload(uploadPath, imageBuffer, { upsert: true });
+        .upload(uploadPath, imageBuffer, {
+          upsert: true,
+          contentType: "image/png"
+        });
 
       if (uploadErr)
         console.error(`⚠️ Upload error (page ${i}):`, uploadErr.message);
+      else
+        console.log(`✅ Uploaded page ${i} to ${uploadPath}`);
 
       results.push({
         page: i,
@@ -166,7 +188,7 @@ Return valid JSON:
 
     console.log(`✅ OCR extraction & upload complete for ${results.length} pages.`);
 
-    // ✅ NEW: Update evaluation status in Supabase
+    // ✅ Update evaluation status in Supabase
     const { error: upsertError } = await supabase
       .from("evaluations")
       .upsert(
@@ -181,7 +203,8 @@ Return valid JSON:
 
     if (upsertError)
       console.error("⚠️ Failed to update evaluation status:", upsertError.message);
-    else console.log(`📊 Evaluation status set to 'Pages Detected' for ${submissionId}`);
+    else
+      console.log(`📊 Evaluation status set to 'Pages Detected' for ${submissionId}`);
 
     return NextResponse.json({ success: true, data: results });
   } catch (err) {
