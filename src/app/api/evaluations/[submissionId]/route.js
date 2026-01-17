@@ -28,6 +28,7 @@ if (typeof globalThis.ImageData === "undefined") {
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
+import path from "path";
 import sharp from "sharp";
 
 // ⚙️ Initialize Supabase + Gemini
@@ -49,8 +50,9 @@ export async function POST(req, { params }) {
     const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
     const { createCanvas } = await import("canvas");
 
-    // Configure worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "pdfjs-dist/legacy/build/pdf.worker.mjs";
+    // Configure worker with absolute path for Vercel
+    const workerPath = path.join(process.cwd(), "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
 
     // Define NodeCanvasFactory for Node.js environment
     class NodeCanvasFactory {
