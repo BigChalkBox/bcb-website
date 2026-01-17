@@ -1,5 +1,5 @@
 // Polyfills for Node.js (required for pdfjs-dist on Vercel)
-import { DOMMatrix } from "dommatrix";
+import DOMMatrix from "dommatrix";
 import { Path2D } from "path2d";
 
 // Polyfill DOMMatrix
