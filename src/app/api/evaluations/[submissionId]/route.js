@@ -51,7 +51,9 @@ export async function POST(req, { params }) {
   try {
     // Dynamic import of pdfjs-dist to ensure polyfills are loaded first
     const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
-    const { createCanvas } = await import("canvas");
+
+    // USE @napi-rs/canvas INSTEAD OF canvas
+    const { createCanvas } = await import("@napi-rs/canvas");
 
     // Configure worker with absolute path pointing to public folder
     const workerPath = path.join(process.cwd(), "public/pdf.worker.mjs");
