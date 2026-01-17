@@ -104,8 +104,15 @@ export default function EvaluationsPage() {
     setDetectProgress("Loading PDF...");
 
     try {
-      // 1. Get the PDF URL
-      const pdfUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/submissions/${filePath}`;
+      // 1. Get the PDF URL (Signed URL for private buckets)
+      console.log("📄 Pth:", filePath);
+      const { data: fileData, error: urlError } = await supabase.storage
+        .from("submissions")
+        .createSignedUrl(filePath, 3600); // Valid for 1 hour
+
+      if (urlError) throw new Error("Failed to get PDF URL: " + urlError.message);
+      const pdfUrl = fileData.signedUrl;
+
       console.log("📄 Loading PDF:", pdfUrl);
 
       // 2. Load PDF with pdf.js
