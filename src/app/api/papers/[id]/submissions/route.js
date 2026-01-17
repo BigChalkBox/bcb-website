@@ -2,6 +2,18 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+// Increase body size limit for file uploads (default is 4.5MB on Vercel)
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
+};
+
+// For Next.js App Router - use route segment config
+export const maxDuration = 60; // Allow up to 60 seconds for large uploads
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY

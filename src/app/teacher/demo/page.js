@@ -6,7 +6,60 @@ import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { PDFDocument } from "pdf-lib";
 import styles from "./Demo.module.css";
+
+// --- PDF Compression Helper ---
+// Reduces PDF file size by re-saving without unnecessary data
+async function compressPDF(file, maxSizeMB = 4) {
+    const maxBytes = maxSizeMB * 1024 * 1024;
+
+    // If file is already small enough, return as-is
+    if (file.size <= maxBytes) {
+        console.log(`PDF already under ${maxSizeMB}MB (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        return file;
+    }
+
+    console.log(`Compressing PDF from ${(file.size / 1024 / 1024).toFixed(2)}MB...`);
+
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBuffer, {
+            ignoreEncryption: true,
+            updateMetadata: false
+        });
+
+        // Remove metadata to reduce size
+        pdfDoc.setTitle('');
+        pdfDoc.setAuthor('');
+        pdfDoc.setSubject('');
+        pdfDoc.setKeywords([]);
+        pdfDoc.setProducer('');
+        pdfDoc.setCreator('');
+
+        // Save with compression
+        const compressedBytes = await pdfDoc.save({
+            useObjectStreams: true,
+            addDefaultPage: false,
+        });
+
+        const compressedBlob = new Blob([compressedBytes], { type: 'application/pdf' });
+        const compressedFile = new File([compressedBlob], file.name, { type: 'application/pdf' });
+
+        console.log(`Compressed to ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`);
+
+        // If still too large, warn but continue
+        if (compressedFile.size > maxBytes) {
+            console.warn(`Warning: PDF still larger than ${maxSizeMB}MB after compression`);
+        }
+
+        return compressedFile;
+    } catch (err) {
+        console.error('PDF compression failed:', err);
+        // Return original file if compression fails
+        return file;
+    }
+}
 
 // --- Tooltip Component ---
 const Tooltip = ({ text, children }) => (
@@ -469,8 +522,12 @@ export default function DemoPage() {
 
         setLoading((l) => ({ ...l, submit: true }));
         try {
+            // Compress PDF to reduce file size (Vercel has 4.5MB limit)
+            showToast("success", "Compressing PDF...");
+            const compressedFile = await compressPDF(file, 4);
+
             const fd = new FormData();
-            fd.append("file", file);
+            fd.append("file", compressedFile);
             fd.append("student_name", "Demo Student");
             fd.append("enrollment_no", `DEMO-${Date.now()}`);
             fd.append("email", "demo@example.com");
