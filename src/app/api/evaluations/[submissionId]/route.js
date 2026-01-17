@@ -45,8 +45,33 @@ export const maxDuration = 300;
 
 export async function POST(req, { params }) {
   try {
-    // 动态 import to ensure polyfills are active
-    const { pdf } = await import("pdf-to-img");
+    // Dynamic import of pdfjs-dist to ensure polyfills are loaded first
+    const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+    const { createCanvas } = await import("canvas");
+
+    // Configure worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "pdfjs-dist/legacy/build/pdf.worker.mjs";
+
+    // Define NodeCanvasFactory for Node.js environment
+    class NodeCanvasFactory {
+      create(width, height) {
+        const canvas = createCanvas(width, height);
+        const context = canvas.getContext("2d");
+        return { canvas, context };
+      }
+
+      reset(canvasAndContext, width, height) {
+        canvasAndContext.canvas.width = width;
+        canvasAndContext.canvas.height = height;
+      }
+
+      destroy(canvasAndContext) {
+        canvasAndContext.canvas.width = 0;
+        canvasAndContext.canvas.height = 0;
+        canvasAndContext.canvas = null;
+        canvasAndContext.context = null;
+      }
+    }
 
     const { submissionId } = await params;
     if (!submissionId) {
@@ -56,7 +81,7 @@ export async function POST(req, { params }) {
       );
     }
 
-    // 🧾 Fetch submission file path
+    // 🧾 Fetch submission
     const { data: submission, error: subErr } = await supabase
       .from("submissions")
       .select("file_path")
@@ -69,7 +94,7 @@ export async function POST(req, { params }) {
 
     console.log("🗂️ Submission file path:", submission.file_path);
 
-    // 🔗 Generate temporary signed URL
+    // 🔗 Generate URL
     const { data: fileData, error: fileError } = await supabase.storage
       .from("submissions")
       .createSignedUrl(submission.file_path, 300);
@@ -85,21 +110,40 @@ export async function POST(req, { params }) {
     }
 
     const arrayBuffer = await res.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
-    console.log("📘 PDF downloaded, size:", pdfBuffer.length);
+    // Convert to strict Uint8Array for pdfjs
+    const pdfData = new Uint8Array(arrayBuffer);
+    console.log("📘 PDF downloaded, size:", pdfData.length);
 
-    // 📄 Convert PDF to images
-    const pdfDocument = await pdf(pdfBuffer, { scale: 2.0 });
-    console.log(`📚 Processing PDF pages...`);
+    // 📄 Load PDF Document
+    const loadingTask = pdfjsLib.getDocument({
+      data: pdfData,
+      cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+      cMapPacked: true,
+      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
+      canvasFactory: new NodeCanvasFactory(),
+    });
+
+    const pdfDoc = await loadingTask.promise;
+    console.log(`📚 Processing ${pdfDoc.numPages} pages...`);
 
     const results = [];
-    let pageNumber = 0;
 
-    for await (const imageBuffer of pdfDocument) {
-      pageNumber++;
-      console.log(`🖼️ Processing page ${pageNumber}...`);
+    for (let i = 1; i <= pdfDoc.numPages; i++) {
+      console.log(`🖼️ Processing page ${i}...`);
 
-      const imgBuffer = Buffer.isBuffer(imageBuffer) ? imageBuffer : Buffer.from(imageBuffer);
+      const page = await pdfDoc.getPage(i);
+      const viewport = page.getViewport({ scale: 2.0 });
+
+      const canvasFactory = new NodeCanvasFactory();
+      const { canvas, context } = canvasFactory.create(viewport.width, viewport.height);
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+        canvasFactory: canvasFactory
+      }).promise;
+
+      const imgBuffer = canvas.toBuffer("image/png");
 
       // ✂️ Crop top 25%
       const metadata = await sharp(imgBuffer).metadata();
@@ -157,7 +201,7 @@ Return valid JSON:
 
       // 🗂️ Upload
       const qFolder = question_no ? `q${question_no}` : "unassigned";
-      const uploadPath = `${submissionId}/${qFolder}/page_${pageNumber}.png`;
+      const uploadPath = `${submissionId}/${qFolder}/page_${i}.png`;
 
       const { error: uploadErr } = await supabase.storage
         .from("submissions")
@@ -165,7 +209,10 @@ Return valid JSON:
 
       if (uploadErr) console.error(`⚠️ Upload error:`, uploadErr.message);
 
-      results.push({ page: pageNumber, question_no, uploadPath });
+      results.push({ page: i, question_no, uploadPath });
+
+      // Clean up page
+      page.cleanup();
     }
 
     // ✅ Update status
