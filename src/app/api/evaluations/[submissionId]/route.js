@@ -50,8 +50,8 @@ export async function POST(req, { params }) {
     const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
     const { createCanvas } = await import("canvas");
 
-    // Configure worker with absolute path for Vercel
-    const workerPath = path.join(process.cwd(), "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs");
+    // Configure worker with absolute path pointing to public folder
+    const workerPath = path.join(process.cwd(), "public/pdf.worker.mjs");
     pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
 
     // Define NodeCanvasFactory for Node.js environment
