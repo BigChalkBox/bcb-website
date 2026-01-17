@@ -24,7 +24,17 @@ export async function POST(req, { params }) {
       );
     }
 
-    const body = await req.json();
+    // Parse body with error handling
+    let body;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      return NextResponse.json(
+        { success: false, error: "Invalid or empty request body" },
+        { status: 400 }
+      );
+    }
+
     const { status, result } = body;
 
     if (!status) {
