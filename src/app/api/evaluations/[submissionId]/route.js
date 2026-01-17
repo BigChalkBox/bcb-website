@@ -133,6 +133,9 @@ export async function POST(req, { params }) {
       cMapPacked: true,
       standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
       canvasFactory: new NodeCanvasFactory(),
+      // Disable font face to avoid font loading errors that crash @napi-rs/canvas
+      disableFontFace: true,
+      useSystemFonts: true,
     });
 
     const pdfDoc = await loadingTask.promise;
