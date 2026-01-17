@@ -4,11 +4,9 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import styles from "./EvaluationsPage.module.css";
 import Header from "@/components/HeaderSub";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
-
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-// Initialize Authenticated Supabase client
+// Initialize Authenticated Supabase client (for signed URLs)
 const supabase = createClientComponentClient();
 
 export default function EvaluationsPage() {
@@ -174,23 +172,29 @@ export default function EvaluationsPage() {
         const questionNo = detectJson.question_no;
         console.log(`📝 Page ${i}: Q${questionNo || "?"}`);
 
-        // 5. Upload full image to Supabase
-        const qFolder = questionNo ? `q${questionNo}` : "unassigned";
-        const uploadPath = `${submissionId}/${qFolder}/page_${i}.png`;
+        // 5. Upload full image via server API (bypasses RLS)
+        const fullBase64 = canvas.toDataURL("image/png");
 
-        setDetectProgress(`Uploading page ${i} to ${qFolder}...`);
-        const { error: uploadErr } = await supabase.storage
-          .from("submissions")
-          .upload(uploadPath, fullBlob, {
-            upsert: true,
-            contentType: "image/png",
-          });
+        setDetectProgress(`Uploading page ${i}...`);
+        const uploadRes = await fetch("/api/upload-page-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            submissionId,
+            questionNo,
+            pageNumber: i,
+            imageBase64: fullBase64,
+          }),
+        });
+        const uploadJson = await uploadRes.json();
 
-        if (uploadErr) {
-          console.error(`⚠️ Upload error (page ${i}):`, uploadErr.message);
+        if (!uploadJson.success) {
+          console.error(`⚠️ Upload error (page ${i}):`, uploadJson.error);
         } else {
-          console.log(`✅ Uploaded page ${i} to ${uploadPath}`);
+          console.log(`✅ Uploaded page ${i} to ${uploadJson.path}`);
         }
+
+        const uploadPath = uploadJson.path || `${submissionId}/${questionNo ? `q${questionNo}` : "unassigned"}/page_${i}.png`;
 
         results.push({
           page: i,
