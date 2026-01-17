@@ -23,9 +23,10 @@ async function compressPDF(file, maxSizeMB = 4, jpegQuality = 0.6) {
     console.log(`Compressing PDF from ${(file.size / 1024 / 1024).toFixed(2)}MB with JPEG quality ${jpegQuality}...`);
 
     try {
-        // Dynamically import pdfjs-dist to avoid SSR issues
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+        // Dynamically import pdfjs-dist legacy build to avoid SSR issues
+        const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        // Use unpkg which has all versions (cdnjs may not have latest)
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/legacy/build/pdf.worker.min.mjs`;
 
         const arrayBuffer = await file.arrayBuffer();
 
