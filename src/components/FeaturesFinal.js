@@ -57,8 +57,8 @@ export default function FeaturesFinal() {
                     <div className={styles.innercontainer}>
 
                         <div className={styles.featureBox1}>
-                            <h2>Handwriting to Text (OCR)</h2>
-                            <p>Seamlessly convert handwritten answer sheets into high-accuracy digital text using advanced OCR.</p>
+                            <h2>Handwriting to Meaning</h2>
+                            <p>Convert handwritten responses into structured understanding for accurate, rubric-based evaluation using AI vision.</p>
                         </div>
 
                         <div className={styles.featureBox1}>
