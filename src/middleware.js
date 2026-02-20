@@ -24,7 +24,7 @@ export async function middleware(req) {
   // 🚫 Redirect to login if not logged in
   if (!user) {
     const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/DASESLanding";
+    redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);
   }
 
