@@ -399,7 +399,7 @@ export default function CurriculumSelector({
                             </div>
                         ))}
                         {(!topics.courseOutcomes || topics.courseOutcomes.length === 0) && (
-                            <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>No COs defined. Click "+ Add CO" to add.</span>
+                            <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>No COs defined. Click &quot;+ Add CO&quot; to add.</span>
                         )}
                     </div>
                 </div>

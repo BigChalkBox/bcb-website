@@ -389,7 +389,7 @@ export default function PaperPage() {
             <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
               <div className={styles.drawerHeader}>
                 <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {analysisDetailView === 'blooms' && <><Brain size={20} /> Bloom's Taxonomy Analysis</>}
+                  {analysisDetailView === 'blooms' && <><Brain size={20} /> Bloom&apos;s Taxonomy Analysis</>}
                   {analysisDetailView === 'time' && <><Clock size={20} /> Time Feasibility Analysis</>}
                   {analysisDetailView === 'difficulty' && <><BarChart3 size={20} /> Difficulty Distribution Analysis</>}
                 </h3>

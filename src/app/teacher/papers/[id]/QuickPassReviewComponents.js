@@ -206,7 +206,7 @@ export function ApprovalPanel({ intelligence, onReanalyze, onApprove, analyzing,
                 {/* Bloom's Taxonomy */}
                 {qp.blooms && (
                     <div className="panel-metric" style={{ borderTop: '1px solid #e5e7eb', paddingTop: '8px', marginTop: '8px' }}>
-                        <span className="panel-metric-label">🧠 Bloom's Level</span>
+                        <span className="panel-metric-label">🧠 Bloom&apos;s Level</span>
                         <span className={`panel-metric-value ${qp.blooms.warnings?.length > 0 ? 'has-issues' : ''}`}>
                             {qp.blooms.warnings?.length > 0 ? `⚠ ${qp.blooms.warnings.length}` : `✓ ${qp.blooms.avgCognitiveLevel?.toFixed(1)}`}
                         </span>

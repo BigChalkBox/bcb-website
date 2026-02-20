@@ -191,7 +191,7 @@ export default function TeacherDashboard() {
           <section className={styles.papers}>
             <h2>Your Question Papers</h2>
             {papers.length === 0 ? (
-              <p>No papers created yet. Click "Set Paper" to get started.</p>
+              <p>No papers created yet. Click &quot;Set Paper&quot; to get started.</p>
             ) : (
               papers.map((paper) => {
                 // Determine stage

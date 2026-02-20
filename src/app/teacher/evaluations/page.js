@@ -494,7 +494,7 @@ export default function EvaluationsPage() {
         <div className={styles.modalOverlay} onClick={() => setShowBulkModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalTitle}>
-              📦 Bulk Detection for "{bulkConfig.paperName}"
+              📦 Bulk Detection for &quot;{bulkConfig.paperName}&quot;
             </div>
             <p className={styles.modalSubtitle}>
               Process {bulkConfig.submissions.length} pending submission(s) in batches.
@@ -581,7 +581,7 @@ export default function EvaluationsPage() {
         <div className={styles.modalOverlay} onClick={() => setShowBulkEvalModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalTitle}>
-              📊 Bulk Evaluation for "{bulkEvalConfig.paperName}"
+              📊 Bulk Evaluation for &quot;{bulkEvalConfig.paperName}&quot;
             </div>
             <p className={styles.modalSubtitle}>
               Evaluate {bulkEvalConfig.submissions.length} detected submission(s) in batches.
