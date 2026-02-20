@@ -1,6 +1,6 @@
 // src/app/api/analyze-clarity/route.js
 import { NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import { generateContentWithFallback, extractTextFromResponse, cleanLLMOutput } from "@/lib/gemini";
 
 /**
  * POST /api/analyze-clarity
@@ -77,26 +77,24 @@ IMPORTANT:
 - Be specific in the issues - mention exactly what's missing or ambiguous
 - The suggested question should be a drop-in replacement, not just advice`;
 
-        const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        // Use fallback-enabled generation
+        const contents = [
+            {
+                role: "user",
+                parts: [{ text: prompt }],
+            },
+        ];
 
-        const response = await genAI.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: [
-                {
-                    role: "user",
-                    parts: [{ text: prompt }],
-                },
-            ],
+        const { response, model } = await generateContentWithFallback({
+            contents,
+            preferredModel: "gemini-2.5-flash",
+            maxRetries: 2,
+            baseDelay: 1000,
         });
 
         // Extract text from response
-        let rawText = "";
-        if (response.text) {
-            rawText = response.text.trim();
-        } else if (response.candidates?.length) {
-            const part = response.candidates[0].content?.parts?.[0];
-            rawText = part?.text?.trim() || "";
-        }
+        const rawText = extractTextFromResponse(response);
+        console.log(`Clarity Analysis RAW OUTPUT (model: ${model}):`, rawText);
 
         console.log("Clarity Analysis RAW OUTPUT:", rawText);
 

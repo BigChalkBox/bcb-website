@@ -3,8 +3,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 80px 6%;
-  background: #f8f2e7;
-  font-family: Inter, sans-serif;
+  background: var(--bg-light);
+  font-family: 'Outfit', sans-serif;
   gap: 10%;
   padding: 5%;
 
@@ -22,7 +22,7 @@
   position: absolute;
   width: 90%;
   height: 85%;
-  background: #cdc8c4;
+  background: var(--pale-olive);
   border-radius: 20px;
   z-index: 1;
   left: 30px;
@@ -31,7 +31,7 @@
 }
 
 .cardMid {
-  background: #d6d2ce;
+  background: var(--sage);
   left: 15px;
   bottom: -15px;
   transform: rotate(2deg);
@@ -45,25 +45,29 @@
   border-radius: 20px;
   padding: 40px;
   width: 100%;
-  box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-  
+  border: 1px solid var(--pale-olive);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.05);
+
 }
 
 .logo {
   font-weight: 600;
   margin-bottom: 16px;
+  color: var(--deep-forest);
 }
 
 .quote {
-  font-size: 18px;
+  font-size: 1.25rem;
   line-height: 1.6;
   margin-bottom: 30px;
+  color: var(--slate-content);
 }
 
 .userRow {
   display: flex;
   align-items: center;
   gap: 12px;
+  color: var(--slate-deep);
 }
 
 .avatar {
@@ -73,6 +77,7 @@
 .userTitle {
   font-size: 14px;
   opacity: 0.8;
+  color: var(--secondary);
 }
 
 /* Right side content */
@@ -81,23 +86,29 @@
 }
 
 .tag {
-  color: #6fa765;
-  font-weight: 600;
-  font-size: 15px;
+  color: var(--primary);
+  font-weight: 900;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .heading {
-  font-size: 42px;
-  font-weight: 700;
+  font-size: 4rem;
+  font-weight: 900;
   margin: 12px 0;
+  color: var(--deep-forest);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
 }
 
 .sub {
-  font-size: 17px;
+  font-size: 1.25rem;
   opacity: 0.85;
   line-height: 1.6;
   max-width: 90%;
   margin-bottom: 30px;
+  color: var(--slate-content);
 }
 
 /* Arrows */
@@ -110,15 +121,16 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  border: 1.5px solid black;
+  border: 1.5px solid var(--deep-forest);
   font-size: 18px;
   background: white;
   cursor: pointer;
   transition: 0.2s;
+  color: var(--deep-forest);
 }
 
 .navBtn:hover {
-  background: #f1efe9;
+  background: var(--pale-olive);
 }
 
 /* Flip (now diagonal throw-back instead of flip) */
@@ -131,10 +143,12 @@
     transform: translate(0px, 0px) scale(1) rotate(0deg);
     opacity: 1;
   }
+
   50% {
     transform: translate(20px, -25px) scale(0.97) rotate(-3deg);
     opacity: .8;
   }
+
   100% {
     transform: translate(45px, -55px) scale(0.94) rotate(-6deg);
     opacity: 0;
@@ -145,6 +159,7 @@
 .stackMove {
   transform: translateY(14px) rotate(4deg);
   opacity: .75;
+
 }
 
 .stackMoveMid {
@@ -156,7 +171,7 @@
 .progressWrapper {
   width: 100%;
   height: 4px;
-  background: rgba(0,0,0,0.09);
+  background: rgba(0, 0, 0, 0.09);
   border-radius: 6px;
   margin-top: 20px;
   overflow: hidden;
@@ -165,14 +180,19 @@
 .progressBar {
   height: 100%;
   width: 100%;
-  background: #6b6be8;
+  background: var(--accent);
   animation: progressLinear 5s linear forwards;
   border-radius: 6px;
 }
 
 @keyframes progressLinear {
-  0% { width: 0%; }
-  100% { width: 100%; }
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
 }
 
 
@@ -188,11 +208,11 @@
   }
 
   .heading {
-    font-size: 36px;
+    font-size: 3rem;
   }
 
   .sub {
-    font-size: 16px;
+    font-size: 1.125rem;
   }
 
   .left {
@@ -250,12 +270,12 @@
 /* Mobile */
 @media (max-width: 600px) {
   .heading {
-    font-size: 30px;
+    font-size: 2.5rem;
     line-height: 1.2;
   }
 
   .sub {
-    font-size: 15px;
+    font-size: 1rem;
   }
 
   .cardMain {
@@ -280,7 +300,7 @@
 /* Small mobile */
 @media (max-width: 420px) {
   .heading {
-    font-size: 26px;
+    font-size: 2rem;
   }
 
   .cardMain {
@@ -289,7 +309,7 @@
   }
 
   .quote {
-    font-size: 15px;
+    font-size: 1rem;
   }
 
   .userRow {
@@ -300,6 +320,6 @@
   .navBtn {
     width: 36px;
     height: 36px;
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }

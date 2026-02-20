@@ -3,7 +3,7 @@ import { jsPDF } from "jspdf";
 
 export async function POST(req) {
     try {
-        const { submission, report, totalScore, totalMarks, paperData } = await req.json();
+        const { submission, report, totalScore, totalMarks, paperData, detectionResult } = await req.json();
 
         // Create question map for OR detection
         const questionsMap = new Map();
@@ -343,7 +343,7 @@ export async function POST(req) {
         doc.text("Evaluated on: " + new Date(report.evaluatedAt).toLocaleDateString(), m, pageHeight - 15);
         doc.text("Powered by DASES", pageWidth - m, pageHeight - 15, { align: "right" });
 
-        // ============ PAGE 2: SCORE BREAKDOWN ============
+        // ============ PAGE 2: 3DOWN ============
         doc.addPage();
         fillPageBg();
         y = m;
@@ -410,8 +410,43 @@ export async function POST(req) {
         doc.text("Percentage", tx + colW[3] / 2, y + 10, { align: "center" });
         y += rowH;
 
+        // Helper to draw table header (for continuation on new pages)
+        const drawTableHeader = () => {
+            doc.setFillColor(...brand.darkGreen);
+            doc.roundedRect(tableX, y, tableW, rowH, 3, 3, "F");
+            doc.setTextColor(...C.white);
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            let headerTx = tableX;
+            doc.text("Question", headerTx + 8, y + 10);
+            headerTx += colW[0];
+            doc.text("Max", headerTx + colW[1] / 2, y + 10, { align: "center" });
+            headerTx += colW[1];
+            doc.text("Obtained", headerTx + colW[2] / 2, y + 10, { align: "center" });
+            headerTx += colW[2];
+            doc.text("Percentage", headerTx + colW[3] / 2, y + 10, { align: "center" });
+            y += rowH;
+        };
+
         // Data rows
         rows.forEach((r, i) => {
+            // Check if we need a new page (leave space for row + possible total row)
+            if (y + rowH + 20 > pageHeight - m) {
+                doc.addPage();
+                fillPageBg();
+                y = m;
+
+                // Redraw section title on new page
+                doc.setTextColor(...C.primary);
+                doc.setFontSize(18);
+                doc.setFont("helvetica", "bold");
+                doc.text("Score Breakdown (continued)", pageWidth / 2, y + 10, { align: "center" });
+                y += 25;
+
+                // Redraw table header
+                drawTableHeader();
+            }
+
             const pct = r.max > 0 ? (r.got / r.max) * 100 : 0;
             const rowBg = i % 2 === 0 ? C.white : [252, 250, 245];
             const accent = pct >= 80 ? C.success : pct >= 50 ? C.warning : C.danger;
@@ -457,6 +492,23 @@ export async function POST(req) {
             y += rowH;
         });
 
+        // Check if we need a new page for the Total row
+        if (y + rowH + 5 > pageHeight - m) {
+            doc.addPage();
+            fillPageBg();
+            y = m;
+
+            // Redraw section title on new page
+            doc.setTextColor(...C.primary);
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.text("Score Breakdown (continued)", pageWidth / 2, y + 10, { align: "center" });
+            y += 25;
+
+            // Redraw table header for the total row
+            drawTableHeader();
+        }
+
         // Total row
         doc.setFillColor(...brand.darkGreen);
         doc.roundedRect(tableX, y, tableW, rowH + 2, 0, 0, "F");
@@ -471,6 +523,102 @@ export async function POST(req) {
         doc.text(totalScore.toString(), tx + colW[2] / 2, y + 10, { align: "center" });
         tx += colW[2];
         doc.text(`${percentage}%`, tx + colW[3] / 2, y + 10, { align: "center" });
+
+        // ============ OBJECTIVE ANSWER SHEETS ============
+        const objectivePages = detectionResult?.pages?.filter(p => p.page_type === 'objective') || [];
+
+        if (objectivePages.length > 0) {
+            doc.addPage();
+            fillPageBg();
+            y = m;
+
+            // Section header
+            doc.setFillColor(...brand.darkGreen);
+            doc.roundedRect(m, y, w, 16, 4, 4, "F");
+            doc.setTextColor(...C.white);
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("Objective Answer Sheets", m + 10, y + 11);
+            y += 26;
+
+            doc.setFontSize(10);
+            doc.setTextColor(...C.secondary);
+            doc.setFont("helvetica", "normal");
+            doc.text(`${objectivePages.length} objective answer page${objectivePages.length > 1 ? 's' : ''} submitted`, m, y);
+            y += 15;
+
+            // Render each objective page image
+            for (let pi = 0; pi < objectivePages.length; pi++) {
+                const page = objectivePages[pi];
+                const imgUrl = `https://crqheuuvsgtzejaestyj.supabase.co/storage/v1/object/public/submissions/${page.uploaded_to}`;
+                const b64 = await fetchImg(imgUrl);
+
+                if (b64) {
+                    try {
+                        const imgProps = doc.getImageProperties(b64);
+                        const imgAspect = imgProps.width / imgProps.height;
+
+                        const maxImgWidth = w - 20;
+                        const minRequiredHeight = 150; // Minimum height we want for proper display
+                        const availableHeight = pageHeight - y - 30;
+
+                        // If not enough space for a proper-sized image, go to new page first
+                        if (availableHeight < minRequiredHeight) {
+                            doc.addPage();
+                            fillPageBg();
+                            y = m;
+                        }
+
+                        // Now calculate image size with full available space
+                        const targetHeight = 180; // Target height for images
+                        let imgWidth, imgHeight;
+
+                        if (imgAspect < 1) {
+                            // Portrait
+                            imgHeight = targetHeight;
+                            imgWidth = imgHeight * imgAspect;
+                            if (imgWidth > maxImgWidth) {
+                                imgWidth = maxImgWidth;
+                                imgHeight = imgWidth / imgAspect;
+                            }
+                        } else {
+                            // Landscape
+                            imgWidth = maxImgWidth;
+                            imgHeight = imgWidth / imgAspect;
+                            if (imgHeight > targetHeight) {
+                                imgHeight = targetHeight;
+                                imgWidth = imgHeight * imgAspect;
+                            }
+                        }
+
+                        // Page label
+                        doc.setFontSize(10);
+                        doc.setFont("helvetica", "bold");
+                        doc.setTextColor(...brand.green);
+                        doc.text(`Page ${pi + 1} of ${objectivePages.length}`, m, y);
+                        y += 8;
+
+                        // Center the image
+                        const imgX = m + (w - imgWidth) / 2;
+
+                        // Border around image
+                        doc.setDrawColor(...C.border);
+                        doc.setLineWidth(0.5);
+                        doc.roundedRect(imgX - 3, y - 3, imgWidth + 6, imgHeight + 6, 3, 3, "S");
+
+                        doc.addImage(b64, 'JPEG', imgX, y, imgWidth, imgHeight);
+                        y += imgHeight + 20;
+
+                    } catch (e) {
+                        console.error("Objective page image error:", e);
+                        doc.setFontSize(9);
+                        doc.setTextColor(...C.danger);
+                        doc.text(`[Objective page ${pi + 1} could not be loaded]`, m, y);
+                        y += 15;
+                    }
+                }
+            }
+        }
 
         // ============ DETAILED EVALUATION ============
         processedIndices.clear();
@@ -570,12 +718,43 @@ export async function POST(req) {
             doc.setFont(contentFont, "normal");
 
             const qClean = cleanText(q.question);
-            const qText = qClean.substring(0, 350) + (qClean.length > 350 ? "..." : "");
-            const lines = doc.splitTextToSize(qText, w - 16);
-            doc.text(lines.slice(0, 3), m + 8, y + 8);
+            // Limit to 100 words for PDF
+            const words = qClean.split(/\s+/);
+            const truncatedText = words.length > 100
+                ? words.slice(0, 100).join(' ') + '...'
+                : qClean;
+            const lines = doc.splitTextToSize(truncatedText, w - 16);
 
-            // Reset to Helvetica for UI labels if needed, or stick to styles
-            y += 28;
+            // Calculate dynamic box height based on content
+            const lineHeight = 4;
+            const textHeight = lines.length * lineHeight;
+            const boxHeight = Math.max(20, textHeight + 10);
+
+            // Check if we need a new page for long questions
+            if (y + boxHeight > pageHeight - 40) {
+                doc.addPage();
+                fillPageBg();
+                y = m;
+
+                // Re-render question header on new page
+                doc.setFillColor(...C.primary);
+                doc.roundedRect(m, y, w, 14, 3, 3, "F");
+                doc.setTextColor(...C.white);
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.text(`Question ${q.qNumber} (continued)`, m + 8, y + 10);
+                y += 22;
+            }
+
+            // Draw dynamic question box
+            doc.setFillColor(...C.light);
+            doc.roundedRect(m, y, w, boxHeight, 3, 3, "F");
+            doc.setFontSize(10);
+            doc.setTextColor(...C.secondary);
+            doc.setFont(contentFont, "normal");
+            doc.text(lines, m + 8, y + 8);
+
+            y += boxHeight + 8;
 
             if (!showFull || skipDetails) {
                 if (!isAttempted) {

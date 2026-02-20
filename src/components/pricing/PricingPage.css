@@ -1,0 +1,346 @@
+/* ============================================
+   DASES Pricing Page - Package Cards
+   ============================================ */
+
+.pricing-page {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-light);
+    color: var(--slate-deep);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.pp-hero {
+    padding: 5rem 0 3rem;
+    text-align: center;
+    background: radial-gradient(circle at top center, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
+}
+
+.pp-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.pp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    background: rgba(198, 211, 193, 0.3);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(198, 211, 193, 0.6);
+}
+
+.pp-hero-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.25rem;
+    line-height: 1.1;
+    color: var(--deep-forest);
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pp-hero-title .accent {
+    color: var(--accent);
+}
+
+.pp-hero-sub {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--slate-content);
+    max-width: 36rem;
+    margin: 0 auto;
+    line-height: 1.75;
+}
+
+/* ============================================
+   PRICING CARDS
+   ============================================ */
+.pp-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    align-items: stretch;
+}
+
+.pp-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    border: 2px solid rgba(198, 211, 193, 0.2);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.pp-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+}
+
+.pp-card.featured {
+    border: 3px solid var(--accent);
+    box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.15);
+    position: relative;
+}
+
+.pp-card-popular {
+    position: absolute;
+    top: -0.875rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
+    white-space: nowrap;
+}
+
+.pp-card-header {
+    margin-bottom: 1.75rem;
+}
+
+.pp-card.featured .pp-card-header {
+    padding-top: 0.5rem;
+}
+
+.pp-card-header h3 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--deep-forest);
+    margin-bottom: 0.5rem;
+}
+
+.pp-card-header .desc {
+    color: var(--slate-content);
+    font-weight: 600;
+    font-size: 0.938rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.pp-price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+}
+
+.pp-price .amount {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--deep-forest);
+}
+
+.pp-card.featured .pp-price .amount {
+    color: var(--accent);
+}
+
+.pp-price .period {
+    font-size: 1rem;
+    font-weight: 700;
+    opacity: 0.4;
+}
+
+.pp-card-cta {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 900;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 2rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.pp-card-cta.default {
+    background: rgba(30, 41, 35, 0.05);
+    color: var(--deep-forest);
+    border: 2px solid transparent;
+}
+
+.pp-card-cta.default:hover {
+    background: rgba(30, 41, 35, 0.1);
+    border-color: rgba(30, 41, 35, 0.1);
+}
+
+.pp-card-cta.primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
+}
+
+.pp-card-cta.primary:hover {
+    background: #16a34a;
+    transform: scale(1.02);
+}
+
+.pp-card-features-label {
+    font-size: 0.688rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.25rem;
+    opacity: 0.4;
+    color: var(--deep-forest);
+}
+
+.pp-card.featured .pp-card-features-label {
+    color: var(--accent);
+    opacity: 1;
+}
+
+.pp-feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pp-feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.938rem;
+    font-weight: 700;
+    color: var(--deep-forest);
+    margin-bottom: 1rem;
+}
+
+.pp-feature-list li .material-symbols-outlined {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    color: var(--accent);
+}
+
+.pp-feature-list li.disabled {
+    opacity: 0.3;
+}
+
+.pp-feature-list li.disabled .material-symbols-outlined {
+    color: var(--slate-content);
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+.pp-faq {
+    padding: 2rem 0 5rem;
+}
+
+.pp-faq-title {
+    font-size: 2.25rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: var(--deep-forest);
+    letter-spacing: -0.025em;
+}
+
+.pp-faq-list {
+    max-width: 52rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pp-faq-item {
+    background: white;
+    padding: 1.75rem 2rem;
+    border-radius: 1.5rem;
+    border: 2px solid rgba(34, 197, 94, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pp-faq-item:hover {
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.pp-faq-item h4 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: var(--deep-forest);
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.pp-faq-item h4 .material-symbols-outlined {
+    color: var(--accent);
+    font-weight: 900;
+    transition: transform 0.3s;
+}
+
+.pp-faq-item.open h4 .material-symbols-outlined {
+    transform: rotate(180deg);
+}
+
+.pp-faq-answer {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, margin 0.3s ease;
+}
+
+.pp-faq-item.open .pp-faq-answer {
+    max-height: 200px;
+    margin-top: 1rem;
+}
+
+.pp-faq-answer p {
+    color: var(--slate-content);
+    font-size: 0.938rem;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (min-width: 768px) {
+    .pp-hero-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .pp-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .pp-card.featured {
+        transform: scale(1.03);
+    }
+
+    .pp-card.featured:hover {
+        transform: scale(1.03) translateY(-6px);
+    }
+
+    .pp-hero-title {
+        font-size: 4rem;
+    }
+}

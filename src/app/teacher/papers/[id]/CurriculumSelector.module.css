@@ -216,7 +216,499 @@
     color: #16A34A;
 }
 
-/* ========== EDIT MODE STYLES ========== */
+/* ========== MODERN EDIT MODE STYLES ========== */
+
+/* Seamless Input Base - Looks like text until interacted with */
+.seamlessInput {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.seamlessInput:hover {
+    background: #f1f5f9;
+}
+
+.seamlessInput:focus {
+    background: white;
+    border-color: #e2e8f0;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    outline: none;
+}
+
+/* Edit Mode Container */
+.editModeContainer {
+    animation: fadeSlideIn 0.3s ease;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glass Header */
+.editHeader {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 20px 24px;
+    margin: -24px -24px 24px -24px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.editHeaderTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 8px 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+}
+
+.editHeaderMeta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.metaBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    color: #166534;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Floating Unit Card */
+.floatingCard {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.04),
+        0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.floatingCard:hover {
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.04),
+        0 10px 24px rgba(0, 0, 0, 0.06);
+    border-color: #e2e8f0;
+}
+
+/* Unit Card Header */
+.unitCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: linear-gradient(180deg, #fafbfc 0%, #f8fafc 100%);
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.unitNameLarge {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e293b;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.unitNameLarge:hover {
+    background: white;
+    border-color: #e2e8f0;
+}
+
+.unitNameLarge:focus {
+    background: white;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    outline: none;
+}
+
+/* Weight Badge */
+.weightBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 24px;
+    border: 1px solid #bfdbfe;
+}
+
+.weightBadge span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #3b82f6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.weightBadge input {
+    width: 36px;
+    padding: 2px 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1d4ed8;
+    text-align: center;
+    background: white;
+    border: 1px solid #93c5fd;
+    border-radius: 6px;
+}
+
+.weightBadge input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Topics Area */
+.topicsArea {
+    padding: 16px 20px;
+}
+
+.topicItemModern {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    transition: all 0.15s;
+}
+
+.topicBullet {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.topicInputModern {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #334155;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: all 0.15s;
+}
+
+.topicInputModern:hover {
+    background: #f8fafc;
+}
+
+.topicInputModern:focus {
+    background: white;
+    border-color: #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    outline: none;
+}
+
+.topicDeleteBtn {
+    opacity: 0;
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 4px;
+}
+
+.topicItemModern:hover .topicDeleteBtn {
+    opacity: 1;
+}
+
+.topicDeleteBtn:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.addTopicModern {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: transparent;
+    color: #10b981;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.addTopicModern:hover {
+    background: #f0fdf4;
+}
+
+/* CO Mapping Footer */
+.coMappingFooter {
+    padding: 14px 20px;
+    background: #fafbfc;
+    border-top: 1px solid #f1f5f9;
+}
+
+.coMappingLabel {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.coPillContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.coPill {
+    padding: 6px 14px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.coPill:hover {
+    border-color: #10b981;
+    color: #059669;
+}
+
+.coPillActive {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border-color: #22c55e;
+    color: #166534;
+}
+
+/* CO Section */
+.coSection {
+    margin-bottom: 28px;
+}
+
+.coSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.coSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.coChipsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.coChip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    transition: all 0.15s;
+}
+
+.coChip:hover {
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+}
+
+.coChipCode {
+    width: 50px;
+    padding: 4px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #166534;
+    text-align: center;
+    background: white;
+    border: 1px solid #a7f3d0;
+    border-radius: 4px;
+}
+
+.coChipCode:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.coChipDesc {
+    width: 180px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #334155;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
+
+.coChipDesc:focus {
+    outline: none;
+    border-color: #10b981;
+}
+
+.coChipDelete {
+    padding: 2px 6px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.15s;
+}
+
+.coChipDelete:hover {
+    color: #ef4444;
+}
+
+/* CO Toggle Bar */
+.coToggleBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    transition: all 0.2s;
+}
+
+.coToggleBarEnabled {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-color: #bbf7d0;
+}
+
+.coToggleLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.coToggleBarEnabled .coToggleLabel {
+    color: #166534;
+}
+
+/* Add Unit CTA */
+.addUnitCTA {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.addUnitCTA:hover {
+    background: white;
+    border-color: #10b981;
+    color: #10b981;
+}
+
+/* Action Bar */
+.editActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.cancelBtn {
+    flex: 1;
+    padding: 14px;
+    background: white;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.cancelBtn:hover {
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+.confirmBtn {
+    flex: 2;
+    padding: 14px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.confirmBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+}
 
 .unitsContainer {
     max-height: 500px;
@@ -344,52 +836,6 @@
     font-weight: 600;
     cursor: pointer;
     margin-top: 8px;
-}
-
-.addUnitBtn:hover {
-    background: #e2e8f0;
-}
-
-.editActions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid #e2e8f0;
-}
-
-.cancelBtn {
-    flex: 1;
-    padding: 12px;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.cancelBtn:hover {
-    background: #e2e8f0;
-}
-
-.confirmBtn {
-    flex: 2;
-    padding: 12px;
-    background: linear-gradient(135deg, #10b981 0%, #16A34A 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.confirmBtn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 /* ========== SHARE FUNCTIONALITY ========== */

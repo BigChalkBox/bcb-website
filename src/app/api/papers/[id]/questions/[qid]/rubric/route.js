@@ -1,7 +1,7 @@
 // src/app/api/papers/[id]/questions/[qid]/rubric/route.js
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { GoogleGenAI } from "@google/genai";
+import { generateContentWithFallback, extractTextFromResponse } from "@/lib/gemini";
 import fs from "fs";
 
 const supabase = createClient(
@@ -12,7 +12,7 @@ const supabase = createClient(
 export async function POST(req, { params }) {
   const { id, qid } = params;
   const body = await req.json();
-  const { sampleAnswer = "", maxMarks, sampleImages = [], questionText } = body;
+  const { sampleAnswer = "", maxMarks, sampleImages = [], questionText, rubricInstructions = "" } = body;
 
   // ✅ Validation
   if ((!sampleAnswer.trim() && (!sampleImages || sampleImages.length === 0))) {
@@ -49,7 +49,6 @@ export async function POST(req, { params }) {
   }
 
   try {
-    const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     /* ----------------------- Build multimodal prompt ----------------------- */
     //     const parts = [
@@ -92,7 +91,12 @@ Your task is to generate a **general evaluation rubric** suitable for CA examina
 Inputs:
 Question: ${questionText}
 Sample Answer (for reference only): ${sampleAnswer || "None"}
-Maximum Marks: ${maxMarks}
+Maximum Marks: ${maxMarks}${rubricInstructions ? `
+
+Additional Instructions from Teacher:
+${rubricInstructions}
+
+(Please incorporate the above teacher instructions while generating the rubric. These are specific guidance on what to focus on, how strict to be, or specific criteria to include.)` : ""}
 
 IMPORTANT GUIDELINES:
 - Use the sample answer ONLY to understand:
@@ -152,10 +156,12 @@ Constraints:
       }
     }
 
-    // ✅ Generate rubric with @google/genai
-    const response = await genAI.models.generateContent({
-      model: "gemini-2.5-flash",
+    // ✅ Generate rubric with fallback-enabled generation
+    const { response, model } = await generateContentWithFallback({
       contents: [{ role: "user", parts }],
+      preferredModel: "gemini-2.5-flash",
+      maxRetries: 2,
+      baseDelay: 1000,
     });
 
 
@@ -165,7 +171,7 @@ Constraints:
       "\n📦 GEMINI PAYLOAD PREVIEW:",
       JSON.stringify(
         {
-          model: "gemini-2.5-flash",
+          model,
           contents: [
             {
               role: "user",
@@ -185,12 +191,7 @@ Constraints:
 
 
     // Extract text safely
-    let raw = "";
-    if (response.text) {
-      raw = response.text.trim();
-    } else if (response.candidates?.length) {
-      raw = response.candidates[0].content?.parts?.[0]?.text?.trim() || "";
-    }
+    let raw = extractTextFromResponse(response);
 
     console.log('raw response:', raw)
 

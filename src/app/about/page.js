@@ -1,0 +1,72 @@
+import AboutPage from '../../components/about/AboutPage'
+
+export const metadata = {
+    title: 'About | AI-Powered Exam Evaluation by eSun Smart Solutions Pvt. Ltd.',
+    description:
+        'DASES is built by eSun Smart Solutions Pvt. Ltd. — solving the hardest problems in academic assessment. 98% rubric accuracy on handwritten answers, 400+ sheets evaluated, 20+ educators onboard.',
+    openGraph: {
+        type: 'website',
+        locale: 'en_IN',
+        url: 'https://dases.in/about',
+        title: 'About DASES | Built by eSun Smart Solutions Pvt. Ltd.',
+        description:
+            'A team of engineers and educators transforming descriptive grading. Learn how DASES achieves 98% accuracy on handwritten exams.',
+        siteName: 'DASES',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'About DASES | eSun Smart Solutions Pvt. Ltd.',
+        description:
+            '400+ sheets evaluated • 98% accuracy • 20+ educators. Built by eSun Smart Solutions Pvt. Ltd. in India.',
+    },
+    alternates: {
+        canonical: 'https://dases.in/about',
+    },
+    authors: [
+        {
+            name: 'eSun Smart Solutions Pvt. Ltd.',
+            url: 'https://eSun.solutions',
+            email: 'support@esun.solutions',
+        },
+    ],
+    summary:
+        'eSun Smart Solutions Pvt. Ltd. builds DASES — an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
+}
+
+const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'eSun Smart Solutions Pvt. Ltd.',
+    url: 'https://dases.in',
+    email: 'support@esun.solutions',
+    telephone: '+917529836117',
+    description:
+        'eSun Smart Solutions Pvt. Ltd. builds DASES — an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
+    address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'IN',
+    },
+    foundingDate: '2024',
+    sameAs: [],
+    makesOffer: {
+        '@type': 'Offer',
+        itemOffered: {
+            '@type': 'SoftwareApplication',
+            name: 'DASES',
+            applicationCategory: 'EducationalApplication',
+            operatingSystem: 'Web',
+        },
+    },
+}
+
+export default function About() {
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <AboutPage />
+        </>
+    )
+}

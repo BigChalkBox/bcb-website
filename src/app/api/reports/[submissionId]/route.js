@@ -13,7 +13,7 @@ export async function GET(req, { params }) {
         // Fetch evaluation data
         const { data: evalData, error: evalError } = await supabase
             .from("evaluations")
-            .select("evaluation_results, submission_id")
+            .select("evaluation_results, result, submission_id")
             .eq("submission_id", submissionId)
             .single();
 
@@ -38,6 +38,11 @@ export async function GET(req, { params }) {
             typeof evalData.evaluation_results === "string"
                 ? JSON.parse(evalData.evaluation_results)
                 : evalData.evaluation_results;
+
+        const detectionResult =
+            typeof evalData.result === "string"
+                ? JSON.parse(evalData.result)
+                : evalData.result;
 
         const submission = submissionData;
 
@@ -90,6 +95,7 @@ export async function GET(req, { params }) {
         return NextResponse.json({
             submission,
             report,
+            detectionResult,
             paperData,
             totalScore,
             totalMarks,

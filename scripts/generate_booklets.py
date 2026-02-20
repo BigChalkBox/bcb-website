@@ -25,6 +25,8 @@ from PIL import Image
 PAGE_SIZES = {'A4': A4, 'letter': letter}
 DEFAULT_PAGE_SIZE = 'A4'
 MARGIN_DEFAULT = 20 * mm  # Increased for more white space
+LINE_MARGIN_LEFT = 25 * mm  # Left margin for ruled lines (larger for binding)
+LINE_MARGIN_RIGHT = 15 * mm  # Right margin for ruled lines
 QR_SIZE = 22 * mm  # Smaller as per your change
 HEADER_RULE = 0.4  # Thinner for subtlety
 LINE_GAP = 19  # Wider for writing comfort
@@ -212,7 +214,7 @@ def draw_answer_page(c, exam_id, booklet_id, page_label="2", lines=LINE_COUNT_DE
     available_height = y - bottom
     max_lines = int(available_height / LINE_GAP)  # Dynamic cap to prevent overflow
     while line_count < min(lines, max_lines):
-        c.line(0, y, page_w, y)  # Full page width
+        c.line(LINE_MARGIN_LEFT, y, page_w - LINE_MARGIN_RIGHT, y)  # With margins
         y -= LINE_GAP
         line_count += 1
     c.setStrokeColor(colors.black)  # Reset
@@ -258,13 +260,93 @@ def draw_extra_sheet(c, exam_id, booklet_id, x_index="X1", lines=LINE_COUNT_DEFA
     available_height = y - bottom
     max_lines = int(available_height / LINE_GAP)
     while line_count < min(lines, max_lines):
-        c.line(0, y, page_w, y)  # Full page width
+        c.line(LINE_MARGIN_LEFT, y, page_w - LINE_MARGIN_RIGHT, y)  # With margins
         y -= LINE_GAP
         line_count += 1
     c.setStrokeColor(colors.black)
 
+def draw_objective_answers_page(c, exam_id, booklet_id, question_labels=None, start_q=1, end_q=15, page_w=None, page_h=None, margin=MARGIN_DEFAULT, error_level=ERROR_CORRECT_M):
+    """
+    Draws a dedicated page for objective question answers.
+    Creates a vertical list of numbered answer boxes.
+    
+    Args:
+        question_labels: Optional list of custom labels (e.g., ["1a", "1b", "2", "3a", "3b"])
+                        If None, uses numeric range from start_q to end_q
+        start_q: Starting question number (inclusive) - used if question_labels is None
+        end_q: Ending question number (inclusive) - used if question_labels is None
+    """
+    if page_w is None or page_h is None:
+        raise ValueError("page_w and page_h must be provided")
+    
+    left, bottom, right, top = content_frame(page_w, page_h, margin)
+    
+    # Determine labels to use
+    if question_labels:
+        labels = question_labels
+    else:
+        labels = [str(i) for i in range(start_q, end_q + 1)]
+    
+    num_questions = len(labels)
+    
+    # ===== HEADER =====
+    c.setFont(FONT_BOLD, 18)
+    c.drawCentredString(page_w / 2, top - 20, "OBJECTIVE ANSWERS")
+    c.setFont(FONT, 10)
+    c.drawCentredString(page_w / 2, top - 38, "Write your answers clearly on the lines below")
+    
+    # QR top-right (include page indicator in QR)
+    qr_x = right - QR_SIZE
+    qr_y = top - QR_SIZE - 10
+    if question_labels:
+        page_indicator = f"OBJ-{labels[0]}-{labels[-1]}" if len(labels) > 1 else f"OBJ-{labels[0]}"
+    else:
+        page_indicator = f"OBJ{start_q}-{end_q}"
+    payload = {"exam_id": exam_id, "booklet_id": booklet_id, "page": page_indicator}
+    draw_qr(c, payload, qr_x, qr_y, QR_SIZE, error_level)
+    
+    # Exam ID
+    c.setFont(FONT_BOLD, 11)
+    c.drawString(left, top - 8, f"Exam ID: {exam_id}")
+    
+    # Header rule
+    draw_header_rule(c, top - QR_SIZE - 20, left, right)
+    
+    # ===== VERTICAL ANSWER LIST =====
+    max_per_page = 12  # Max items per page for spacing
+    
+    grid_top = top - QR_SIZE - 80  # Margin at top before questions start
+    grid_left = left + 20
+    
+    # Calculate available height and spacing
+    available_height = grid_top - bottom - 30  # Leave footer space
+    row_height = available_height / max_per_page  # Consistent spacing
+    
+    c.setFont(FONT_BOLD, 12)
+    
+    for i, label in enumerate(labels):
+        y = grid_top - (i * row_height)
+        
+        # Question number label (use custom label or Qn)
+        c.setFillColor(colors.Color(0.1, 0.4, 0.1))  # Dark green
+        display_label = f"Q{label}:" if not label[0].isalpha() else f"Q{label}:"
+        c.drawString(grid_left, y + 6, display_label)
+        c.setFillColor(colors.black)
+        
+        # Answer line - extends to right margin
+        line_x = grid_left + 55  # Adjusted for longer labels like Q1a
+        c.setStrokeColor(LIGHT_GRAY)
+        c.setLineWidth(1)
+        c.line(line_x, y, right - 10, y)
+        c.setStrokeColor(colors.black)
+    
+    # ===== FOOTER =====
+    c.setFont(FONT, 9)
+    c.setFillColor(colors.black)
+
+
 def generate_booklet_pdf(args_tuple):
-    path, university_name, exam_id, subject, date_str, main_pages, extra_pages, lines, page_size, margin, error_level = args_tuple
+    path, university_name, exam_id, subject, date_str, main_pages, extra_pages, lines, page_size, margin, error_level, num_objective_questions, objective_labels = args_tuple
     page_w, page_h = PAGE_SIZES[page_size]
     try:
         booklet_id = uuid.uuid4().hex
@@ -272,7 +354,33 @@ def generate_booklet_pdf(args_tuple):
         # Page 1: candidate details (no student data in QR)
         draw_candidate_details_page(c, university_name, exam_id, subject, date_str, booklet_id, page_w, page_h, margin, error_level)
         c.showPage()
-        # Main answer pages: 2..(main_pages+1)
+        
+        # Objective answers pages
+        # Max 12 questions per page for comfortable spacing
+        max_per_page = 12
+        
+        if objective_labels:
+            # Custom labels provided (e.g., ["1a", "1b", "2", "3a", "3b"])
+            labels = objective_labels
+            num_obj_pages = (len(labels) + max_per_page - 1) // max_per_page
+            
+            for page_idx in range(num_obj_pages):
+                start_idx = page_idx * max_per_page
+                end_idx = min((page_idx + 1) * max_per_page, len(labels))
+                page_labels = labels[start_idx:end_idx]
+                draw_objective_answers_page(c, exam_id, booklet_id, question_labels=page_labels, page_w=page_w, page_h=page_h, margin=margin, error_level=error_level)
+                c.showPage()
+        elif num_objective_questions > 0:
+            # Numeric questions (1, 2, 3...)
+            num_obj_pages = (num_objective_questions + max_per_page - 1) // max_per_page
+            
+            for page_idx in range(num_obj_pages):
+                start_q = page_idx * max_per_page + 1
+                end_q = min((page_idx + 1) * max_per_page, num_objective_questions)
+                draw_objective_answers_page(c, exam_id, booklet_id, start_q=start_q, end_q=end_q, page_w=page_w, page_h=page_h, margin=margin, error_level=error_level)
+                c.showPage()
+        
+        # Main answer pages: for subjective questions
         for p in range(2, 2 + main_pages):
             draw_answer_page(c, exam_id, booklet_id, page_label=str(p), lines=lines, page_w=page_w, page_h=page_h, margin=margin, error_level=error_level)
             c.showPage()
@@ -281,7 +389,7 @@ def generate_booklet_pdf(args_tuple):
             draw_extra_sheet(c, exam_id, booklet_id, x_index=f"X{i}", lines=lines, page_w=page_w, page_h=page_h, margin=margin, error_level=error_level)
             c.showPage()
         c.save()
-        logging.info(f"Generated {path} with booklet_id={booklet_id}")
+        logging.info(f"Generated {path} with booklet_id={booklet_id}" + (f", {num_objective_questions} objective questions" if num_objective_questions > 0 else ""))
         return path, booklet_id
     except Exception as e:
         logging.error(f"Error generating {path}: {e}")
@@ -302,6 +410,8 @@ def main():
     parser.add_argument("--page-size", choices=PAGE_SIZES.keys(), default=DEFAULT_PAGE_SIZE, help="Page size")
     parser.add_argument("--margin-mm", type=float, default=20, help="Page margin in mm")
     parser.add_argument("--qr-error-correction", choices=ERROR_LEVELS.keys(), default='M', help="QR error correction level (L/M/Q/H)")
+    parser.add_argument("--objective-questions", type=int, default=0, help="Number of objective questions (creates a dedicated objective answers page if > 0)")
+    parser.add_argument("--objective-labels", type=str, default="", help="Comma-separated custom labels for objective questions (e.g., '1a,1b,2,3a,3b'). Use this for case study sub-parts.")
     parser.add_argument("--parallel", action='store_true', help="Generate booklets in parallel (for large batches)")
     parser.add_argument("--manifest", action='store_true', help="Generate a CSV manifest of all booklets")
     args = parser.parse_args()
@@ -320,11 +430,16 @@ def main():
     manifest_data = []
     error_level = ERROR_LEVELS[args.qr_error_correction]
     margin = args.margin_mm * mm
+    
+    # Parse objective labels if provided
+    objective_labels = [label.strip() for label in args.objective_labels.split(",") if label.strip()] if args.objective_labels else []
+    if objective_labels:
+        logging.info(f"Using custom objective labels: {objective_labels}")
 
     for i in range(1, args.num_students + 1):
         filename = f"{args.prefix}_{i:04d}.pdf"
         out_path = os.path.join(args.output_dir, filename)
-        tasks.append((out_path, args.university_name, args.exam_id, args.subject, args.date, args.main_pages, args.extra_pages, args.lines_per_page, args.page_size, margin, error_level))
+        tasks.append((out_path, args.university_name, args.exam_id, args.subject, args.date, args.main_pages, args.extra_pages, args.lines_per_page, args.page_size, margin, error_level, args.objective_questions, objective_labels))
         manifest_data.append([filename, args.university_name, args.exam_id, args.subject, args.date, args.main_pages, args.extra_pages])  # Booklet ID added later
 
     if args.parallel:

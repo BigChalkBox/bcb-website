@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Brushstroke D shape -->
+  <path d="M28 15 C28 15, 30 12, 35 12 C50 12, 72 18, 78 38 C84 58, 72 80, 50 85 C38 88, 28 85, 25 82 L25 18 C25 15, 27 14, 28 15 Z" 
+        stroke="#22C55E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Brushstroke connecting tail sweeping out -->
+  <path d="M50 85 C55 83, 65 75, 75 60 C80 52, 82 42, 78 38" 
+        stroke="#22C55E" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <!-- Checkmark inside D -->
+  <path d="M32 50 L42 62 L62 34" 
+        stroke="#1B5E20" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

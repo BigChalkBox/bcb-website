@@ -15,7 +15,19 @@ const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
  */
 async function mapQuestionsToTopics(questions, curriculum) {
     const topicsFlat = [];
+
+    // Safety check for curriculum structure
+    if (!curriculum?.units || !Array.isArray(curriculum.units)) {
+        console.error("[Coverage] Invalid curriculum structure - no units array");
+        console.log("[Coverage] Curriculum structure:", JSON.stringify(curriculum).substring(0, 500));
+        return { mappings: [], error: "Invalid curriculum structure" };
+    }
+
     curriculum.units.forEach(unit => {
+        if (!unit?.topics || !Array.isArray(unit.topics)) {
+            console.warn(`[Coverage] Unit "${unit?.name}" has no topics array`);
+            return;
+        }
         unit.topics.forEach(topic => {
             topicsFlat.push({
                 id: topic.id,
@@ -24,6 +36,13 @@ async function mapQuestionsToTopics(questions, curriculum) {
             });
         });
     });
+
+    console.log(`[Coverage] Flattened ${topicsFlat.length} topics for mapping`);
+
+    if (topicsFlat.length === 0) {
+        console.error("[Coverage] No topics found in curriculum to map against");
+        return { mappings: [], error: "No topics in curriculum" };
+    }
 
     const prompt = `You are analyzing exam questions against a course syllabus.
 
@@ -38,7 +57,7 @@ For each question, identify which topic(s) it tests. Return ONLY valid JSON:
   "mappings": [
     {
       "question_index": 0,
-      "mapped_topics": ["u1-t1", "u1-t2"],
+      "mapped_topics": ["${topicsFlat[0]?.id || 'topic-id'}"],
       "confidence": 0.85,
       "reasoning": "Brief explanation"
     }
@@ -47,8 +66,10 @@ For each question, identify which topic(s) it tests. Return ONLY valid JSON:
 
 Rules:
 - Map each question to 1-3 most relevant topics
+- Use the EXACT topic IDs from the list above (e.g., "${topicsFlat[0]?.id || 'u1-t1'}")
 - Confidence 0.0-1.0 based on how well the question tests the topic
-- If a question doesn't match any topic, use empty array for mapped_topics`;
+- If a question doesn't match any topic, use empty array for mapped_topics
+- IMPORTANT: Return mappings for ALL ${questions.length} questions`;
 
     try {
         const response = await genAI.models.generateContent({
@@ -60,10 +81,22 @@ Rules:
         let rawText = response.text?.trim() ||
             response.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
 
-        rawText = rawText.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
-        return JSON.parse(rawText);
+        console.log("[Coverage] Raw AI response length:", rawText.length);
+
+        // Extract JSON from markdown code blocks if present
+        const jsonMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) {
+            rawText = jsonMatch[1].trim();
+        }
+
+        const parsed = JSON.parse(rawText);
+
+        console.log(`[Coverage] Parsed ${parsed.mappings?.length || 0} mappings from AI`);
+
+        return parsed;
     } catch (err) {
         console.error("Mapping error:", err);
+        console.error("Raw response that failed to parse:", err.message);
         return { mappings: [], error: err.message };
     }
 }
@@ -121,7 +154,12 @@ Be critical and accurate. A well-balanced paper should have questions across mul
         let rawText = response.text?.trim() ||
             response.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
 
-        rawText = rawText.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+        // Extract JSON from markdown code blocks if present
+        const jsonMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) {
+            rawText = jsonMatch[1].trim();
+        }
+
         return JSON.parse(rawText);
     } catch (err) {
         console.error("Bloom's analysis error:", err);
@@ -135,7 +173,7 @@ Be critical and accurate. A well-balanced paper should have questions across mul
 }
 
 /**
- * Calculate coverage percentages with advanced analytics
+ * Calculate coverage percentages with advanced analytics including CO-level
  */
 function calculateCoverage(questions, curriculum, mappings) {
     // Total paper marks
@@ -169,7 +207,8 @@ function calculateCoverage(questions, curriculum, mappings) {
 
         m.mapped_topics?.forEach(topicId => {
             if (topicCoverage[topicId]) {
-                topicCoverage[topicId].coveredMarks += marksPerTopic * (m.confidence || 0.8);
+                // Use 100% of marks (no confidence weighting) for deterministic calculation
+                topicCoverage[topicId].coveredMarks += marksPerTopic;
                 topicCoverage[topicId].questions.push({
                     index: m.question_index + 1,
                     text: question.text?.substring(0, 80) + (question.text?.length > 80 ? '...' : ''),
@@ -221,6 +260,7 @@ function calculateCoverage(questions, curriculum, mappings) {
         return {
             id: unit.id,
             name: unit.name,
+            mappedCOs: unit.mappedCOs || [],
             expectedPercent: unitExpectedPercent,
             actualPercent: unitActualPercent,
             deviation,
@@ -228,6 +268,76 @@ function calculateCoverage(questions, curriculum, mappings) {
             topics: topicDetails,
         };
     });
+
+    // ========== CO-LEVEL ANALYSIS ==========
+    // Only run CO analysis if explicitly enabled in curriculum
+    const coMappingEnabled = curriculum.coMappingEnabled === true;
+    const courseOutcomes = curriculum.courseOutcomes || [];
+
+    let coAnalysis = null;
+
+    if (coMappingEnabled && courseOutcomes.length > 0) {
+        console.log("[Coverage] CO mapping enabled, running CO analysis...");
+
+        // Check if any units have mappedCOs
+        const hasExplicitMappings = unitAnalysis.some(u => u.mappedCOs && u.mappedCOs.length > 0);
+
+        // If no explicit mappings and CO mapping is enabled but no mappings set, skip
+        if (!hasExplicitMappings) {
+            console.log("[Coverage] CO mapping enabled but no unit mappings found, skipping CO analysis");
+        } else {
+            // Calculate CO analysis using explicit mappings only (no auto-mapping)
+            coAnalysis = courseOutcomes.map(co => {
+                // Find all units mapped to this CO
+                const mappedUnits = unitAnalysis.filter(u =>
+                    u.mappedCOs?.includes(co.id) || u.mappedCOs?.includes(co.code)
+                );
+
+                if (mappedUnits.length === 0) {
+                    return {
+                        id: co.id,
+                        code: co.code,
+                        description: co.description,
+                        coverage: 0,
+                        actualPercent: 0,
+                        expectedPercent: 0,
+                        mappedUnits: [],
+                        status: 'not_mapped',
+                    };
+                }
+
+                // Calculate CO coverage from mapped units
+                const totalUnitWeight = mappedUnits.reduce((sum, u) => sum + u.expectedPercent, 0);
+
+                let coCoverage;
+                if (totalUnitWeight > 0) {
+                    coCoverage = Math.round(mappedUnits.reduce((sum, u) => sum + (u.coverage * u.expectedPercent), 0) / totalUnitWeight);
+                } else {
+                    coCoverage = Math.round(mappedUnits.reduce((sum, u) => sum + u.coverage, 0) / mappedUnits.length);
+                }
+
+                const coActualPercent = mappedUnits.reduce((sum, u) => sum + u.actualPercent, 0);
+                const coExpectedPercent = totalUnitWeight > 0 ? totalUnitWeight : Math.round(100 / (curriculum.units?.length || 1) * mappedUnits.length);
+
+                let status = 'missing';
+                if (coCoverage >= 70) status = 'covered';
+                else if (coCoverage >= 30) status = 'partial';
+
+                return {
+                    id: co.id,
+                    code: co.code,
+                    description: co.description,
+                    coverage: coCoverage,
+                    actualPercent: coActualPercent,
+                    expectedPercent: coExpectedPercent,
+                    mappedUnits: mappedUnits.map(u => ({ id: u.id, name: u.name, coverage: u.coverage })),
+                    status,
+                };
+            });
+        }
+    } else {
+        console.log("[Coverage] CO mapping not enabled, skipping CO analysis");
+    }
 
     // Overall coverage = percentage of all topics that have at least one question
     const allTopics = Object.values(topicCoverage);
@@ -245,6 +355,9 @@ function calculateCoverage(questions, curriculum, mappings) {
     return {
         overall: overallCoverage,
         units: unitAnalysis,
+        coAnalysis, // Will be null if not enabled
+        coMappingEnabled, // Add flag so UI knows
+        courseOutcomes,
         uncoveredTopics,
         totalTopics: Object.keys(topicCoverage).length,
         coveredTopics: Object.values(topicCoverage).filter(t => t.coveredMarks > 0).length,
@@ -253,6 +366,7 @@ function calculateCoverage(questions, curriculum, mappings) {
         mappings: mappings.mappings || [],
     };
 }
+
 
 /**
  * Generate actionable recommendations for improving coverage
@@ -372,12 +486,30 @@ export async function POST(req, { params }) {
         }
 
         console.log(`[Coverage] Analyzing ${questions.length} questions against curriculum...`);
+        console.log(`[Coverage] Curriculum has ${curriculum.structured_topics?.units?.length || 0} units`);
+
+        // Count total topics
+        const totalTopics = curriculum.structured_topics?.units?.reduce(
+            (sum, u) => sum + (u.topics?.length || 0), 0
+        ) || 0;
+        console.log(`[Coverage] Total topics in curriculum: ${totalTopics}`);
 
         // Map questions to topics AND analyze Bloom's taxonomy in parallel
         const [mappings, blooms] = await Promise.all([
             mapQuestionsToTopics(questions, curriculum.structured_topics),
             analyzeBloomsTaxonomy(questions)
         ]);
+
+        // Log mapping results
+        console.log(`[Coverage] Mappings received: ${mappings.mappings?.length || 0} question mappings`);
+        if (mappings.error) {
+            console.error(`[Coverage] Mapping error: ${mappings.error}`);
+        }
+
+        // Log a sample mapping for debugging
+        if (mappings.mappings?.length > 0) {
+            console.log(`[Coverage] Sample mapping:`, JSON.stringify(mappings.mappings[0]));
+        }
 
         // Calculate coverage
         const coverage = calculateCoverage(questions, curriculum.structured_topics, mappings);
@@ -392,7 +524,7 @@ export async function POST(req, { params }) {
             console.error("Failed to save coverage:", updateError);
         }
 
-        console.log(`[Coverage] Analysis complete: ${coverage.overall}% overall, Bloom's quality: ${blooms.insights?.quality}`);
+        console.log(`[Coverage] Analysis complete: ${coverage.overall}% overall (${coverage.coveredTopics}/${coverage.totalTopics} topics), Bloom's quality: ${blooms.insights?.quality}`);
 
         return NextResponse.json({
             success: true,

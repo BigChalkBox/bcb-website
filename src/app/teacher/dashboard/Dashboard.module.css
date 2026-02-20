@@ -113,7 +113,7 @@
   width: 100%;
 }
 
-/* ========== QUICK ACTIONS ========== */
+/* ========== QUICK ACTIONS - CARD STYLE ========== */
 .quickActions {
   margin-bottom: 3rem;
   animation: fadeInUp 0.6s ease;
@@ -126,6 +126,133 @@
   font-weight: 700;
 }
 
+.actionCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.actionCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 1.5rem;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.actionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+
+.actionCardIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.actionCard:hover .actionCardIcon {
+  transform: scale(1.1);
+}
+
+.actionCardIconGreen {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #16a34a;
+}
+
+.actionCardIconBlue {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #2563eb;
+}
+
+.actionCardIconPurple {
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  color: #7c3aed;
+}
+
+.actionCardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.35rem;
+}
+
+.actionCardDesc {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+}
+
+/* Stage Indicator Badge */
+.stageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.stageDraft {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.stageQuestions {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.stageModerated {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.stageRubrics {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.stageQuestionsSet {
+  background: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fcd34d;
+}
+
+.stageFinal {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+/* Continue Button - Prominent */
+.continueBtn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.continueBtn:hover {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Legacy action buttons support */
 .actions {
   display: flex;
   gap: 1rem;
@@ -360,6 +487,62 @@
   resize: vertical;
   min-height: 100px;
   font-family: inherit;
+}
+
+.form select {
+  padding: 0.875rem 1.125rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.form select:focus {
+  outline: none;
+  border-color: #16A34A;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(74, 124, 47, 0.1);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formMessage {
+  padding: 0.875rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  margin: 0;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.cancelBtn {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+.cancelBtn:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.createBtn {
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(74, 124, 47, 0.3) !important;
+}
+
+.createBtn:hover {
+  box-shadow: 0 6px 16px rgba(74, 124, 47, 0.4) !important;
+  transform: translateY(-2px);
 }
 
 .form label {

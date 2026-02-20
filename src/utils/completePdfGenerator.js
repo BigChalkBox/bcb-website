@@ -267,12 +267,46 @@ export const downloadCompleteQuestionPaper = async (paper) => {
             if (part.type === "text") {
               const lines = part.content.split("\n");
               lines.forEach((line, lineIdx) => {
-                if (line.trim()) {
+                if (line.trim() || line === "") { // Handle empty lines too for spacing
                   const textSpan = document.createElement("span");
-                  textSpan.textContent = line;
+
+                  // Basic Markdown Parsing
+                  let html = line
+                    .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML first
+                    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+                    .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+                    .replace(/`(.*?)`/g, "<code style='background:#f1f5f9;padding:2px 4px;border-radius:4px;font-family:monospace'>$1</code>"); // Code
+
+                  // Headings
+                  if (line.trim().startsWith("#")) {
+                    const level = line.trim().match(/^#+/)[0].length;
+                    const text = line.trim().replace(/^#+\s*/, "");
+                    const size = level === 1 ? "16px" : level === 2 ? "14px" : "13px";
+                    const margin = level === 1 ? "12px 0 8px 0" : "10px 0 6px 0";
+                    html = `<div style="font-weight:bold;font-size:${size};margin:${margin};color:#1e293b">${text}</div>`;
+                    textSpan.style.display = "block";
+                  }
+
+                  // Unordered Lists (bullet points)
+                  else if (line.trim().startsWith("- ")) {
+                    html = `&bull; ${html.replace(/^- /, "")}`;
+                    textSpan.style.display = "block";
+                    textSpan.style.paddingLeft = "15px";
+                  }
+
+                  // Numbered Lists (1., 2.)
+                  else if (/^\d+\.\s/.test(line.trim())) {
+                    html = html.replace(/^(\d+\.)\s/, "<strong>$1</strong> ");
+                    textSpan.style.display = "block";
+                    textSpan.style.paddingLeft = "15px";
+                  }
+
+                  textSpan.innerHTML = html;
                   tempDiv.appendChild(textSpan);
                 }
-                if (lineIdx < lines.length - 1) {
+
+                // Add break unless it's the last line OR it's a heading (which has own spacing)
+                if (lineIdx < lines.length - 1 && !line.trim().startsWith("#")) {
                   tempDiv.appendChild(document.createElement("br"));
                 }
               });
@@ -730,39 +764,48 @@ export const downloadCompleteQuestionPaper = async (paper) => {
             y += 8;
           }
 
-          // Answer text - with LaTeX rendering
+          // Answer text - with Markdown/LaTeX rendering
           if (sample.answer) {
-            const cleanedAnswer = cleanStr(sample.answer);
+            // Do NOT use cleanStr which strips newlines. 
+            // Instead, handle basic markdown to HTML conversion manually.
+            let formattedHtml = sample.answer
+              .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML
+              .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+              .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+              .replace(/`(.*?)`/g, "<code>$1</code>") // Inline code
+              .replace(/\n/g, "<br>"); // Newlines
+
+            // Handle lists (simple)
+            formattedHtml = formattedHtml.replace(/(?:^|\n)- (.*?)(?=\n|$)/g, "<br>• $1");
 
             // Check if answer contains LaTeX 
-            if (hasLatex(cleanedAnswer)) {
+            // We use the image rendering path for EVERYTHING now to support formatting
+            {
               // Calculate max height for one page with comfortable margin
-              const maxChunkHeight = pageHeight - margin * 2 - 150; // More conservative for better margins
+              const maxChunkHeight = pageHeight - margin * 2 - 150;
 
               // Split content if it's very long
-              const contentChunks = splitLongContent(cleanedAnswer, maxChunkHeight);
+              const contentChunks = splitLongContent(sample.answer, maxChunkHeight);
 
               for (let chunkIdx = 0; chunkIdx < contentChunks.length; chunkIdx++) {
                 const chunk = contentChunks[chunkIdx];
 
-                // Render each chunk to image
+                // Render each chunk to image using our existing helper
+                // We pass true to force it to render even without LaTeX, because we want formatting
                 const answerImg = await renderLatexToImage(chunk, contentWidth - 70);
 
                 if (answerImg) {
                   // Calculate space needed with comfortable buffer
-                  const spaceNeeded = answerImg.height + 80; // Larger buffer for better margins
+                  const spaceNeeded = answerImg.height + 40;
                   const spaceAvailable = pageHeight - margin - y;
 
                   // For first chunk, try to fit on same page as question
-                  // For subsequent chunks, start on new page
                   if (chunkIdx === 0) {
-                    // First chunk: only move to new page if really doesn't fit
                     if (spaceNeeded > spaceAvailable) {
                       newPage();
                       fillPageBg();
                     }
                   } else {
-                    // Subsequent chunks: always start on new page for clarity
                     newPage();
                     fillPageBg();
                   }
@@ -776,23 +819,11 @@ export const downloadCompleteQuestionPaper = async (paper) => {
                     answerImg.width,
                     answerImg.height
                   );
-                  y += answerImg.height + 8; // Smaller gap between chunks
+                  y += answerImg.height + 8;
                 }
               }
 
-              y += 12; // Final spacing after all chunks
-            } else {
-              // Plain text answer
-              pdf.setFont(FONT.body, "normal");
-              pdf.setFontSize(10);
-              setColor(COLORS.text);
-              const ansLines = splitText(cleanedAnswer, contentWidth - 70);
-              ansLines.forEach((line) => {
-                checkSpace(14);
-                pdf.text(line, margin + 35, y);
-                y += 13;
-              });
-              y += 12;
+              y += 12; // Final spacing
             }
           }
 
@@ -1238,127 +1269,395 @@ export const downloadCompleteQuestionPaper = async (paper) => {
     // ═══════════════════════════════════════════════════════════════
     // COVERAGE ANALYSIS
     // ═══════════════════════════════════════════════════════════════
-    const drawCoverage = () => {
+    // Helper to render a donut chart using html2canvas and CSS conic-gradients
+    const renderDonutChart = async (percentage, color) => {
+      return new Promise(async (resolve) => {
+        try {
+          const size = 200;
+          const div = document.createElement("div");
+          div.style.position = "absolute";
+          div.style.left = "-9999px";
+          div.style.width = `${size}px`;
+          div.style.height = `${size}px`;
+
+          // CSS Donut Chart logic
+          const colorHex = "#" + color.map(c => c.toString(16).padStart(2, '0')).join('');
+          div.style.background = `conic-gradient(${colorHex} ${percentage}%, #f1f5f9 0)`;
+          div.style.borderRadius = "50%";
+          div.style.display = "flex";
+          div.style.alignItems = "center";
+          div.style.justifyContent = "center";
+
+          // Inner white circle (hole)
+          const inner = document.createElement("div");
+          inner.style.width = "70%";
+          inner.style.height = "70%";
+          inner.style.background = "white";
+          inner.style.borderRadius = "50%";
+          inner.style.display = "flex";
+          inner.style.alignItems = "center";
+          inner.style.justifyContent = "center";
+          inner.style.color = colorHex;
+          inner.style.fontFamily = "sans-serif";
+          inner.style.fontWeight = "bold";
+          inner.style.fontSize = "40px";
+          inner.textContent = `${percentage}%`;
+
+          div.appendChild(inner);
+          document.body.appendChild(div);
+
+          const canvas = await html2canvas(div, { backgroundColor: null, scale: 2 });
+          document.body.removeChild(div);
+          resolve(canvas.toDataURL("image/png"));
+        } catch (e) {
+          console.error("Chart render error", e);
+          resolve(null);
+        }
+      });
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // COVERAGE ANALYSIS (Enhanced Visual Design)
+    // ═══════════════════════════════════════════════════════════════
+
+    // Helper: Draw a Unit Card with dual-bar visualization
+    const drawUnitCard = (unit, cardX, cardY, cardW) => {
+      const unitPct = unit.coverage || 0;
+      const actualPct = unit.actualPercent || 0;
+      const expectedPct = unit.expectedPercent || 0;
+      const deviation = unit.deviation || 0;
+
+      const getStatusColor = (pct) => pct >= 70 ? COLORS.success : pct >= 40 ? COLORS.warning : COLORS.danger;
+      const getDeviationColor = (dev) => Math.abs(dev) <= 5 ? COLORS.success : Math.abs(dev) <= 15 ? COLORS.warning : COLORS.danger;
+
+      const coverageColor = getStatusColor(unitPct);
+      const contributionColor = getDeviationColor(deviation);
+
+      // Collect all questions from this unit's topics
+      const unitQuestions = [];
+      unit.topics?.forEach(topic => {
+        topic.questions?.forEach(q => {
+          if (!unitQuestions.find(uq => uq.index === q.index)) {
+            unitQuestions.push({ index: q.index, marks: q.marks });
+          }
+        });
+      });
+      unitQuestions.sort((a, b) => a.index - b.index);
+
+      // Calculate card height based on content
+      const hasQuestions = unitQuestions.length > 0;
+      const cardH = hasQuestions ? 115 : 95;
+
+      // Card background with subtle shadow
+      pdf.setFillColor(0, 0, 0, 0.02);
+      pdf.roundedRect(cardX + 2, cardY + 2, cardW, cardH, 8, 8, "F");
+      pdf.setFillColor(...COLORS.white);
+      pdf.setDrawColor(...COLORS.border);
+      pdf.setLineWidth(1);
+      pdf.roundedRect(cardX, cardY, cardW, cardH, 8, 8, "FD");
+
+      // Left accent bar (color based on coverage)
+      pdf.setFillColor(...coverageColor);
+      pdf.roundedRect(cardX, cardY, 5, cardH, 8, 0, "F");
+      pdf.rect(cardX + 4, cardY, 2, cardH, "F"); // Fill the gap
+
+      let localY = cardY + 18;
+      const innerX = cardX + 18;
+      const innerW = cardW - 36;
+
+      // Unit Name + Coverage Badge
+      pdf.setFont(FONT.heading, "bold");
+      pdf.setFontSize(11);
+      setColor(COLORS.dark);
+      const unitNameTrunc = unit.name.length > 40 ? unit.name.substring(0, 38) + "..." : unit.name;
+      pdf.text(unitNameTrunc, innerX, localY);
+
+      // Coverage badge (right side)
+      const badgeText = `${unitPct}%`;
+      const badgeW = pdf.getTextWidth(badgeText) + 14;
+      pdf.setFillColor(...coverageColor);
+      pdf.roundedRect(cardX + cardW - badgeW - 15, localY - 10, badgeW, 16, 4, 4, "F");
+      pdf.setFont(FONT.heading, "bold");
+      pdf.setFontSize(9);
+      setColor(COLORS.white);
+      pdf.text(badgeText, cardX + cardW - badgeW - 15 + 7, localY - 1);
+
+      localY += 18;
+
+      // ─── CONTRIBUTION BAR (Actual vs Expected) ───
+      const barW = innerW - 60;
+      const barH = 10;
+
+      // Label
+      pdf.setFont(FONT.heading, "normal");
+      pdf.setFontSize(8);
+      setColor(COLORS.muted);
+      pdf.text("Contribution", innerX, localY - 2);
+
+      // Bar background
+      pdf.setFillColor(241, 245, 249);
+      pdf.roundedRect(innerX, localY, barW, barH, 3, 3, "F");
+
+      // Actual fill
+      const actualFillW = Math.min(100, actualPct) / 100 * barW;
+      if (actualFillW > 0) {
+        pdf.setFillColor(...contributionColor);
+        pdf.roundedRect(innerX, localY, actualFillW, barH, 3, 3, "F");
+      }
+
+      // Expected marker (vertical line with label)
+      const expectedX = innerX + (Math.min(100, expectedPct) / 100 * barW);
+      pdf.setDrawColor(51, 65, 85); // Slate 700
+      pdf.setLineWidth(2);
+      pdf.line(expectedX, localY - 2, expectedX, localY + barH + 2);
+
+      // Draw small triangle marker above
+      pdf.setFillColor(51, 65, 85);
+      pdf.triangle(expectedX - 3, localY - 4, expectedX + 3, localY - 4, expectedX, localY - 1, "F");
+
+      // Stats text (right of bar)
+      pdf.setFont(FONT.heading, "bold");
+      pdf.setFontSize(9);
+      setColor(contributionColor);
+      pdf.text(`${actualPct}%`, innerX + barW + 8, localY + 8);
+
+      pdf.setFont(FONT.heading, "normal");
+      pdf.setFontSize(7);
+      setColor(COLORS.muted);
+      pdf.text(`(target: ${expectedPct}%)`, innerX + barW + 8, localY + 16);
+
+      localY += 28;
+
+      // ─── QUESTION PILLS ───
+      if (hasQuestions) {
+        pdf.setFont(FONT.heading, "normal");
+        pdf.setFontSize(8);
+        setColor(COLORS.muted);
+        pdf.text("Questions:", innerX, localY);
+
+        let pillX = innerX + 50;
+        const pillY = localY - 8;
+        const maxPillsWidth = innerW - 60;
+
+        unitQuestions.slice(0, 8).forEach((q, idx) => {
+          const pillText = `Q${q.index}`;
+          const pillW = pdf.getTextWidth(pillText) + 10;
+
+          if (pillX + pillW > innerX + maxPillsWidth && idx > 0) {
+            // Would overflow, show "+N more"
+            pdf.setFont(FONT.heading, "italic");
+            pdf.setFontSize(7);
+            setColor(COLORS.muted);
+            pdf.text(`+${unitQuestions.length - idx} more`, pillX, localY);
+            return;
+          }
+
+          pdf.setFillColor(238, 242, 255); // Indigo 50
+          pdf.roundedRect(pillX, pillY, pillW, 14, 4, 4, "F");
+          pdf.setFont(FONT.heading, "bold");
+          pdf.setFontSize(8);
+          setColor(COLORS.info);
+          pdf.text(pillText, pillX + 5, localY);
+          pillX += pillW + 5;
+        });
+      }
+
+      return cardH + 12; // Return total height used
+    };
+
+    const drawCoverage = async () => {
       const cov = paper.coverage_analysis;
       if (!cov) return;
 
       newPage();
       sectionTitle("Syllabus Coverage Analysis");
 
-      // Overall score card
+      // Overall score
       const covPct = cov.overall || 0;
-      const covColor = covPct >= 70 ? COLORS.success : covPct >= 40 ? COLORS.warning : COLORS.danger;
+      const getStatusColor = (pct) => pct >= 70 ? COLORS.success : pct >= 40 ? COLORS.warning : COLORS.danger;
+      const mainColor = getStatusColor(covPct);
 
-      drawCard(70, true);
+      // Main Card: Chart + Stats
+      const cardH = 180;
+      drawCard(cardH, true);
 
-      pdf.setFillColor(...covColor);
-      pdf.roundedRect(margin + 20, y + 20, 80, 35, 5, 5, "F");
-      pdf.setFont(FONT.heading, "bold");
-      pdf.setFontSize(20);
-      setColor(COLORS.white);
-      pdf.text(`${covPct}%`, margin + 60, y + 45, { align: "center" });
-
-      pdf.setFont(FONT.heading, "bold");
-      pdf.setFontSize(12);
-      setColor(COLORS.dark);
-      pdf.text("Syllabus Coverage", margin + 120, y + 35);
-      pdf.setFont(FONT.heading, "normal");
-      pdf.setFontSize(10);
-      setColor(COLORS.muted);
-      pdf.text(`${cov.coveredTopics || 0} of ${cov.totalTopics || 0} topics covered`, margin + 120, y + 52);
-
-      y += 85;
-
-      // Unit breakdown table
-      if (cov.units?.length > 0) {
-        pdf.setFont(FONT.heading, "bold");
-        pdf.setFontSize(10);
-        setColor(COLORS.dark);
-        pdf.text("Unit Breakdown", margin, y);
-        y += 18;
-
-        const col1W = contentWidth * 0.55;
-        const col2W = contentWidth * 0.22;
-        const col3W = contentWidth * 0.23;
-
-        // Header
-        pdf.setFillColor(...COLORS.primary);
-        pdf.rect(margin, y, col1W, 18, "F");
-        pdf.rect(margin + col1W, y, col2W, 18, "F");
-        pdf.rect(margin + col1W + col2W, y, col3W, 18, "F");
-
-        pdf.setFont(FONT.heading, "bold");
-        pdf.setFontSize(9);
-        setColor(COLORS.white);
-        pdf.text("UNIT", margin + 8, y + 12);
-        pdf.text("COVERAGE", margin + col1W + 8, y + 12);
-        pdf.text("TOPICS", margin + col1W + col2W + 8, y + 12);
-        y += 20;
-
-        cov.units.forEach((unit, idx) => {
-          checkSpace(22);
-          const coveredTopics = unit.topics?.filter(t => t.status === "covered" || t.status === "partial").length || 0;
-          const totalTopics = unit.topics?.length || 0;
-          const unitPct = unit.coverage || 0;
-
-          if (idx % 2 === 0) {
-            pdf.setFillColor(...COLORS.light);
-            pdf.rect(margin, y, contentWidth, 20, "F");
-          }
-          pdf.setDrawColor(...COLORS.border);
-          pdf.line(margin, y + 20, margin + contentWidth, y + 20);
-
-          pdf.setFont(FONT.body, "normal");
-          pdf.setFontSize(9);
-          setColor(COLORS.text);
-          const unitName = (unit.name || "").substring(0, 45);
-          pdf.text(unitName, margin + 8, y + 13);
-
-          const pctColor = unitPct >= 70 ? COLORS.success : unitPct >= 40 ? COLORS.warning : COLORS.danger;
-          pdf.setFont(FONT.heading, "bold");
-          setColor(pctColor);
-          pdf.text(`${unitPct}%`, margin + col1W + 8, y + 13);
-
-          pdf.setFont(FONT.body, "normal");
-          setColor(COLORS.muted);
-          pdf.text(`${coveredTopics}/${totalTopics}`, margin + col1W + col2W + 8, y + 13);
-
-          y += 20;
-        });
-        y += 15;
+      // 1. Render Pie Chart
+      const chartImg = await renderDonutChart(covPct, mainColor);
+      if (chartImg) {
+        pdf.addImage(chartImg, "PNG", margin + 30, y + 20, 140, 140);
       }
 
-      // Recommendations
-      if (cov.recommendations?.length > 0) {
-        checkSpace(40);
+      // 2. Stats Text (Right side)
+      const textX = margin + 200;
+      const textY = y + 50;
+
+      pdf.setFont(FONT.heading, "bold");
+      pdf.setFontSize(18);
+      setColor(COLORS.dark);
+      pdf.text("Curriculum Coverage", textX, textY);
+
+      pdf.setFont(FONT.heading, "bold");
+      pdf.setFontSize(11);
+      setColor(mainColor);
+      const statusText = covPct >= 70 ? "Excellent coverage" : covPct >= 40 ? "Moderate coverage" : "Low coverage";
+      pdf.text(statusText, textX, textY + 20);
+
+      pdf.setFont(FONT.heading, "normal");
+      pdf.setFontSize(10);
+      setColor(COLORS.dark);
+      pdf.text(`Topics Covered: ${cov.coveredTopics || 0}`, textX, textY + 50);
+      pdf.text(`Uncovered Topics: ${cov.totalTopics - (cov.coveredTopics || 0)}`, textX + 130, textY + 50);
+
+      y += 200;
+
+      // ═══════════════════════════════════════════════════════════════
+      // UNIT-WISE COVERAGE (Enhanced Card Layout)
+      // ═══════════════════════════════════════════════════════════════
+      if (cov.units?.length > 0) {
+        checkSpace(60);
         pdf.setFont(FONT.heading, "bold");
-        pdf.setFontSize(10);
+        pdf.setFontSize(14);
         setColor(COLORS.dark);
-        pdf.text("Recommendations", margin, y);
+        pdf.text("Unit-wise Coverage & Contribution", margin, y);
+        y += 8;
+
+        // Subtitle
+        pdf.setFont(FONT.heading, "normal");
+        pdf.setFontSize(9);
+        setColor(COLORS.muted);
+        pdf.text("Coverage = topics tested • Contribution = marks share (marker shows target)", margin, y);
+        y += 20;
+
+        // Draw Unit Cards
+        cov.units.forEach((unit) => {
+          const estimatedCardHeight = 130;
+          if (y + estimatedCardHeight > pageHeight - margin) {
+            newPage();
+            fillPageBg();
+          }
+
+          const usedHeight = drawUnitCard(unit, margin, y, contentWidth);
+          y += usedHeight;
+        });
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      // UNCOVERED TOPICS (Tag Cloud Style)
+      // ═══════════════════════════════════════════════════════════════
+      if (cov.uncoveredTopics?.length > 0) {
+        checkSpace(80);
+        y += 10;
+
+        pdf.setFont(FONT.heading, "bold");
+        pdf.setFontSize(12);
+        setColor(COLORS.danger);
+        pdf.text(`Uncovered Topics (${cov.uncoveredTopics.length})`, margin, y);
         y += 18;
 
-        cov.recommendations.forEach((rec) => {
-          checkSpace(30);
-          const sevColor = rec.severity === "error" ? COLORS.danger : rec.severity === "warning" ? COLORS.warning : COLORS.success;
-          pdf.setFillColor(...sevColor);
-          pdf.circle(margin + 8, y - 3, 3, "F");
+        // Tag cloud container
+        const containerX = margin;
+        const containerW = contentWidth;
+        let tagX = containerX;
+        let tagY = y;
+        const tagH = 20;
+        const tagGap = 6;
+        const maxTagsPerRow = 4;
+        let tagsInRow = 0;
 
+        const topicsToShow = cov.uncoveredTopics.slice(0, 12);
+
+        topicsToShow.forEach((topic, idx) => {
+          const topicName = topic.name || topic;
+          const truncName = topicName.length > 25 ? topicName.substring(0, 23) + ".." : topicName;
+
+          pdf.setFont(FONT.heading, "normal");
+          pdf.setFontSize(8);
+          const tagW = Math.min(pdf.getTextWidth(truncName) + 16, containerW / 2);
+
+          // Check if we need to wrap
+          if (tagX + tagW > containerX + containerW || tagsInRow >= maxTagsPerRow) {
+            tagX = containerX;
+            tagY += tagH + tagGap;
+            tagsInRow = 0;
+          }
+
+          // Check page space
+          if (tagY + tagH > pageHeight - margin) {
+            newPage();
+            fillPageBg();
+            tagY = margin + 20;
+            tagX = containerX;
+          }
+
+          // Draw tag
+          pdf.setFillColor(254, 242, 242); // Red 50
+          pdf.setDrawColor(252, 165, 165); // Red 300
+          pdf.setLineWidth(0.5);
+          pdf.roundedRect(tagX, tagY, tagW, tagH, 4, 4, "FD");
+
+          // Tag text
+          setColor(COLORS.danger);
+          pdf.text(truncName, tagX + 8, tagY + 13);
+
+          tagX += tagW + tagGap;
+          tagsInRow++;
+        });
+
+        // Show "and X more" if truncated
+        if (cov.uncoveredTopics.length > 12) {
+          tagY += tagH + tagGap;
+          pdf.setFont(FONT.heading, "italic");
+          pdf.setFontSize(9);
+          setColor(COLORS.muted);
+          pdf.text(`... and ${cov.uncoveredTopics.length - 12} more topics`, containerX, tagY + 10);
+          tagY += 15;
+        }
+
+        y = tagY + tagH + 15;
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      // RECOMMENDATIONS
+      // ═══════════════════════════════════════════════════════════════
+      if (cov.recommendations?.length > 0) {
+        checkSpace(50);
+        pdf.setFont(FONT.heading, "bold");
+        pdf.setFontSize(11);
+        setColor(COLORS.dark);
+        pdf.text("Recommendations", margin, y);
+        y += 20;
+
+        cov.recommendations.forEach((rec) => {
+          checkSpace(35);
+          const sevColor = rec.severity === "error" ? COLORS.danger : rec.severity === "warning" ? COLORS.warning : COLORS.success;
+
+          // Recommendation card
+          const recCardH = rec.suggestion ? 45 : 28;
+          pdf.setFillColor(250, 250, 252);
+          pdf.roundedRect(margin, y, contentWidth, recCardH, 5, 5, "F");
+          pdf.setFillColor(...sevColor);
+          pdf.rect(margin, y, 4, recCardH, "F");
+
+          // Icon circle
+          pdf.setFillColor(...sevColor);
+          pdf.circle(margin + 18, y + 14, 5, "F");
+
+          // Message
           pdf.setFont(FONT.body, "normal");
           pdf.setFontSize(10);
           setColor(COLORS.text);
-          const msgLines = splitText(cleanStr(rec.message), contentWidth - 30);
-          pdf.text(msgLines[0], margin + 20, y);
-          y += 14;
+          const msgLines = splitText(cleanStr(rec.message), contentWidth - 50);
+          pdf.text(msgLines[0], margin + 30, y + 16);
 
           if (rec.suggestion) {
             pdf.setFont(FONT.body, "italic");
             pdf.setFontSize(9);
             setColor(COLORS.muted);
-            const suggLines = splitText(cleanStr(rec.suggestion), contentWidth - 40);
-            pdf.text(suggLines[0], margin + 25, y);
-            y += 12;
+            const suggLines = splitText(cleanStr(rec.suggestion), contentWidth - 50);
+            pdf.text(suggLines[0], margin + 30, y + 32);
           }
-          y += 5;
+
+          y += recCardH + 10;
         });
       }
     };

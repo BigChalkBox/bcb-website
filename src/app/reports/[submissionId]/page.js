@@ -12,8 +12,10 @@ export default function ReportPage({ params }) {
   const [report, setReport] = useState(null);
   const [submission, setSubmission] = useState(null);
   const [paperData, setPaperData] = useState(null);
+  const [detectionResult, setDetectionResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lightboxImage, setLightboxImage] = useState(null);
+  const [showObjectiveSheets, setShowObjectiveSheets] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,11 +36,13 @@ export default function ReportPage({ params }) {
         setReport(data.report);
         setSubmission(data.submission);
         setPaperData(data.paperData);
+        setDetectionResult(data.detectionResult);
       } catch (err) {
         console.error("Error fetching report data:", err);
         setReport(null);
         setSubmission(null);
         setPaperData(null);
+        setDetectionResult(null);
       } finally {
         setLoading(false);
       }
@@ -132,6 +136,7 @@ export default function ReportPage({ params }) {
           totalScore,
           totalMarks,
           paperData,
+          detectionResult,
         }),
       });
 
@@ -156,9 +161,49 @@ export default function ReportPage({ params }) {
     }
   };
 
+  const renderAnswerComparison = (ques) => {
+    // Only for objective-like questions that have single answer props
+    if (ques.studentAnswer === undefined || ques.correctAnswer === undefined) return null;
+
+    // Check correctness (case-insensitive)
+    const isCorrect = String(ques.studentAnswer || "").trim().toLowerCase() === String(ques.correctAnswer || "").trim().toLowerCase();
+
+    return (
+      <div style={{
+        marginTop: '16px',
+        padding: '12px 16px',
+        backgroundColor: isCorrect ? '#f0fdf4' : '#fef2f2',
+        border: `1px solid ${isCorrect ? '#bbf7d0' : '#fecaca'}`,
+        borderRadius: '8px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '24px',
+        alignItems: 'center'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', marginBottom: '2px' }}>Student Answer</span>
+          <span style={{ fontSize: '16px', fontWeight: 700, color: isCorrect ? '#166534' : '#dc2626' }}>
+            {ques.studentAnswer || <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>Not answered</span>}
+            {isCorrect ? ' ✅' : ' ❌'}
+          </span>
+        </div>
+
+        <div style={{ width: '1px', height: '32px', background: isCorrect ? '#bbf7d0' : '#fecaca' }}></div>
+
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', marginBottom: '2px' }}>Expected Answer</span>
+          <span style={{ fontSize: '16px', fontWeight: 700, color: '#166534' }}>
+            {ques.correctAnswer}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  const objectivePages = detectionResult?.pages?.filter(p => p.page_type === 'objective') || [];
+
   return (
     <>
-
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerContent}>
@@ -167,13 +212,16 @@ export default function ReportPage({ params }) {
                 <h1 className={styles.title}>Evaluation Report</h1>
                 <p className={styles.subtitle}>Detailed Assessment & Feedback</p>
               </div>
-              <button onClick={downloadPDF} className={styles.downloadBtn} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {loading ? (
-                  <><Loader2 className="animate-spin" size={16} /> Generating PDF...</>
-                ) : (
-                  <><Download size={16} /> Download Report PDF</>
-                )}
-              </button>
+
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button onClick={downloadPDF} className={styles.downloadBtn} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {loading ? (
+                    <><Loader2 className="animate-spin" size={16} /> Generating PDF...</>
+                  ) : (
+                    <><Download size={16} /> Download Report PDF</>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -238,9 +286,83 @@ export default function ReportPage({ params }) {
         </div>
 
         <div className={styles.questionsSection}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
             <h2>Detailed Evaluation</h2>
+
+            {objectivePages.length > 0 && (
+              <button
+                onClick={() => setShowObjectiveSheets(!showObjectiveSheets)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  backgroundColor: '#f3f4f6',
+                  color: '#1f2937',
+                  border: '1px solid #e5e7eb',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}
+              >
+                <Search size={16} /> {showObjectiveSheets ? 'Hide' : 'View'} Objective Sheets ({objectivePages.length})
+              </button>
+            )}
           </div>
+
+          {showObjectiveSheets && objectivePages.length > 0 && (
+            <div style={{
+              marginBottom: '24px',
+              padding: '16px',
+              background: '#fff',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px'
+            }}>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600 }}>Objective Answer Sheets</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '12px' }}>
+                {objectivePages.map((page, idx) => {
+                  const imgSrc = `https://crqheuuvsgtzejaestyj.supabase.co/storage/v1/object/public/submissions/${page.uploaded_to}`;
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => openLightbox(imgSrc)}
+                      style={{
+                        position: 'relative',
+                        aspectRatio: '0.7',
+                        cursor: 'pointer',
+                        border: '1px solid #eee',
+                        borderRadius: '4px',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      <Image
+                        src={imgSrc}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        alt={`Objective Page ${idx + 1}`}
+                      />
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        background: 'rgba(0,0,0,0.6)',
+                        color: 'white',
+                        fontSize: '10px',
+                        padding: '4px',
+                        textAlign: 'center'
+                      }}>
+                        Page {page.page + 1}
+                      </div>
+                      <div className={styles.imageOverlay}>
+                        <span><Search size={14} /></span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {report.results.map((q, idx) => {
             if (processedForUI.has(idx)) return null;
@@ -290,6 +412,8 @@ export default function ReportPage({ params }) {
                           <Latex>{ques.question}</Latex>
                         </div>
 
+                        {renderAnswerComparison(ques)}
+
                         <p
                           className={
                             attempted
@@ -310,36 +434,57 @@ export default function ReportPage({ params }) {
                           <div className={styles.criteriaSection}>
                             <h4>Evaluation Breakdown</h4>
                             <div className={styles.criteriaList}>
-                              {ques.evaluation.criteria.map((c, i) => (
-                                <div
-                                  key={i}
-                                  className={styles.criteriaItem}
-                                >
+                              {ques.evaluation.criteria.map((c, i) => {
+                                const hasAnswers = c.studentAnswer !== undefined || c.correctAnswer !== undefined;
+                                const isCorrect = hasAnswers && String(c.studentAnswer || "").trim().toLowerCase() === String(c.correctAnswer || "").trim().toLowerCase();
+
+                                return (
                                   <div
-                                    className={styles.criteriaHeader}
+                                    key={i}
+                                    className={styles.criteriaItem}
                                   >
-                                    <span
-                                      className={styles.criterionName}
-                                    >
-                                      {c.criterion}
-                                    </span>
-                                    <span
-                                      className={
-                                        styles.criterionMarks
-                                      }
-                                    >
-                                      {c.obtained_marks}/{c.max_marks}
-                                    </span>
+                                    <div className={styles.criteriaHeader}>
+                                      <span className={styles.criterionName}>
+                                        {c.criterion}
+                                      </span>
+                                      <span className={styles.criterionMarks}>
+                                        {c.obtained_marks}/{c.max_marks}
+                                      </span>
+                                    </div>
+
+                                    {hasAnswers && (
+                                      <div style={{
+                                        display: 'flex',
+                                        gap: '16px',
+                                        padding: '8px 12px',
+                                        marginTop: '8px',
+                                        backgroundColor: isCorrect ? '#f0fdf4' : '#fef2f2',
+                                        border: `1px solid ${isCorrect ? '#bbf7d0' : '#fecaca'}`,
+                                        borderRadius: '6px',
+                                        fontSize: '13px'
+                                      }}>
+                                        <div>
+                                          <span style={{ fontWeight: 600, color: '#6b7280', fontSize: '11px', textTransform: 'uppercase' }}>Student: </span>
+                                          <span style={{ fontWeight: 700, color: isCorrect ? '#166534' : '#dc2626' }}>
+                                            {c.studentAnswer || <em style={{ color: '#9ca3af' }}>No answer</em>}
+                                            {isCorrect ? ' ✅' : ' ❌'}
+                                          </span>
+                                        </div>
+                                        <div style={{ borderLeft: '1px solid #e5e7eb', paddingLeft: '16px' }}>
+                                          <span style={{ fontWeight: 600, color: '#6b7280', fontSize: '11px', textTransform: 'uppercase' }}>Expected: </span>
+                                          <span style={{ fontWeight: 700, color: '#166534' }}>{c.correctAnswer}</span>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {!hasAnswers && (
+                                      <div className={styles.criterionFeedback}>
+                                        {c.feedback}
+                                      </div>
+                                    )}
                                   </div>
-                                  <div
-                                    className={
-                                      styles.criterionFeedback
-                                    }
-                                  >
-                                    {c.feedback}
-                                  </div>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           </div>
                         )}
@@ -418,34 +563,63 @@ export default function ReportPage({ params }) {
                   <Latex>{q.question}</Latex>
                 </div>
 
+                {renderAnswerComparison(q)}
+
                 {q.evaluation?.criteria?.length > 0 && (
                   <div className={styles.criteriaSection}>
                     <h4>Evaluation Breakdown</h4>
                     <div className={styles.criteriaList}>
-                      {q.evaluation.criteria.map((c, i) => (
-                        <div
-                          key={i}
-                          className={styles.criteriaItem}
-                        >
-                          <div className={styles.criteriaHeader}>
-                            <span
-                              className={styles.criterionName}
-                            >
-                              {c.criterion}
-                            </span>
-                            <span
-                              className={styles.criterionMarks}
-                            >
-                              {c.obtained_marks}/{c.max_marks}
-                            </span>
-                          </div>
+                      {q.evaluation.criteria.map((c, i) => {
+                        const hasAnswers = c.studentAnswer !== undefined || c.correctAnswer !== undefined;
+                        const isCorrect = hasAnswers && String(c.studentAnswer || "").trim().toLowerCase() === String(c.correctAnswer || "").trim().toLowerCase();
+
+                        return (
                           <div
-                            className={styles.criterionFeedback}
+                            key={i}
+                            className={styles.criteriaItem}
                           >
-                            {c.feedback}
+                            <div className={styles.criteriaHeader}>
+                              <span className={styles.criterionName}>
+                                {c.criterion}
+                              </span>
+                              <span className={styles.criterionMarks}>
+                                {c.obtained_marks}/{c.max_marks}
+                              </span>
+                            </div>
+
+                            {hasAnswers && (
+                              <div style={{
+                                display: 'flex',
+                                gap: '16px',
+                                padding: '8px 12px',
+                                marginTop: '8px',
+                                backgroundColor: isCorrect ? '#f0fdf4' : '#fef2f2',
+                                border: `1px solid ${isCorrect ? '#bbf7d0' : '#fecaca'}`,
+                                borderRadius: '6px',
+                                fontSize: '13px'
+                              }}>
+                                <div>
+                                  <span style={{ fontWeight: 600, color: '#6b7280', fontSize: '11px', textTransform: 'uppercase' }}>Student: </span>
+                                  <span style={{ fontWeight: 700, color: isCorrect ? '#166534' : '#dc2626' }}>
+                                    {c.studentAnswer || <em style={{ color: '#9ca3af' }}>No answer</em>}
+                                    {isCorrect ? ' ✅' : ' ❌'}
+                                  </span>
+                                </div>
+                                <div style={{ borderLeft: '1px solid #e5e7eb', paddingLeft: '16px' }}>
+                                  <span style={{ fontWeight: 600, color: '#6b7280', fontSize: '11px', textTransform: 'uppercase' }}>Expected: </span>
+                                  <span style={{ fontWeight: 700, color: '#166534' }}>{c.correctAnswer}</span>
+                                </div>
+                              </div>
+                            )}
+
+                            {!hasAnswers && (
+                              <div className={styles.criterionFeedback}>
+                                {c.feedback}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -504,7 +678,7 @@ export default function ReportPage({ params }) {
             contact your instructor.
           </p>
         </div>
-      </div>
+      </div >
 
       {lightboxImage && (
         <div className={styles.lightbox} onClick={closeLightbox}>
@@ -521,7 +695,8 @@ export default function ReportPage({ params }) {
             onClick={(e) => e.stopPropagation()}
           />
         </div>
-      )}
+      )
+      }
     </>
   );
 }

@@ -1,11 +1,7 @@
 // src/app/api/evaluations/[submissionId]/evaluate/route.js
 
-import { GoogleGenAI } from "@google/genai";
+import { generateContentWithFallback, extractTextFromResponse } from "@/lib/gemini";
 import { createClient } from "@supabase/supabase-js";
-
-const genAI = new GoogleGenAI({
-    apiKey: process.env.GOOGLE_API_KEY,
-});
 
 // Supabase (service role)
 const supabase = createClient(
@@ -61,6 +57,8 @@ export async function POST(request, { params }) {
         }
 
         const pages = Array.isArray(detectionResult.pages) ? detectionResult.pages : [];
+        // Extract objective answers from detection result (for auto-grading objective questions)
+        const objectiveAnswers = detectionResult.objective_answers || {};
 
         // 2️⃣ Load submission to get paper_id
         const { data: submissionRow, error: subErr } = await supabase
@@ -192,11 +190,171 @@ export async function POST(request, { params }) {
         }
 
         // 5️⃣ Evaluate each question
+        console.log("🔑 Available Objective Answer Keys:", Object.keys(objectiveAnswers));
         const evaluationsPerQuestion = [];
+
+        // Helper to find answer with loose key matching
+        const findAnswer = (key) => {
+            const normalizedKey = String(key).toLowerCase().trim();
+            // Try exact match
+            if (objectiveAnswers[key]) return objectiveAnswers[key];
+            if (objectiveAnswers[normalizedKey]) return objectiveAnswers[normalizedKey];
+
+            // Try variations
+            const variations = [
+                `q${normalizedKey}`,  // 1a -> q1a
+                normalizedKey.replace(/^q/, ''), // q1a -> 1a
+                normalizedKey.replace('.', ''),  // 1.a -> 1a
+                `q${normalizedKey}`.replace('.', ''), // 1.a -> q1a
+            ];
+
+            for (const v of variations) {
+                if (objectiveAnswers[v]) return objectiveAnswers[v];
+            }
+
+            // Search all keys for suffix match if key is sub-part (e.g. key="1a", stored="q.1a")
+            const allKeys = Object.keys(objectiveAnswers);
+            const found = allKeys.find(k => {
+                const kNorm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const keyNorm = normalizedKey.replace(/[^a-z0-9]/g, '');
+                return kNorm === keyNorm || kNorm.endsWith(keyNorm);
+            });
+
+            return found ? objectiveAnswers[found] : null;
+        };
 
         for (let qi = 0; qi < questions.length; qi++) {
             const q = questions[qi];
             const qNumber = qi + 1;
+
+            // 🆕 Handle OBJECTIVE questions with auto-grading
+            if (q.type === "objective") {
+                const studentAnswer = findAnswer(qNumber);
+                const correctAnswer = q.correctAnswer || null;
+
+                let isCorrect = false;
+                if (studentAnswer && correctAnswer) {
+                    // Case-insensitive comparison, trim whitespace
+                    const normalizedStudent = String(studentAnswer).trim().toLowerCase();
+                    const normalizedCorrect = String(correctAnswer).trim().toLowerCase();
+                    isCorrect = normalizedStudent === normalizedCorrect;
+                }
+
+                const score = isCorrect ? (q.marks || 0) : 0;
+
+                evaluationsPerQuestion.push({
+                    qNumber,
+                    qid: q.qid || null,
+                    marks: q.marks || null,
+                    question: q.text || null,
+                    type: "objective",
+                    studentAnswer,
+                    correctAnswer,
+                    studentImages: [], // No images for objective questions
+                    evaluation: {
+                        question_number: qNumber,
+                        qid: q.qid || null,
+                        suggestedScore: score,
+                        feedback: studentAnswer
+                            ? (isCorrect
+                                ? "✅ Correct answer"
+                                : `❌ Incorrect. Expected: "${correctAnswer}", Got: "${studentAnswer}"`)
+                            : "⚠️ No answer provided",
+                        criteria: [{
+                            criterion: "Answer correctness",
+                            obtained_marks: score,
+                            max_marks: q.marks || 0,
+                            feedback: isCorrect ? "Correct" : (studentAnswer ? "Incorrect" : "Not attempted"),
+                        }],
+                    },
+                });
+
+                console.log(`✅ Q${qNumber} (objective): ${studentAnswer || "no answer"} → ${isCorrect ? "CORRECT" : "INCORRECT"}`);
+                continue; // Skip to next question, no LLM evaluation needed
+            }
+
+            // 🆕 Handle CASE_STUDY questions with sub-parts
+            if (q.type === "case_study" && q.hasSubParts && Array.isArray(q.subParts)) {
+                const subPartResults = [];
+                let totalScore = 0;
+
+                for (const sub of q.subParts) {
+                    const subLabel = `${qNumber}${sub.label}`; // e.g., "1a", "1b"
+
+                    if (sub.type === "objective") {
+                        // Auto-grade objective sub-part
+                        const studentAnswer = findAnswer(subLabel) || findAnswer(sub.label); // Try "1a" then "a"
+                        const correctAnswer = sub.correctAnswer || null;
+
+                        let isCorrect = false;
+                        if (studentAnswer && correctAnswer) {
+                            const normalizedStudent = String(studentAnswer).trim().toLowerCase();
+                            const normalizedCorrect = String(correctAnswer).trim().toLowerCase();
+                            isCorrect = normalizedStudent === normalizedCorrect;
+                        }
+
+                        const subScore = isCorrect ? (sub.marks || 0) : 0;
+                        totalScore += subScore;
+
+                        subPartResults.push({
+                            label: sub.label,
+                            fullLabel: subLabel,
+                            text: sub.text,
+                            type: "objective",
+                            marks: sub.marks,
+                            studentAnswer,
+                            correctAnswer,
+                            score: subScore,
+                            feedback: studentAnswer
+                                ? (isCorrect ? "✅ Correct" : `❌ Incorrect. Expected: "${correctAnswer}"`)
+                                : "⚠️ Not answered",
+                        });
+
+                        console.log(`  ✅ Q${subLabel} (objective sub-part): ${studentAnswer || "no answer"} → ${isCorrect ? "CORRECT" : "INCORRECT"}`);
+                    } else {
+                        // Subjective sub-part - would need images/LLM, marking as TODO for now
+                        subPartResults.push({
+                            label: sub.label,
+                            fullLabel: subLabel,
+                            text: sub.text,
+                            type: "subjective",
+                            marks: sub.marks,
+                            score: 0, // TODO: LLM evaluation for subjective sub-parts
+                            feedback: "⚠️ Subjective sub-parts require manual review",
+                        });
+                        console.log(`  📝 Q${subLabel} (subjective sub-part): requires LLM evaluation`);
+                    }
+                }
+
+                evaluationsPerQuestion.push({
+                    qNumber,
+                    qid: q.qid || null,
+                    marks: q.marks || null,
+                    question: q.text || null,
+                    type: "case_study",
+                    subParts: subPartResults,
+                    studentImages: [],
+                    evaluation: {
+                        question_number: qNumber,
+                        qid: q.qid || null,
+                        suggestedScore: totalScore,
+                        feedback: `Case study with ${subPartResults.length} sub-parts. Objective parts auto-graded.`,
+                        criteria: subPartResults.map(s => ({
+                            criterion: `Part ${s.label.toUpperCase()}: ${s.text || "Sub-question"}`,
+                            obtained_marks: s.score,
+                            max_marks: s.marks || 0,
+                            feedback: s.feedback,
+                            studentAnswer: s.studentAnswer,
+                            correctAnswer: s.correctAnswer,
+                        })),
+                    },
+                });
+
+                console.log(`📋 Q${qNumber} (case_study): ${subPartResults.length} sub-parts, total score: ${totalScore}`);
+                continue;
+            }
+
+            // SUBJECTIVE questions - use LLM evaluation
             const samples = Array.isArray(q.samples) ? q.samples : [];
 
             const sampleBlocks = samples.map((s, idx) => {
@@ -212,21 +370,39 @@ ${rubricText || "[No rubric available]"}
 `;
             }).join("\n\n---\n\n");
 
+
+
+
+
+            // NORMAL PROMPT
+
             const prompt = `
-You are a VERY STRICT and expert exam evaluator.
 
-You are given one student's handwritten answer (as images) for a specific question.
+You are evaluating a student's handwritten answer.
+You are a fair and moderate evaluator.
+Be a bit lenient.
 
-This question has multiple official sample solutions, and each sample has its own rubric.
+Carefully read the handwritten answer images and understand what the student has written.
+Ignore any content that is crossed out.
 
-Your tasks are:
-1. Analyze the student’s answer.
-2. Decide which sample solution (from the list below) the student’s work most closely matches.
-3. Apply *only that sample’s rubric* to evaluate the student’s performance.
-4. Award marks per criterion, give feedback per criterion, and compute the total score.
-5. Be generous in partial credit for correct reasoning.
-6. If the handwriting or answer is blank/unreadable, give minimal marks and explain.
-7. BE STRICT: Do not award marks for any criterion not clearly met.
+The question has multiple official sample solutions, each with its own rubric.
+
+Your tasks:
+1. Analyze the student’s answer for correctness and understanding.
+2. Choose the sample solution that best matches the student’s approach.
+3. Apply ONLY that sample’s rubric.
+4. Award marks based on how well each criterion is met.
+5. Give partial credit where correct ideas or reasoning are shown.
+6. Do not award marks for irrelevant or incorrect content.
+7. If the answer is blank or unreadable, give minimal marks and explain why.
+
+Be fair, clear, and focused on evaluating understanding rather than minor mistakes.
+
+
+First, carefully and thoroughly read the student's handwritten answer images.
+- Clearly understand what the student has written.
+- Ignore any content that has been crossed out by the student.
+
 
 Return STRICTLY valid JSON (no markdown, no commentary) structured as:
 {
@@ -241,7 +417,6 @@ Return STRICTLY valid JSON (no markdown, no commentary) structured as:
 }
 
 ---
-
 QUESTION:
 ${q.text || "[No text provided]"}
 
@@ -250,6 +425,8 @@ TOTAL MARKS: ${q.marks ?? "N/A"}
 AVAILABLE SAMPLES (each has its own rubric) choose one SAMPLE to which student answer resonates the most:
 ${sampleBlocks}
 `;
+
+
 
             const parts = [{ text: prompt }];
 
@@ -275,14 +452,33 @@ ${sampleBlocks}
                 }
             }
 
-            const studentImgs = questionToStudentImages[qi] || [];
-            if (studentImgs.length) {
-                parts.push({ text: "Student's handwritten answer (images in order):" });
-                for (const img of studentImgs) {
-                    parts.push({ inlineData: { mimeType: img.mimeType, data: img.base64 } });
-                }
+            // 🆕 CHECK FOR EXTRACTED TEXT
+            const extractedTextsForQ = pages
+                .filter(p => Number(p.question_no) === qNumber && p.extracted_text)
+                .map(p => p.extracted_text)
+                .join("\n\n [Next Page] \n\n");
+
+            const hasExtractedText = extractedTextsForQ && extractedTextsForQ.trim().length > 10;
+
+            if (hasExtractedText) {
+                parts.push({ text: "Student's Answer (Extracted Text via OCR/Digital Layer):" });
+                parts.push({ text: extractedTextsForQ });
+
+                // Add images as reference anyway? User said "send the text INSTEAD of images"
+                // But it might be safer to send images as fallback if token limit allows? 
+                // User instruction was explicit: "send the text instead of images"
+                parts.push({ text: "(Note: The text above was extracted from the student's answer sheet. Evaluate this text primarily.)" });
+                console.log(`Q${qNumber}: Using extracted text (${extractedTextsForQ.length} chars) instead of images.`);
             } else {
-                parts.push({ text: "No student images found for this question (possibly skipped)." });
+                const studentImgs = questionToStudentImages[qi] || [];
+                if (studentImgs.length) {
+                    parts.push({ text: "Student's handwritten answer (images in order):" });
+                    for (const img of studentImgs) {
+                        parts.push({ inlineData: { mimeType: img.mimeType, data: img.base64 } });
+                    }
+                } else {
+                    parts.push({ text: "No student images found for this question (possibly skipped)." });
+                }
             }
 
             console.log(`Sending Q${qNumber} (qid=${q.qid || "n/a"}) to Gemini — parts: ${parts.length}`);
@@ -298,16 +494,15 @@ ${sampleBlocks}
                     payload: parts.map((p) => (p.text ? { text: p.text.slice(0, 3000) } : { inlineData: "[image data]" })),
                 });
 
-                const response = await genAI.models.generateContent({
-                    model: "gemini-2.5-flash",
+                const { response, model } = await generateContentWithFallback({
                     contents: [{ role: "user", parts }],
+                    preferredModel: "gemini-2.5-flash",
+                    maxRetries: 2,
+                    baseDelay: 1000,
                 });
 
-                let raw = "";
-                if (response.text) raw = response.text.trim();
-                else if (response.candidates?.length) {
-                    raw = response.candidates[0]?.content?.parts?.[0]?.text?.trim() || "";
-                }
+                const raw = extractTextFromResponse(response);
+                console.log(`Q${qNumber} evaluated with model: ${model}`);
 
                 // 🧠 Log what we received
                 appendToLog({

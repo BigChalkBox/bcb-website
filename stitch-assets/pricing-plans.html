@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DASES Pricing Plans - Vibrant Green</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a34a", // Vibrant Green (Green 600)
+                        "vibrant-green": "#22c55e", // Green 500
+                        "beige-bg": "#f5f5dc", // Classic Beige
+                        "beige-light": "#fafaf5",
+                        "dark-text": "#1a1c1e",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #16a34a;
+            --bg-beige: #f5f5dc;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--bg-beige);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pricing-card {
+            @apply bg-white transition-all duration-300;
+        }
+        .pricing-card:hover {
+            @apply transform -translate-y-2;
+        }
+    </style>
+</head>
+<body class="text-dark-text min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<header class="flex items-center justify-between border-b border-primary/10 bg-beige-light/90 backdrop-blur-md px-10 py-5 sticky top-0 z-50">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-9">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M10.4485 13.8519C10.4749 13.9271 10.6203 14.246 11.379 14.7361C12.298 15.3298 13.7492 15.9145 15.6717 16.3735C18.0007 16.9296 20.8712 17.2655 24 17.2655C27.1288 17.2655 29.9993 16.9296 32.3283 16.3735C34.2508 15.9145 35.702 15.3298 36.621 14.7361C37.3796 14.246 37.5251 13.9271 37.5515 13.8519C37.5287 13.7876 37.4333 13.5973 37.0635 13.2931C36.5266 12.8516 35.6288 12.3647 34.343 11.9175C31.79 11.0295 28.1333 10.4437 24 10.4437C19.8667 10.4437 16.2099 11.0295 13.657 11.9175C12.3712 12.3647 11.4734 12.8516 10.9365 13.2931C10.5667 13.5973 10.4713 13.7876 10.4485 13.8519ZM37.5563 18.7877C36.3176 19.3925 34.8502 19.8839 33.2571 20.2642C30.5836 20.9025 27.3973 21.2655 24 21.2655C20.6027 21.2655 17.4164 20.9025 14.7429 20.2642C13.1498 19.8839 11.6824 19.3925 10.4436 18.7877V34.1275C10.4515 34.1545 10.5427 34.4867 11.379 35.027C12.298 35.6207 13.7492 36.2054 15.6717 36.6644C18.0007 37.2205 20.8712 37.5564 24 37.5564C27.1288 37.5564 29.9993 37.2205 32.3283 36.6644C34.2508 36.2054 35.702 35.6207 36.621 35.027C37.4573 34.4867 37.5485 34.1546 37.5563 34.1275V18.7877ZM41.5563 13.8546V34.1455C41.5563 36.1078 40.158 37.5042 38.7915 38.3869C37.3498 39.3182 35.4192 40.0389 33.2571 40.5551C30.5836 41.1934 27.3973 41.5564 24 41.5564C20.6027 41.5564 17.4164 41.1934 14.7429 40.5551C12.5808 40.0389 10.6502 39.3182 9.20848 38.3869C7.84205 37.5042 6.44365 36.1078 6.44365 34.1455L6.44365 13.8546C6.44365 12.2684 7.37223 11.0454 8.39581 10.2036C9.43325 9.3505 10.8137 8.67141 12.343 8.13948C15.4203 7.06909 19.5418 6.44366 24 6.44366C28.4582 6.44366 32.5797 7.06909 35.657 8.13948C37.1863 8.67141 38.5667 9.3505 39.6042 10.2036C40.6278 11.0454 41.5563 12.2684 41.5563 13.8546Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-dark-text text-2xl font-black tracking-tight">DASES</h2>
+</div>
+<div class="flex flex-1 justify-end gap-10">
+<nav class="hidden lg:flex items-center gap-10">
+<a class="text-dark-text text-sm font-bold hover:text-primary transition-colors" href="#">Product</a>
+<a class="text-dark-text text-sm font-bold hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-dark-text text-sm font-bold hover:text-primary transition-colors" href="#">Resources</a>
+<a class="text-primary text-sm font-extrabold border-b-4 border-primary pb-1" href="#">Pricing</a>
+</nav>
+<div class="flex gap-4">
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center rounded-xl h-11 px-6 bg-primary text-white text-sm font-black shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                    Sign Up
+                </button>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center rounded-xl h-11 px-6 bg-white border-2 border-primary/20 text-primary text-sm font-black hover:bg-primary/5 transition-all">
+                    Log In
+                </button>
+</div>
+</div>
+</header>
+<main class="flex flex-col items-center py-20 px-6 max-w-7xl mx-auto w-full">
+<div class="text-center max-w-4xl mb-16">
+<h1 class="text-6xl font-black text-dark-text tracking-tight mb-8 leading-[1.1]">
+                Empowering Educators with <span class="text-primary">AI-Driven</span> Insights
+            </h1>
+<p class="text-xl text-dark-text/70 font-semibold max-w-2xl mx-auto">
+                Transparent pricing tailored for every educational journey. From solo teachers to global campuses.
+            </p>
+</div>
+<div class="flex flex-col items-center gap-6 mb-20">
+<div class="flex items-center p-2 bg-white/50 border-2 border-primary/10 rounded-2xl w-fit">
+<label class="relative flex items-center justify-center px-10 py-3 rounded-xl cursor-pointer transition-all has-[:checked]:bg-primary has-[:checked]:shadow-xl group">
+<input checked="" class="sr-only" name="billing" type="radio" value="monthly"/>
+<span class="text-base font-black text-dark-text/60 group-has-[:checked]:text-white">Monthly</span>
+</label>
+<label class="relative flex items-center justify-center px-10 py-3 rounded-xl cursor-pointer transition-all has-[:checked]:bg-primary has-[:checked]:shadow-xl group">
+<input class="sr-only" name="billing" type="radio" value="yearly"/>
+<span class="text-base font-black text-dark-text/60 group-has-[:checked]:text-white flex items-center gap-3">
+                        Yearly
+                        <span class="bg-vibrant-green/20 group-has-[:checked]:bg-white/20 text-primary group-has-[:checked]:text-white text-[11px] uppercase tracking-widest px-3 py-1 rounded-full font-black">2 Months Free</span>
+</span>
+</label>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10 w-full items-stretch">
+<div class="pricing-card flex flex-col p-10 border-2 border-primary/5 rounded-3xl shadow-sm">
+<div class="mb-10">
+<h3 class="text-2xl font-black text-dark-text mb-3">Basic</h3>
+<p class="text-dark-text/50 font-bold mb-8 leading-relaxed">Perfect for individual teachers getting started.</p>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-dark-text">$0</span>
+<span class="text-lg font-bold text-dark-text/40">/month</span>
+</div>
+</div>
+<button class="w-full py-4 px-6 mb-10 bg-dark-text/5 text-dark-text font-black rounded-xl border-2 border-transparent hover:border-dark-text/10 hover:bg-dark-text/10 transition-all text-lg">
+                    Get Started
+                </button>
+<div class="flex flex-col gap-6 mt-auto">
+<p class="text-xs font-black text-dark-text/40 uppercase tracking-[0.2em]">Core Features</p>
+<ul class="space-y-5">
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Individual classroom tools
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            5 AI assessments /mo
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Standard feedback reports
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Email support
+                        </li>
+</ul>
+</div>
+</div>
+<div class="pricing-card relative flex flex-col p-10 border-[6px] border-primary rounded-3xl shadow-2xl scale-105 z-10 bg-white">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-black uppercase tracking-[0.25em] px-8 py-2.5 rounded-full shadow-xl">
+                    Most Popular
+                </div>
+<div class="mb-10 pt-4">
+<h3 class="text-2xl font-black text-dark-text mb-3">Professional</h3>
+<p class="text-dark-text/50 font-bold mb-8 leading-relaxed">Best for tutoring &amp; coaching centers.</p>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-primary">$29</span>
+<span class="text-lg font-bold text-primary/40">/month</span>
+</div>
+</div>
+<button class="w-full py-4 px-6 mb-10 bg-primary text-white font-black rounded-xl shadow-xl shadow-primary/30 hover:bg-primary/90 transition-all hover:scale-[1.03] text-lg">
+                    Choose Professional
+                </button>
+<div class="flex flex-col gap-6 mt-auto">
+<p class="text-xs font-black text-primary uppercase tracking-[0.2em]">Everything in Basic, plus:</p>
+<ul class="space-y-5">
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Multi-teacher management
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Unlimited AI assessments
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Advanced analytics dashboard
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Custom grading rubrics
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Priority 24/7 support
+                        </li>
+</ul>
+</div>
+</div>
+<div class="pricing-card flex flex-col p-10 border-2 border-primary/5 rounded-3xl shadow-sm">
+<div class="mb-10">
+<h3 class="text-2xl font-black text-dark-text mb-3">Enterprise</h3>
+<p class="text-dark-text/50 font-bold mb-8 leading-relaxed">Scaling solutions for large institutions.</p>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-dark-text">$99</span>
+<span class="text-lg font-bold text-dark-text/40">/month</span>
+</div>
+</div>
+<button class="w-full py-4 px-6 mb-10 bg-dark-text/5 text-dark-text font-black rounded-xl border-2 border-transparent hover:border-dark-text/10 hover:bg-dark-text/10 transition-all text-lg">
+                    Contact Sales
+                </button>
+<div class="flex flex-col gap-6 mt-auto">
+<p class="text-xs font-black text-dark-text/40 uppercase tracking-[0.2em]">Institutional Features</p>
+<ul class="space-y-5">
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Full API access &amp; webhooks
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            SSO &amp; LMS integration
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Dedicated account manager
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Unlimited scaling
+                        </li>
+<li class="flex items-start gap-4 text-base font-bold text-dark-text">
+<span class="material-symbols-outlined text-primary text-2xl">check_circle</span>
+                            Custom service contracts
+                        </li>
+</ul>
+</div>
+</div>
+</div>
+<div class="mt-32 w-full text-center py-16 px-10 rounded-[3rem] bg-white/40 border-2 border-primary/5">
+<p class="text-sm font-black text-primary uppercase tracking-[0.3em] mb-12">Trusted by institutions worldwide</p>
+<div class="flex flex-wrap justify-center items-center gap-16 md:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
+<div class="flex items-center gap-3 font-black text-2xl"><span class="material-symbols-outlined text-4xl text-primary">school</span> EdTech Academy</div>
+<div class="flex items-center gap-3 font-black text-2xl"><span class="material-symbols-outlined text-4xl text-primary">architecture</span> Design Institute</div>
+<div class="flex items-center gap-3 font-black text-2xl"><span class="material-symbols-outlined text-4xl text-primary">science</span> Science Global</div>
+<div class="flex items-center gap-3 font-black text-2xl"><span class="material-symbols-outlined text-4xl text-primary">menu_book</span> OpenLibrary</div>
+</div>
+</div>
+<div class="mt-32 w-full max-w-4xl">
+<h2 class="text-4xl font-black text-dark-text text-center mb-16">Frequently Asked Questions</h2>
+<div class="space-y-6">
+<div class="p-8 bg-white border-2 border-primary/5 rounded-3xl shadow-sm hover:border-primary/20 transition-all cursor-pointer">
+<h4 class="text-xl font-black text-dark-text mb-4 flex items-center justify-between">
+                        Can I switch plans later?
+                        <span class="material-symbols-outlined text-primary font-black">expand_more</span>
+</h4>
+<p class="text-base text-dark-text/60 font-bold leading-relaxed">Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected instantly, and we'll prorate any payments.</p>
+</div>
+<div class="p-8 bg-white border-2 border-primary/5 rounded-3xl shadow-sm hover:border-primary/20 transition-all cursor-pointer">
+<h4 class="text-xl font-black text-dark-text mb-4 flex items-center justify-between">
+                        What counts as an "AI Assessment"?
+                        <span class="material-symbols-outlined text-primary font-black">expand_more</span>
+</h4>
+<p class="text-base text-dark-text/60 font-bold leading-relaxed">An AI assessment is one full student submission processed through our proprietary feedback engine, including detailed rubric evaluation.</p>
+</div>
+<div class="p-8 bg-white border-2 border-primary/5 rounded-3xl shadow-sm hover:border-primary/20 transition-all cursor-pointer">
+<h4 class="text-xl font-black text-dark-text mb-4 flex items-center justify-between">
+                        Do you offer discounts for non-profits?
+                        <span class="material-symbols-outlined text-primary font-black">expand_more</span>
+</h4>
+<p class="text-base text-dark-text/60 font-bold leading-relaxed">Absolutely. We provide a 50% discount for verified non-profit educational organizations. Contact our sales team for more info.</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-beige-light border-t-2 border-primary/5 py-16 px-10 mt-20">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+<div class="flex items-center gap-3 text-primary font-black text-2xl">
+<div class="size-8">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" fill="currentColor"></path>
+</svg>
+</div>
+                DASES
+            </div>
+<div class="flex gap-12">
+<a class="text-base font-black text-dark-text/40 hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="text-base font-black text-dark-text/40 hover:text-primary transition-colors" href="#">Terms</a>
+<a class="text-base font-black text-dark-text/40 hover:text-primary transition-colors" href="#">Security</a>
+</div>
+<p class="text-sm font-bold text-dark-text/30">© 2024 DASES AI Platforms. All rights reserved.</p>
+</div>
+</footer>
+</div>
+
+</body></html>

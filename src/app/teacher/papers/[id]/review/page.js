@@ -202,7 +202,13 @@ export default function ReviewPage() {
     }
   }
 
-  const questionsWithAnswers = questions.filter(q => q.samples?.length > 0).length;
+  // Count questions with answers
+  const questionsWithAnswers = questions.filter(q => {
+    if (q.type === 'objective') return !!q.correctAnswer;
+    if (q.type === 'case_study') return q.subParts?.length > 0;
+    return q.samples?.length > 0;
+  }).length;
+
   const completionPercent = questions.length > 0 ? Math.round((questionsWithAnswers / questions.length) * 100) : 0;
 
   const handleFinalize = async () => {
@@ -255,7 +261,35 @@ export default function ReviewPage() {
   // Render question block with collapse/expand
   const renderQuestionBlock = (q, idx) => {
     const isExpanded = expandedQuestions[q.qid] ?? false;
-    const hasVariants = q.samples?.length > 0;
+
+    // Determine status based on type
+    let hasAnswers = false;
+    let statusBadge = null;
+
+    if (q.type === 'objective') {
+      hasAnswers = !!q.correctAnswer;
+      statusBadge = hasAnswers ? (
+        <span className={styles.statusComplete}><CheckCircle2 size={12} /> Answered</span>
+      ) : (
+        <span className={styles.statusPending}><AlertTriangle size={12} /> No Answer</span>
+      );
+    } else if (q.type === 'case_study') {
+      hasAnswers = q.subParts?.length > 0;
+      statusBadge = hasAnswers ? (
+        <span className={styles.statusComplete}><CheckCircle2 size={12} /> {q.subParts.length} sub-parts</span>
+      ) : (
+        <span className={styles.statusPending}><AlertTriangle size={12} /> No sub-parts</span>
+      );
+    } else {
+      // Subjective
+      hasAnswers = q.samples?.length > 0;
+      statusBadge = hasAnswers ? (
+        <span className={styles.statusComplete}><CheckCircle2 size={12} /> {q.samples.length} variant{q.samples.length > 1 ? 's' : ''}</span>
+      ) : (
+        <span className={styles.statusPending}><AlertTriangle size={12} /> No variants</span>
+      );
+    }
+
     const previewText = q.text?.substring(0, 100) || "No question text";
     const issues = getIssuesForQuestion(idx);
 
@@ -268,11 +302,13 @@ export default function ReviewPage() {
             <div className={styles.questionMeta}>
               <span className={styles.questionNum}>Q{idx + 1}</span>
               <span className={styles.marksBadge}>{q.marks} marks</span>
-              {hasVariants ? (
-                <span className={styles.statusComplete}><CheckCircle2 size={12} /> {q.samples.length} variant{q.samples.length > 1 ? 's' : ''}</span>
-              ) : (
-                <span className={styles.statusPending}><AlertTriangle size={12} /> No variants</span>
-              )}
+
+              {/* Type Badge */}
+              {q.type === 'objective' && <span className={styles.typeBadge} style={{ backgroundColor: '#dcfce7', color: '#166534' }}>✓ Obj</span>}
+              {q.type === 'case_study' && <span className={styles.typeBadge} style={{ backgroundColor: '#ffedd5', color: '#9a3412' }}>📋 Case</span>}
+
+              {statusBadge}
+
               {issues.length > 0 && (
                 <span className={styles.issuesBadge}><Search size={12} /> {issues.length} issue{issues.length > 1 ? 's' : ''}</span>
               )}
@@ -312,80 +348,137 @@ export default function ReviewPage() {
             {/* Question Text */}
             <div className={styles.questionTextBlock}>
               <SmartLatex>{q.text}</SmartLatex>
+              {q.type === 'objective' && q.options && (
+                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <strong>Options:</strong>
+                  {q.options.map((opt, i) => (
+                    <div key={i} style={{ padding: '6px 12px', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '4px' }}>
+                      {opt}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Answer Variants */}
+            {/* Answers Section */}
             <div className={styles.variantsSection}>
               <div className={styles.variantsHeader}>
-                <span className={styles.variantsTitle}>Answer Variants</span>
-                <span className={styles.variantsCount}>{q.samples?.length || 0}</span>
+                <span className={styles.variantsTitle}>
+                  {q.type === 'case_study' ? 'Sub-Questions & Answers' : 'Answer Details'}
+                </span>
               </div>
 
-              {q.samples?.length > 0 ? (
-                q.samples.map((s, si) => {
-                  const variantExpanded = expandedVariants[s.id] ?? (si === 0);
-                  const rubricTotal = s.rubric?.criteria?.reduce((sum, c) => sum + (c.weight || 0), 0) || 0;
+              {/* OBJECTIVE: Show Correct Answer */}
+              {q.type === 'objective' && (
+                <div className={styles.variantCard}>
+                  <div className={styles.variantHeader} style={{ cursor: 'default' }}>
+                    <div className={styles.variantLeft}>
+                      <span className={styles.variantTitle}>Correct Answer</span>
+                      <span className={styles.variantCheck}>✓ {q.correctAnswer || 'Not set'}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-                  return (
-                    <div key={s.id || si} className={styles.variantCard}>
-                      <div className={styles.variantHeader} onClick={() => toggleVariant(s.id)}>
-                        <div className={styles.variantLeft}>
-                          <span className={styles.variantArrow}>{variantExpanded ? '▼' : '▶'}</span>
-                          <span className={styles.variantTitle}>Variant {si + 1}</span>
-                          {s.answer && <span className={styles.variantCheck}>✓ Answer</span>}
-                          {s.rubric?.criteria?.length > 0 && (
-                            <span className={styles.variantRubric}><ClipboardList size={12} /> Rubric ({rubricTotal})</span>
-                          )}
+              {/* CASE STUDY: Show Sub-parts */}
+              {q.type === 'case_study' && (
+                q.subParts?.length > 0 ? (
+                  <div className={styles.subPartsList} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {q.subParts.map((sub, si) => (
+                      <div key={si} className={styles.variantCard}>
+                        <div className={styles.variantHeader} style={{ cursor: 'default', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+                          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ fontWeight: 600 }}>Part {sub.label.toUpperCase()} ({sub.marks} marks)</div>
+                            <div style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: '#dcfce7', color: '#166534' }}>Objective</div>
+                          </div>
+                          <div style={{ width: '100%', padding: '8px', background: '#f9fafb', borderRadius: '4px' }}>
+                            <SmartLatex>{sub.text}</SmartLatex>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' }}>
+                            <strong>Answer:</strong>
+                            <span style={{ padding: '2px 8px', background: '#ecfdf5', color: '#047857', borderRadius: '4px', border: '1px solid #a7f3d0' }}>
+                              {sub.correctAnswer || 'Not set'}
+                            </span>
+                          </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.noVariants}>
+                    <span>No sub-parts defined</span>
+                  </div>
+                )
+              )}
 
-                      {variantExpanded && (
-                        <div className={styles.variantContent}>
-                          {s.instructions && (
-                            <div className={styles.fieldBlock}>
-                              <div className={styles.fieldLabel}>DASES AI Guidance</div>
-                              <div className={styles.fieldSubtle}>{s.instructions}</div>
-                            </div>
-                          )}
+              {/* SUBJECTIVE: Show Variants */}
+              {q.type !== 'objective' && q.type !== 'case_study' && (
+                q.samples?.length > 0 ? (
+                  q.samples.map((s, si) => {
+                    const variantExpanded = expandedVariants[s.id] ?? (si === 0);
+                    const rubricTotal = s.rubric?.criteria?.reduce((sum, c) => sum + (c.weight || 0), 0) || 0;
 
-                          {s.answer && (
-                            <div className={styles.fieldBlock}>
-                              <div className={styles.fieldLabel}>Model Answer</div>
-                              <div className={styles.answerBlock}>
-                                <SmartLatex>{s.answer}</SmartLatex>
-                              </div>
-                            </div>
-                          )}
-
-                          {s.rubric?.criteria?.length > 0 && (
-                            <div className={styles.fieldBlock}>
-                              <div className={styles.fieldLabel}>Rubric ({rubricTotal} marks total)</div>
-                              <div className={styles.rubricList}>
-                                {s.rubric.criteria.map((c, ci) => (
-                                  <div key={ci} className={styles.rubricRow}>
-                                    <span className={styles.rubricText}><SmartLatex>{c.criterion}</SmartLatex></span>
-                                    <span className={styles.rubricMarks}>{c.weight}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                    return (
+                      <div key={s.id || si} className={styles.variantCard}>
+                        <div className={styles.variantHeader} onClick={() => toggleVariant(s.id)}>
+                          <div className={styles.variantLeft}>
+                            <span className={styles.variantArrow}>{variantExpanded ? '▼' : '▶'}</span>
+                            <span className={styles.variantTitle}>Variant {si + 1}</span>
+                            {s.answer && <span className={styles.variantCheck}>✓ Answer</span>}
+                            {s.rubric?.criteria?.length > 0 && (
+                              <span className={styles.variantRubric}><ClipboardList size={12} /> Rubric ({rubricTotal})</span>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <div className={styles.noVariants}>
-                  <span className={styles.noVariantsIcon}><FileQuestion size={24} /></span>
-                  <span>No answer variants defined yet</span>
-                  <button
-                    className={styles.editBtn}
-                    onClick={() => router.push(`/teacher/papers/${id}`)}
-                  >
-                    Add Variants
-                  </button>
-                </div>
+
+                        {variantExpanded && (
+                          <div className={styles.variantContent}>
+                            {s.instructions && (
+                              <div className={styles.fieldBlock}>
+                                <div className={styles.fieldLabel}>DASES AI Guidance</div>
+                                <div className={styles.fieldSubtle}>{s.instructions}</div>
+                              </div>
+                            )}
+
+                            {s.answer && (
+                              <div className={styles.fieldBlock}>
+                                <div className={styles.fieldLabel}>Model Answer</div>
+                                <div className={styles.answerBlock}>
+                                  <SmartLatex>{s.answer}</SmartLatex>
+                                </div>
+                              </div>
+                            )}
+
+                            {s.rubric?.criteria?.length > 0 && (
+                              <div className={styles.fieldBlock}>
+                                <div className={styles.fieldLabel}>Rubric ({rubricTotal} marks total)</div>
+                                <div className={styles.rubricList}>
+                                  {s.rubric.criteria.map((c, ci) => (
+                                    <div key={ci} className={styles.rubricRow}>
+                                      <span className={styles.rubricText}><SmartLatex>{c.criterion}</SmartLatex></span>
+                                      <span className={styles.rubricMarks}>{c.weight}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className={styles.noVariants}>
+                    <span className={styles.noVariantsIcon}><FileQuestion size={24} /></span>
+                    <span>No answer variants defined yet</span>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => router.push(`/teacher/papers/${id}`)}
+                    >
+                      Add Variants
+                    </button>
+                  </div>
+                )
               )}
             </div>
           </div>

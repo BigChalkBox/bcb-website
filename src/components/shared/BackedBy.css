@@ -1,0 +1,80 @@
+/* ============================================
+   BACKED BY — Trust Strip
+   ============================================ */
+.backed-by {
+    padding: 3rem 1.5rem;
+    background: white;
+    border-top: 1px solid rgba(198, 211, 193, 0.3);
+    border-bottom: 1px solid rgba(198, 211, 193, 0.3);
+}
+
+.backed-by-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+}
+
+.backed-by-label {
+    font-size: 0.625rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--slate-content);
+    opacity: 0.5;
+}
+
+.backed-by-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.backed-by-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    background: rgba(198, 211, 193, 0.12);
+    border: 1px solid rgba(198, 211, 193, 0.25);
+    transition: all 0.3s;
+}
+
+.backed-by-item:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 8px 24px -8px rgba(34, 197, 94, 0.1);
+    transform: translateY(-2px);
+}
+
+.backed-by-icon {
+    font-size: 1.5rem !important;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.backed-by-name {
+    font-size: 0.938rem;
+    font-weight: 800;
+    color: var(--deep-forest);
+    letter-spacing: -0.01em;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .backed-by {
+        padding: 3.5rem 2rem;
+    }
+
+    .backed-by-logos {
+        gap: 3rem;
+    }
+
+    .backed-by-item {
+        padding: 1rem 2rem;
+    }
+}

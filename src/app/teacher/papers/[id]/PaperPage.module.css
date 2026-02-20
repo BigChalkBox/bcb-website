@@ -153,6 +153,14 @@
   transform: scaleY(1);
 }
 
+.steps li.clickable {
+  cursor: pointer;
+}
+
+.steps li.completed {
+  opacity: 0.85;
+}
+
 /* ========== MAIN CONTENT ========== */
 .main {
   flex: 1;
@@ -217,6 +225,81 @@
   justify-content: flex-end;
   align-items: center;
   animation: fadeInUp 0.6s ease 0.2s backwards;
+}
+
+/* Finalize Questions Actions Bar */
+.finalizeActions {
+  background: linear-gradient(145deg, rgba(240, 253, 244, 0.95) 0%, rgba(220, 252, 231, 0.9) 100%);
+  backdrop-filter: blur(8px);
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-top: 2.5rem;
+  border: 2px solid rgba(187, 247, 208, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 8px 32px rgba(22, 163, 74, 0.1);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.finalizeQuestionsBtn {
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+  color: white;
+  border: none;
+  padding: 1.1rem 3.5rem;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.15rem;
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.finalizeQuestionsBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.finalizeQuestionsBtn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.finalizeQuestionsBtn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(22, 163, 74, 0.45);
+}
+
+.finalizeQuestionsBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.finalizeHint {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #166534;
+  font-weight: 500;
 }
 
 .finalActions button {
@@ -373,6 +456,122 @@
     opacity: 1;
     max-height: 500px;
   }
+}
+
+/* ========== COVERAGE BUTTON & DRAWER ========== */
+.coverageButtonSection {
+  margin-top: 1.5rem;
+  padding: 0 1.5rem;
+}
+
+.coverageButton {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.coverageButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+/* Drawer Overlay */
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Drawer Panel */
+.drawer {
+  width: 520px;
+  max-width: 90vw;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawerHeader {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.drawerHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drawerClose {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.drawerClose:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.drawerBody {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
 }
 
 /* QuickPass Sidebar Panel Styles - Scoped under .quickpassContent */

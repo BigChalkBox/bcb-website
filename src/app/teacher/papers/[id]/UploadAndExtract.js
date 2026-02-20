@@ -1,15 +1,28 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Latex from "react-latex-next";
-import { FileText, CheckCircle2, Zap, XCircle, Loader2, BarChart3, Plus, Sparkles, Trash2, AlertCircle, AlertTriangle, Lightbulb, Brain } from "lucide-react";
+import { FileText, CheckCircle2, Zap, XCircle, Loader2, BarChart3, Plus, Sparkles, Trash2, AlertCircle, AlertTriangle, Lightbulb, Brain, Focus, List, ChevronLeft, ChevronRight, Settings, ChevronDown, RefreshCw, SpellCheck, Eye, HelpCircle, Scale, Copy, ClipboardCheck, Rocket, Shield, Download } from "lucide-react";
 import "katex/dist/katex.min.css";
 import "./UploadAndExtract.css";
 import "./QuickPassReview.css";
 import styles from "./CoverageReport.module.css";
 import { PaperHealthBar, QuestionIssues } from "./QuickPassReviewComponents";
 
-export default function UploadAndExtract({ paperId, initialPaper, onIntelligenceUpdate }) {
+const CHECKS_CONFIG = [
+  { id: 'typos', label: 'Typos', Icon: SpellCheck, desc: 'Spelling & grammar' },
+  { id: 'readability', label: 'Readability', Icon: Eye, desc: 'Language clarity' },
+  { id: 'unclear', label: 'Unclear', Icon: HelpCircle, desc: 'Ambiguous phrasing' },
+  { id: 'marks', label: 'Marks', Icon: BarChart3, desc: 'Effort vs allocation' },
+  { id: 'or_balance', label: 'OR Balance', Icon: Scale, desc: 'Difficulty fairness' },
+  { id: 'duplicates', label: 'Duplicates', Icon: Copy, desc: 'Similar questions' },
+  { id: 'grading', label: 'Grading', Icon: ClipboardCheck, desc: 'Evaluation ease' },
+  { id: 'blooms', label: 'Blooms', Icon: Brain, desc: 'Cognitive levels' },
+  { id: 'time', label: 'Time Feasibility', Icon: AlertCircle, desc: 'Duration check' },
+  { id: 'difficulty', label: 'Difficulty Mix', Icon: BarChart3, desc: 'Easy/Med/Hard' },
+];
+
+export default function UploadAndExtract({ paperId, initialPaper, onIntelligenceUpdate, onQuestionsChange }) {
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [finalized, setFinalized] = useState(false);
@@ -19,8 +32,23 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
   const [intelligence, setIntelligence] = useState(null);
   const [coverage, setCoverage] = useState(null); // Coverage analysis results
   const [toast, setToast] = useState(null);
+  const [showQuickPassWizard, setShowQuickPassWizard] = useState(false); // QuickPass 2.0 wizard
+  const [viewMode, setViewMode] = useState("list"); // "list" | "focus"
+  const [currentFocusIndex, setCurrentFocusIndex] = useState(0); // For focus mode navigation
+  const [selectedChecks, setSelectedChecks] = useState(["typos", "readability", "unclear", "marks"]); // Default checks
+  const [showConfigMenu, setShowConfigMenu] = useState(false);
+  const [analyzingStatus, setAnalyzingStatus] = useState("Analyzing...");
+  const [currentPreset, setCurrentPreset] = useState("standard"); // "fast" | "standard" | "deep" | "custom"
+  const [downloadingReport, setDownloadingReport] = useState(false);
   const router = useRouter();
   const richTextRefs = useRef({});
+
+  // Sync questions to parent when they change
+  useEffect(() => {
+    if (onQuestionsChange) {
+      onQuestionsChange(questions);
+    }
+  }, [questions, onQuestionsChange]);
 
   /* ---------------- File Upload & Extraction ---------------- */
   async function handleUpload(e) {
@@ -76,6 +104,41 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
   const showToast = (type, message) => {
     setToast({ type, message });
     setTimeout(() => setToast(null), 4000);
+  };
+
+  // QuickPass Apply Fix handler - updates question text
+  const handleApplyQuickPassFix = (questionIndex, newText) => {
+    setQuestions(prev => prev.map((q, idx) =>
+      idx === questionIndex ? { ...q, text: newText } : q
+    ));
+    showToast("success", `Fixed Q${questionIndex + 1}`);
+  };
+
+  // QuickPass Re-analyze handler
+  const handleReanalyzeQuickPass = async () => {
+    if (questions.length === 0) return;
+    setAnalyzingQuickpass(true);
+    try {
+      const res = await fetch(`/api/papers/${paperId}/quickpass/analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questions,
+          checks: selectedChecks // Pass selected checks
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setIntelligence(json.intelligence);
+        if (onIntelligenceUpdate) {
+          onIntelligenceUpdate(json.intelligence);
+        }
+      }
+    } catch (err) {
+      console.error("Re-analysis error:", err);
+    } finally {
+      setAnalyzingQuickpass(false);
+    }
   };
 
   /* ---------------- Finalize & Navigate ---------------- */
@@ -242,16 +305,88 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
             )}
 
             {/* Questions Container */}
+            {/* Questions Container */}
             <div className="questions-column">
               <div className="extracted-questions">
-                <h3 className="extracted-title">
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <FileText size={20} /> Extracted Questions ({questions.length})
-                  </span>
-                </h3>
+                <div className="questions-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #e5e7eb', paddingBottom: '12px' }}>
+                  <h3 className="extracted-title" style={{ margin: 0, border: 0 }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <FileText size={20} /> Extracted Questions ({questions.length})
+                    </span>
+                  </h3>
 
+                  {/* View Mode Toggle */}
+                  <div className="view-mode-toggle" style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: viewMode === "list" ? 'white' : 'transparent',
+                        color: viewMode === "list" ? '#0f172a' : '#64748b',
+                        boxShadow: viewMode === "list" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                        fontWeight: 600,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        gap: '6px',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <List size={16} /> List
+                    </button>
+                    <button
+                      onClick={() => setViewMode("focus")}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: viewMode === "focus" ? 'white' : 'transparent',
+                        color: viewMode === "focus" ? '#6366f1' : '#64748b',
+                        boxShadow: viewMode === "focus" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                        fontWeight: 600,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        gap: '6px',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Focus size={16} /> Focus Card
+                    </button>
+                  </div>
+                </div>
 
-                {questions.map((q, i) => {
+                {/* Focus Mode Navigation */}
+                {viewMode === "focus" && (
+                  <div className="focus-navigation" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: '#eef2ff', padding: '12px 20px', borderRadius: '12px' }}>
+                    <button
+                      onClick={() => setCurrentFocusIndex(prev => Math.max(0, prev - 1))}
+                      disabled={currentFocusIndex === 0}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #c7d2fe', background: 'white', padding: '8px 16px', borderRadius: '8px', cursor: currentFocusIndex === 0 ? 'not-allowed' : 'pointer', opacity: currentFocusIndex === 0 ? 0.5 : 1, color: '#4338ca', fontWeight: 600 }}
+                    >
+                      <ChevronLeft size={20} /> Previous
+                    </button>
+
+                    <span style={{ fontSize: '15px', fontWeight: 700, color: '#3730a3' }}>
+                      Question {currentFocusIndex + 1} of {questions.length}
+                    </span>
+
+                    <button
+                      onClick={() => setCurrentFocusIndex(prev => Math.min(questions.length - 1, prev + 1))}
+                      disabled={currentFocusIndex === questions.length - 1}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #c7d2fe', background: 'white', padding: '8px 16px', borderRadius: '8px', cursor: currentFocusIndex === questions.length - 1 ? 'not-allowed' : 'pointer', opacity: currentFocusIndex === questions.length - 1 ? 0.5 : 1, color: '#4338ca', fontWeight: 600 }}
+                    >
+                      Next <ChevronRight size={20} />
+                    </button>
+                  </div>
+                )}
+
+                {(viewMode === "focus" ? [questions[currentFocusIndex]] : questions).map((q, loopIndex) => {
+                  const i = viewMode === "focus" ? currentFocusIndex : loopIndex;
+                  if (!q) return null; // Safety check
+
                   // Check if this question is part of an OR pair
                   const isOrPairStart = q.isOr;
                   const isOrPairSecond = i > 0 && questions[i - 1]?.isOr;
@@ -452,25 +587,29 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
                         </div>
                       </div>
 
-                      {q.suggestions && (
-                        <div className="suggestion-box">
-                          <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <Lightbulb size={16} /> <strong>Suggestion:</strong> {q.suggestions}
-                          </p>
+                      {/* QuickPass Analysis Issues (Inline) */}
+                      {intelligence && intelligence.quickpass && (
+                        <div style={{ marginTop: '16px' }}>
+                          <QuestionIssues
+                            qid={q.qid}
+                            questionIndex={i}
+                            intelligence={intelligence}
+                            onApplySuggestion={(newText) => {
+                              const updated = [...questions];
+                              updated[i].text = newText;
+                              setQuestions(updated);
+                              showToast("success", `Applied fix to Q${i + 1}`);
+                            }}
+                          />
                         </div>
                       )}
 
-                      {/* QuickPass View Issues Button */}
-                      {intelligence?.quickpass && (
-                        <QuestionIssues
-                          qid={q.qid}
-                          questionIndex={i}
-                          intelligence={intelligence}
-                          onApplySuggestion={(warning) => {
-                            console.log('Apply suggestion:', warning);
-                            alert(`Suggestion: ${warning.suggestion}`);
-                          }}
-                        />
+                      {/* Suggestion Box (Legacy/Manual) */}
+                      {q.suggestions && (
+                        <div className="suggestion-box">
+                          <strong>AI Suggestion from Extraction:</strong>
+                          <p>{q.suggestions}</p>
+                        </div>
                       )}
                     </div>
                   );
@@ -487,54 +626,205 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
 
                 {/* ⚡ QuickPass Analysis */}
                 {!finalized && (
-                  <div className="quickpass-container">
-                    <button
-                      onClick={async () => {
-                        if (questions.length === 0) {
-                          alert("No questions to analyze. Please extract questions first.");
-                          return;
-                        }
-                        setAnalyzingQuickpass(true);
-                        try {
-                          const res = await fetch(`/api/papers/${paperId}/quickpass/analyze`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              questions,
-                              previousAnalysis: intelligence // Send previous results for consistency
-                            }),
-                          });
-                          const json = await res.json();
-                          if (json.success) {
-                            setIntelligence(json.intelligence);
-                            // Pass intelligence to parent for sidebar display
-                            if (onIntelligenceUpdate) {
-                              onIntelligenceUpdate(json.intelligence);
-                            }
-                          } else {
-                            alert("Analysis failed: " + json.error);
+                  <div className="quickpass-container" style={{ position: 'relative' }}>
+                    {/* Split Button Group */}
+                    <div style={{ display: 'flex', gap: '0' }}>
+                      {/* Main Analyze Button */}
+                      <button
+                        onClick={async () => {
+                          if (questions.length === 0) {
+                            alert("No questions to analyze. Please extract questions first.");
+                            return;
                           }
-                        } catch (err) {
-                          console.error("Analysis error:", err);
-                          alert("Error running analysis");
-                        } finally {
-                          setAnalyzingQuickpass(false);
-                        }
-                      }}
-                      className="quickpass-analyze-btn"
-                      disabled={analyzingQuickpass || analyzingCoverage}
-                    >
-                      {analyzingQuickpass ? (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Loader2 className="animate-spin" size={16} /> Analyzing...
-                        </span>
-                      ) : (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Zap size={16} /> Analyze with QuickPass
-                        </span>
-                      )}
-                    </button>
+                          if (selectedChecks.length === 0) {
+                            alert("Please select at least one check to run.");
+                            return;
+                          }
 
+                          setAnalyzingQuickpass(true);
+                          setAnalyzingStatus("Starting checks...");
+
+                          // Animation loop
+                          let step = 0;
+                          const statusInterval = setInterval(() => {
+                            if (selectedChecks.length > 0) {
+                              const checkId = selectedChecks[step % selectedChecks.length];
+                              const checkConfig = CHECKS_CONFIG.find(c => c.id === checkId);
+                              if (checkConfig) {
+                                setAnalyzingStatus(`Checking ${checkConfig.label}...`);
+                              }
+                              step++;
+                            }
+                          }, 800);
+
+                          try {
+                            const res = await fetch(`/api/papers/${paperId}/quickpass/analyze`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                questions,
+                                checks: selectedChecks,
+                                previousAnalysis: intelligence
+                              }),
+                            });
+                            const json = await res.json();
+                            if (json.success) {
+                              setIntelligence(json.intelligence);
+                              if (onIntelligenceUpdate) {
+                                onIntelligenceUpdate(json.intelligence);
+                              }
+                              showToast("success", "Analysis Complete!");
+                            } else {
+                              alert("Analysis failed: " + json.error);
+                            }
+                          } catch (err) {
+                            console.error("Analysis error:", err);
+                            alert("Error running analysis");
+                          } finally {
+                            clearInterval(statusInterval);
+                            setAnalyzingQuickpass(false);
+                            setAnalyzingStatus("Analyzing...");
+                          }
+                        }}
+                        className="quickpass-analyze-btn"
+                        style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: '1px solid rgba(255,255,255,0.2)' }}
+                        disabled={analyzingQuickpass || analyzingCoverage || selectedChecks.length === 0}
+                      >
+                        {analyzingQuickpass ? (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Loader2 className="animate-spin" size={16} /> {analyzingStatus}
+                          </span>
+                        ) : intelligence?.quickpass ? (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <RefreshCw size={16} /> Re-Analyze
+                          </span>
+                        ) : (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Zap size={16} /> Analyze Questions
+                          </span>
+                        )}
+                      </button>
+                      {/* Config Dropdown Toggle */}
+                      <button
+                        onClick={() => setShowConfigMenu(!showConfigMenu)}
+                        className="quickpass-analyze-btn"
+                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, padding: '10px 12px', minWidth: 'auto' }}
+                        disabled={analyzingQuickpass}
+                      >
+                        <ChevronDown size={16} style={{ transform: showConfigMenu ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
+                      </button>
+                    </div>
+
+                    {/* Config Dropdown Menu */}
+                    {showConfigMenu && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        marginTop: '8px',
+                        background: 'white',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+                        border: '1px solid #e2e8f0',
+                        padding: '16px',
+                        minWidth: '320px',
+                        zIndex: 100,
+                      }}>
+                        {/* Presets */}
+                        <div style={{ marginBottom: '16px' }}>
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Presets</span>
+                          <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                            {[
+                              { id: 'fast', label: 'Fast', Icon: Rocket, checks: ['typos', 'marks'] },
+                              { id: 'standard', label: 'Standard', Icon: Shield, checks: ['typos', 'readability', 'unclear', 'marks'] },
+                              { id: 'deep', label: 'Deep', Icon: Brain, checks: ['typos', 'readability', 'unclear', 'marks', 'or_balance', 'duplicates', 'grading', 'blooms', 'time', 'difficulty'] },
+                            ].map(preset => (
+                              <button
+                                key={preset.id}
+                                onClick={() => {
+                                  setCurrentPreset(preset.id);
+                                  setSelectedChecks(preset.checks);
+                                }}
+                                style={{
+                                  padding: '8px 14px',
+                                  borderRadius: '8px',
+                                  border: currentPreset === preset.id ? '2px solid #6366f1' : '1px solid #e2e8f0',
+                                  background: currentPreset === preset.id ? '#eef2ff' : 'white',
+                                  color: currentPreset === preset.id ? '#4338ca' : '#475569',
+                                  fontSize: '13px',
+                                  fontWeight: 500,
+                                  cursor: 'pointer',
+                                  transition: 'all 0.15s',
+                                }}
+                              >
+                                <preset.Icon size={14} style={{ marginRight: '4px' }} />{preset.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Individual Toggles */}
+                        <div>
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Checks</span>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '8px' }}>
+                            {CHECKS_CONFIG.map(check => (
+                              <label
+                                key={check.id}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  padding: '8px 10px',
+                                  borderRadius: '8px',
+                                  border: '1px solid #e2e8f0',
+                                  background: selectedChecks.includes(check.id) ? '#f0fdf4' : '#fafafa',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.15s',
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedChecks.includes(check.id)}
+                                  onChange={(e) => {
+                                    setCurrentPreset('custom');
+                                    if (e.target.checked) {
+                                      setSelectedChecks(prev => [...prev, check.id]);
+                                    } else {
+                                      setSelectedChecks(prev => prev.filter(c => c !== check.id));
+                                    }
+                                  }}
+                                  style={{ width: '16px', height: '16px', accentColor: '#6366f1' }}
+                                />
+                                <div>
+                                  <div style={{ fontSize: '13px', fontWeight: 500, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '6px' }}><check.Icon size={14} /> {check.label}</div>
+                                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>{check.desc}</div>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Apply Button */}
+                        <button
+                          onClick={() => setShowConfigMenu(false)}
+                          style={{
+                            marginTop: '16px',
+                            width: '100%',
+                            padding: '10px',
+                            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Apply ({selectedChecks.length} checks selected)
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Coverage Button */}
                     <button
                       onClick={async () => {
                         if (questions.length === 0) {
@@ -575,152 +865,70 @@ export default function UploadAndExtract({ paperId, initialPaper, onIntelligence
                         </span>
                       )}
                     </button>
-                  </div>
-                )}
 
-                {/* Advanced Coverage Report Display - Premium Dashboard */}
-                {coverage && (
-                  <div className={styles.reportContainer}>
-                    {/* Header */}
-                    <div className={styles.header}>
-                      <h3 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <BarChart3 size={20} /> Paper Analysis Report
-                      </h3>
-                      <button onClick={() => setCoverage(null)} className={styles.closeBtn}>✕</button>
-                    </div>
-
-                    {/* Score + Recommendations Grid */}
-                    <div className={styles.cardsRow}>
-                      {/* Score Circle Card */}
-                      <div className={`${styles.card} ${styles.scoreCard}`}>
-                        <div
-                          className={`${styles.scoreCircle} ${coverage.overall >= 70 ? styles.good : coverage.overall >= 30 ? styles.average : styles.poor}`}
-                          style={{ '--percent': `${coverage.overall}%` }}
-                        >
-                          <div className={styles.scoreInner}>{coverage.overall}%</div>
-                        </div>
-                        <div className={styles.scoreLabel}>Topics Covered</div>
-                        <div className={styles.scoreTopics}>{coverage.coveredTopics}/{coverage.totalTopics}</div>
-                      </div>
-
-                      {/* Recommendations Card */}
-                      <div className={`${styles.card} ${styles.recsCard}`}>
-                        <div className={styles.sectionLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Lightbulb size={16} /> Recommendations
-                        </div>
-                        {coverage.recommendations?.map((rec, i) => (
-                          <div key={i} className={`${styles.recItem} ${styles[rec.severity] || styles.info}`}>
-                            <div className={styles.recMessage}>
-                              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                {rec.severity === 'error' ? <AlertCircle size={16} style={{ color: '#ef4444' }} /> : rec.severity === 'warning' ? <AlertTriangle size={16} style={{ color: '#f59e0b' }} /> : <CheckCircle2 size={16} style={{ color: '#10b981' }} />}
-                                {rec.message}
-                              </span>
-                            </div>
-                            <div className={styles.recSuggestion}>{rec.suggestion}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Bloom's Taxonomy Card */}
-                    {coverage.blooms && (
-                      <div className={`${styles.card} ${styles.bloomsCard}`}>
-                        <div className={styles.bloomsHeader}>
-                          <div className={styles.sectionLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <Brain size={16} /> Bloom&apos;s Taxonomy Analysis
-                          </div>
-                          <span className={`${styles.qualityBadge} ${coverage.blooms.insights?.quality === 'Good' ? styles.good :
-                            coverage.blooms.insights?.quality === 'Average' ? styles.average : styles.poor
-                            }`}>
-                            {coverage.blooms.insights?.quality} Quality
-                          </span>
-                        </div>
-
-                        {/* Skill Bars */}
-                        {['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create'].map((level, i) => {
-                          const count = coverage.blooms.distribution?.[level] || 0;
-                          const total = Object.values(coverage.blooms.distribution || {}).reduce((a, b) => a + b, 0) || 1;
-                          const percent = Math.round((count / total) * 100);
-                          const colors = ['#94a3b8', '#60a5fa', '#34d399', '#fbbf24', '#f97316', '#a855f7'];
-                          return (
-                            <div key={level} className={styles.skillBar}>
-                              <div className={styles.skillLabel}>{level}</div>
-                              <div className={styles.skillTrack}>
-                                <div className={styles.skillFill} style={{ width: `${percent}%`, background: colors[i] }} />
-                              </div>
-                              <div className={styles.skillCount}>{count}</div>
-                            </div>
-                          );
-                        })}
-
-                        {/* Insights Box */}
-                        <div className={styles.insightsBox}>
-                          <div className={styles.insightsSummary}>{coverage.blooms.insights?.summary}</div>
-                          {coverage.blooms.insights?.suggestions?.length > 0 && (
-                            <ul className={styles.insightsList}>
-                              {coverage.blooms.insights.suggestions.map((s, i) => (
-                                <li key={i}>{s}</li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Topic Details Accordion */}
-                    <details className={styles.topicDetails}>
-                      <summary className={styles.topicSummary}>
-                        TOPIC DETAILS
-                      </summary>
-                      <div className={styles.topicContent}>
-                        {coverage.units?.map((unit, ui) => (
-                          <div key={ui} className={styles.unitBlock}>
-                            <div className={styles.unitName}>{unit.name}</div>
-                            {unit.topics?.map((topic, ti) => (
-                              <div
-                                key={ti}
-                                className={`${styles.topicItem} ${styles[topic.status] || styles.missing}`}
-                              >
-                                <span className={`${styles.statusDot} ${styles[topic.status] || styles.missing}`} />
-                                <span className={styles.topicName}>{topic.name}</span>
-                                {topic.questions?.length > 0 && (
-                                  <span className={styles.topicQuestions}>
-                                    Q{topic.questions.map(q => q.index).join(', Q')}
-                                  </span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
-                    </details>
-                  </div>
-                )}
-
-                {/* ✅ Finalize */}
-                <div className="finalize-container">
-                  {!finalized ? (
-                    <button onClick={handleFinalize} className="finalize-btn">
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <CheckCircle2 size={18} /> Finalize Questions
-                      </span>
+                    {/* Download Report Button */}
+                    <button
+                      onClick={async () => {
+                        if (!intelligence?.quickpass) {
+                          alert("Please run QuickPass analysis first");
+                          return;
+                        }
+                        if (!coverage) {
+                          const proceed = confirm("Coverage analysis not done. The report will not include coverage data. Continue anyway?");
+                          if (!proceed) return;
+                        }
+                        setDownloadingReport(true);
+                        try {
+                          const res = await fetch(`/api/papers/${paperId}/moderation-report`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              paperName: initialPaper?.name || "Untitled Paper",
+                              questions,
+                              intelligence,
+                              coverage,
+                            }),
+                          });
+                          if (res.ok) {
+                            const blob = await res.blob();
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `moderation-report-${paperId}.pdf`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            showToast("success", "Report downloaded!");
+                          } else {
+                            const json = await res.json();
+                            alert("Download failed: " + (json.error || "Unknown error"));
+                          }
+                        } catch (err) {
+                          console.error("Download error:", err);
+                          alert("Error downloading report");
+                        } finally {
+                          setDownloadingReport(false);
+                        }
+                      }}
+                      className="coverage-analyze-btn"
+                      style={{ background: intelligence?.quickpass ? 'linear-gradient(135deg, #059669, #10b981)' : '#9ca3af' }}
+                      disabled={!intelligence?.quickpass || downloadingReport}
+                    >
+                      {downloadingReport ? (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Loader2 className="animate-spin" size={16} /> Generating...
+                        </span>
+                      ) : (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Download size={16} /> Download Report
+                        </span>
+                      )}
                     </button>
-                  ) : (
-                    <div className="finalized-success">
-                      <div className="success-icon">
-                        <CheckCircle2 size={48} style={{ color: '#10b981' }} />
-                      </div>
-                      <h3>Questions Finalized!</h3>
-                      <p>Your questions have been saved. Now add sample answers and rubric.</p>
-                      <button
-                        onClick={handleContinueToBuild}
-                        className="continue-btn"
-                      >
-                        Continue to Build & Edit →
-                      </button>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
+
+
               </div>
             </div>
           </>

@@ -15,8 +15,11 @@ import {
     Loader2,
     ChevronDown,
     ChevronRight,
+    ChevronUp,
     Copy,
-    ExternalLink
+    ExternalLink,
+    Target,
+    Layers
 } from "lucide-react";
 import styles from "./Curricula.module.css";
 import Header from "@/components/HeaderSub";
@@ -262,6 +265,16 @@ export default function CurriculaManagement() {
     // Toggle expanded view
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id);
+        // Reset full expand when collapsing
+        if (expandedId === id) {
+            setFullExpandedId(null);
+        }
+    };
+
+    // Toggle full expanded view
+    const [fullExpandedId, setFullExpandedId] = useState(null);
+    const toggleFullExpand = (id) => {
+        setFullExpandedId(fullExpandedId === id ? null : id);
     };
 
     if (loading) {
@@ -411,7 +424,7 @@ export default function CurriculaManagement() {
                                     {/* Expanded Content */}
                                     {expandedId === c.id && (
                                         <div className={styles.cardExpanded}>
-                                            {/* Units & Topics Preview */}
+                                            {/* Units Preview */}
                                             <div className={styles.unitsPreview}>
                                                 {c.structured_topics?.units?.slice(0, 3).map((unit, idx) => (
                                                     <div key={unit.id || idx} className={styles.unitItem}>
@@ -419,12 +432,80 @@ export default function CurriculaManagement() {
                                                         <span>{unit.topics?.length || 0} topics</span>
                                                     </div>
                                                 ))}
-                                                {(c.structured_topics?.units?.length || 0) > 3 && (
+                                                {(c.structured_topics?.units?.length || 0) > 3 && fullExpandedId !== c.id && (
                                                     <div className={styles.moreUnits}>
                                                         + {c.structured_topics.units.length - 3} more units
                                                     </div>
                                                 )}
                                             </div>
+
+                                            {/* Expand More Button */}
+                                            {fullExpandedId !== c.id ? (
+                                                <button
+                                                    className={styles.expandMoreBtn}
+                                                    onClick={() => toggleFullExpand(c.id)}
+                                                >
+                                                    <ChevronDown size={16} /> Expand More
+                                                </button>
+                                            ) : (
+                                                <>
+                                                    {/* Full Expanded Content */}
+
+                                                    {/* Course Outcomes */}
+                                                    {c.structured_topics?.courseOutcomes?.length > 0 && (
+                                                        <div className={styles.cosSection}>
+                                                            <h4 className={styles.sectionTitle}><Target size={16} /> Course Outcomes</h4>
+                                                            <div className={styles.cosList}>
+                                                                {c.structured_topics.courseOutcomes.map((co, idx) => (
+                                                                    <div key={co.id || idx} className={styles.coItem}>
+                                                                        <span className={styles.coCode}>{co.code}</span>
+                                                                        <span className={styles.coDesc}>{co.description}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* All Units & Topics */}
+                                                    <div className={styles.unitsFullSection}>
+                                                        <h4 className={styles.sectionTitle}><Layers size={16} /> All Units & Topics</h4>
+                                                        {c.structured_topics?.units?.map((unit, idx) => (
+                                                            <div key={unit.id || idx} className={styles.unitFullItem}>
+                                                                <div className={styles.unitFullHeader}>
+                                                                    <strong>{unit.name}</strong>
+                                                                    {unit.weight > 0 && (
+                                                                        <span className={styles.weightTag}>{unit.weight}%</span>
+                                                                    )}
+                                                                </div>
+                                                                {unit.topics?.length > 0 && (
+                                                                    <ul className={styles.topicsList}>
+                                                                        {unit.topics.map((topic, ti) => (
+                                                                            <li key={topic.id || ti}>{topic.name}</li>
+                                                                        ))}
+                                                                    </ul>
+                                                                )}
+                                                                {unit.mappedCOs?.length > 0 && (
+                                                                    <div className={styles.mappedCOs}>
+                                                                        <span className={styles.mappedLabel}>Mapped COs:</span>
+                                                                        {unit.mappedCOs.map((coId, mi) => (
+                                                                            <span key={mi} className={styles.mappedCOTag}>
+                                                                                {c.structured_topics.courseOutcomes?.find(co => co.id === coId)?.code || coId}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                    <button
+                                                        className={styles.collapseBtn}
+                                                        onClick={() => toggleFullExpand(c.id)}
+                                                    >
+                                                        <ChevronUp size={16} /> Show Less
+                                                    </button>
+                                                </>
+                                            )}
 
                                             {/* Actions */}
                                             <div className={styles.cardActions}>

@@ -1,0 +1,517 @@
+<html class="light" lang="en"><head></head><body class="bg-background-light dark:bg-background-dark text-slate-deep dark:text-slate-100 transition-colors duration-300 antialiased">```html
+
+
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DASES | AI-Powered Grading Assistant</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1B5E20", // Bright Forest Green
+                        secondary: "#4E6E5D", // Sage
+                        accent: "#22C55E", // Bright Green
+                        "sage": "#84A59D",
+                        "pale-olive": "#C6D3C1",
+                        "classic-beige": "#F5F5DC",
+                        "cream": "#FFFDF5",
+                        "deep-forest": "#0B2613", // Deep Forest Green for headings
+                        "background-light": "#FFFDF5", // Cream background
+                        "background-dark": "#0F1A14",
+                        "slate-deep": "#1E2923", // Deep greenish-slate
+                        "slate-content": "#3D4E44", // Body text
+                    },
+                    fontFamily: {
+                        display: ["'Plus Jakarta Sans'", "sans-serif"],
+                        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        "2xl": "1.5rem",
+                        "3xl": "2.5rem",
+                    },
+                    boxShadow: {
+                        'float': '0 25px 50px -12px rgba(27, 94, 32, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.04)',
+                        'card-hover': '0 30px 60px -15px rgba(0, 0, 0, 0.2)',
+                    },
+                    lineHeight: {
+                        'relaxed-extra': '1.75',
+                    },
+                    letterSpacing: {
+                        'tight-plus': '-0.025em',
+                        'wide-plus': '0.025em',
+                    }
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card {
+            background: rgba(255, 253, 245, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(27, 94, 32, 0.15);
+        }
+        .dark .glass-card {
+            background: rgba(15, 26, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top center, rgba(34, 197, 94, 0.12) 0%, transparent 70%);
+        }
+        .logo-d-path {
+            stroke-dasharray: 100;
+            stroke-linecap: round;
+        }
+    </style>
+
+
+<header class="sticky top-0 z-50 w-full glass-card border-b border-pale-olive/50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="relative w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-800 rounded-xl shadow-md border border-pale-olive">
+<svg class="w-10 h-10 fill-none stroke-accent" style="stroke-width: 3.5;" viewBox="0 0 40 40">
+<path class="logo-d-path" d="M12 8C12 8 28 8 28 20C28 32 12 32 12 32V8Z"></path>
+<path class="stroke-primary" d="M15 20L20 25L32 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+</div>
+<span class="text-3xl font-black tracking-tight-plus dark:text-white text-deep-forest">DASES</span>
+</div>
+<nav class="hidden md:flex items-center gap-10 text-base font-extrabold text-slate-deep dark:text-slate-300">
+<a class="hover:text-primary transition-colors tracking-wide-plus" href="#">Features</a>
+<a class="hover:text-primary transition-colors tracking-wide-plus" href="#">How it works</a>
+<a class="hover:text-primary transition-colors tracking-wide-plus" href="#">Solutions</a>
+<a class="hover:text-primary transition-colors tracking-wide-plus" href="#">Pricing</a>
+</nav>
+<div class="flex items-center gap-8">
+<a class="text-base font-extrabold hover:text-primary transition-colors text-slate-deep dark:text-white tracking-wide-plus" href="#">Log In</a>
+<button class="bg-accent hover:bg-primary text-white px-8 py-4 rounded-full font-black shadow-xl shadow-green-900/20 dark:shadow-none transition-all hover:scale-105 active:scale-95 flex items-center gap-2 tracking-wide-plus text-lg">
+                Book Demo <span class="material-symbols-outlined text-xl font-black">arrow_forward</span>
+</button>
+</div>
+</div>
+</header>
+<main>
+<section class="relative pt-24 pb-40 hero-gradient overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-pale-olive/30 dark:bg-green-900/30 text-primary text-sm font-black tracking-widest uppercase mb-12 border border-pale-olive dark:border-green-800 shadow-sm">
+<span class="relative flex h-3.5 w-3.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-accent"></span>
+</span>
+                New: Canvas Integration
+            </div>
+<h1 class="text-6xl md:text-8xl font-black tracking-tight-plus mb-12 max-w-5xl mx-auto leading-[1.05] text-deep-forest dark:text-white">
+                Let’s Make Your Evaluation <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent drop-shadow-sm">Faster &amp; Fairer.</span>
+</h1>
+<p class="text-xl md:text-2xl font-semibold text-slate-content dark:text-slate-300 max-w-3xl mx-auto mb-20 leading-relaxed-extra tracking-wide-plus">
+                The AI-powered grading assistant that understands handwriting, context, and nuance. Reclaim your weekends for what matters most.
+            </p>
+<div class="relative max-w-6xl mx-auto">
+<div class="bg-white dark:bg-slate-800 p-4 rounded-[3rem] shadow-2xl border-4 border-white/60 dark:border-slate-700/50 backdrop-blur-xl">
+<img alt="Dashboard Analytics Preview" class="rounded-[2.5rem] w-full shadow-inner border border-slate-100 dark:border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL5zPg3WJfVkEQt_-gpwZ7UN8-C2dRYzdPXqkHbc-OlRVEGzgE0oYEPtbcDi9_vVZMD4EJhFRURvpThH-DQfj0813hvqlAmH2Vvpa0REXOP8U697hVs1T1QhD7-EiwMnhNUCcj7pZaBeZ1oDf_gjiWzXT9YubyoSUBzUe5OOQJj2fvG6jvJIzhKkMhtk6BNGmfExaZZguwYqmrVv1O4uZLwLWgt3aXVW9UheWpnmxgRypCyh93_MOwbtfyENaJZtRSAVY5YhTTNUjl"/>
+<div class="absolute -top-10 -left-10 bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-float border-2 border-pale-olive dark:border-slate-600 flex items-center gap-5">
+<div class="w-14 h-14 rounded-xl bg-pale-olive/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">edit_note</span>
+</div>
+<div>
+<span class="block text-xs font-black text-slate-400 uppercase tracking-widest">Feature</span>
+<span class="text-xl font-black text-deep-forest dark:text-white">Handwriting Vision</span>
+</div>
+</div>
+<div class="absolute top-1/2 -right-14 transform -translate-y-1/2 bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-float border-2 border-pale-olive dark:border-slate-600 flex items-center gap-5">
+<div class="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center text-accent">
+<span class="material-symbols-outlined text-3xl font-bold">check_circle</span>
+</div>
+<div>
+<span class="block text-xs font-black text-slate-400 uppercase tracking-widest">Status</span>
+<span class="text-xl font-black text-deep-forest dark:text-white">Feedback Ready</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-32 bg-pale-olive/20 dark:bg-slate-900/50 border-y border-pale-olive/30 dark:border-slate-800">
+<div class="max-w-5xl mx-auto px-4 text-center">
+<h2 class="text-4xl md:text-5xl font-bold leading-tight text-secondary dark:text-slate-500 tracking-tight">
+                Traditional grading is manual, inconsistent, and slow. <br/>
+<span class="text-deep-forest dark:text-white font-black decoration-accent decoration-4 underline-offset-8 underline">DASES automates the tedious parts</span> so you can focus on providing meaningful feedback.
+            </h2>
+</div>
+</section>
+<section class="py-40">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-24">
+<span class="text-primary font-black tracking-[0.25em] uppercase text-sm bg-pale-olive/30 px-6 py-2 rounded-full border border-pale-olive">Why Dases?</span>
+<h2 class="text-5xl md:text-6xl font-black mt-10 text-deep-forest dark:text-white tracking-tight-plus">Intelligent by Design</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="md:col-span-2 bg-white dark:bg-slate-800 p-14 rounded-[3rem] border-2 border-pale-olive/20 dark:border-slate-700 shadow-xl hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between group">
+<div>
+<div class="w-20 h-20 bg-pale-olive/30 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-primary mb-12 group-hover:scale-110 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-4xl font-bold">visibility</span>
+</div>
+<h3 class="text-4xl font-black mb-8 text-deep-forest dark:text-white">Handwriting Intelligence</h3>
+<p class="text-slate-content dark:text-slate-300 mb-12 text-2xl leading-relaxed-extra font-semibold">
+                            Our vision engine doesn't just read text; it understands context, diagrams, and marginalia with human-level accuracy.
+                        </p>
+<div class="bg-classic-beige/30 dark:bg-slate-900/50 p-10 rounded-2xl border-l-8 border-accent italic text-slate-deep dark:text-slate-200 font-serif text-xl leading-relaxed-extra shadow-inner">
+                            "The <span class="bg-accent/20 dark:bg-green-900/50 px-2 py-0.5 rounded font-black text-deep-forest dark:text-green-100">mitochondria</span> is the powerhouse of the cell, generating most of the chemical energy needed to power the cell's biochemical reactions."
+                        </div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-accent to-primary p-14 rounded-[3rem] text-white flex flex-col justify-between shadow-2xl shadow-green-900/30 dark:shadow-none transform md:translate-y-16">
+<div>
+<div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-12 backdrop-blur-md">
+<span class="material-symbols-outlined text-4xl font-bold">speed</span>
+</div>
+<h3 class="text-4xl font-black mb-8">Lightning Fast</h3>
+<p class="text-green-50 leading-relaxed-extra mb-12 text-xl font-bold">
+                            Reduce grading time by up to 90% without sacrificing quality.
+                        </p>
+</div>
+<div>
+<div class="text-9xl font-black mb-4 tracking-tighter">10x</div>
+<p class="text-green-50 font-black text-2xl uppercase tracking-widest">Faster Grading Speed</p>
+</div>
+</div>
+<div class="bg-pale-olive/10 dark:bg-slate-800 p-14 rounded-[3rem] border-2 border-pale-olive/20 dark:border-slate-700 shadow-xl hover:shadow-card-hover transition-all duration-300 group">
+<div class="w-18 h-18 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-accent mb-12 group-hover:scale-110 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-4xl font-bold">fact_check</span>
+</div>
+<h3 class="text-3xl font-black mb-8 text-deep-forest dark:text-white">Custom Rubric Mapping</h3>
+<p class="text-slate-content dark:text-slate-300 mb-10 text-xl font-semibold leading-relaxed-extra">
+                        Upload your specific grading criteria. Our AI adapts to your standards.
+                    </p>
+<ul class="space-y-6">
+<li class="flex items-center gap-4 text-lg font-black text-deep-forest dark:text-slate-200">
+<span class="material-symbols-outlined text-accent font-black text-2xl">check_circle</span> Keywords &amp; Concept Matching
+                        </li>
+<li class="flex items-center gap-4 text-lg font-black text-deep-forest dark:text-slate-200">
+<span class="material-symbols-outlined text-accent font-black text-2xl">check_circle</span> Grammar &amp; Syntax Rules
+                        </li>
+<li class="flex items-center gap-4 text-lg font-black text-deep-forest dark:text-slate-200">
+<span class="material-symbols-outlined text-accent font-black text-2xl">check_circle</span> Partial Credit Logic
+                        </li>
+</ul>
+</div>
+<div class="bg-white dark:bg-slate-800 p-14 rounded-[3rem] border-2 border-pale-olive/20 dark:border-slate-700 shadow-xl hover:shadow-card-hover transition-all duration-300 md:col-span-2 group">
+<div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-12">
+<div class="max-w-lg">
+<div class="w-18 h-18 bg-sage/20 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-secondary mb-12 group-hover:scale-110 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-4xl font-bold">balance</span>
+</div>
+<h3 class="text-3xl font-black mb-8 text-deep-forest dark:text-white">Fairness &amp; Bias Check</h3>
+<p class="text-slate-content dark:text-slate-300 text-xl font-semibold leading-relaxed-extra">
+                                Automatically flag anomalies in grading to ensure every student gets a fair assessment. Eliminate unconscious bias from your evaluation pipeline.
+                            </p>
+</div>
+<div class="hidden md:block flex-shrink-0">
+<div class="w-80 h-60 bg-classic-beige/20 dark:bg-slate-950 rounded-3xl flex items-center justify-center overflow-hidden border-2 border-pale-olive/20 dark:border-slate-800 shadow-inner">
+<div class="relative w-full h-full p-10 flex flex-col gap-6">
+<div class="h-8 w-3/4 bg-pale-olive/40 dark:bg-slate-800 rounded-lg"></div>
+<div class="h-8 w-full bg-pale-olive/40 dark:bg-slate-800 rounded-lg"></div>
+<div class="h-8 w-1/2 bg-accent/30 rounded-lg"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-40 bg-white dark:bg-slate-950 relative">
+<div class="absolute inset-0 bg-[radial-gradient(#1B5E20_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+<div class="flex flex-col lg:flex-row items-center gap-32">
+<div class="lg:w-1/2">
+<span class="text-primary font-black tracking-[0.25em] uppercase text-sm bg-pale-olive/30 px-6 py-2 rounded-full border border-pale-olive">Seamless Workflow</span>
+<h2 class="text-5xl md:text-7xl font-black mt-10 mb-12 leading-[1.1] text-deep-forest dark:text-white">
+                        From Paper to <br/>
+<span class="text-accent decoration-wavy underline decoration-6 underline-offset-[12px]">Actionable Feedback</span> <br/>
+                        in One Click.
+                    </h2>
+<p class="text-slate-content dark:text-slate-300 mb-20 text-2xl leading-relaxed-extra font-semibold">
+                        Simply scan your student’s work. DASES digitizes, analyzes against your rubric, and generates personalized feedback instantly. Review, approve, and you’re done.
+                    </p>
+<div class="space-y-16 pl-6 border-l-4 border-pale-olive dark:border-slate-800">
+<div class="flex gap-10 group">
+<div class="flex-shrink-0 w-20 h-20 bg-primary text-white rounded-3xl flex items-center justify-center font-black text-3xl shadow-xl shadow-green-200 group-hover:scale-110 transition-transform">1</div>
+<div>
+<h4 class="font-black text-3xl mb-3 text-deep-forest dark:text-white">Upload &amp; Scan</h4>
+<p class="text-slate-500 dark:text-slate-400 font-bold text-xl leading-relaxed">Bulk upload PDFs or images directly from your scanner or phone.</p>
+</div>
+</div>
+<div class="flex gap-10 group">
+<div class="flex-shrink-0 w-20 h-20 bg-white dark:bg-slate-800 border-4 border-accent text-accent rounded-3xl flex items-center justify-center font-black text-3xl group-hover:scale-110 transition-transform shadow-lg">2</div>
+<div>
+<h4 class="font-black text-3xl mb-3 text-deep-forest dark:text-white">AI Evaluation</h4>
+<p class="text-slate-500 dark:text-slate-400 font-bold text-xl leading-relaxed">Our engine matches answers to your rubric and suggests grades.</p>
+</div>
+</div>
+<div class="flex gap-10 group">
+<div class="flex-shrink-0 w-20 h-20 bg-white dark:bg-slate-800 border-4 border-accent text-accent rounded-3xl flex items-center justify-center font-black text-3xl group-hover:scale-110 transition-transform shadow-lg">3</div>
+<div>
+<h4 class="font-black text-3xl mb-3 text-deep-forest dark:text-white">Review &amp; Publish</h4>
+<p class="text-slate-500 dark:text-slate-400 font-bold text-xl leading-relaxed">Quickly verify the AI's suggestions and release scores to students.</p>
+</div>
+</div>
+</div>
+<a class="mt-20 inline-flex items-center gap-4 text-primary font-black hover:text-deep-forest text-xl hover:translate-x-4 transition-transform uppercase tracking-widest" href="#">
+                        See full integration details <span class="material-symbols-outlined font-black text-2xl">arrow_forward</span>
+</a>
+</div>
+<div class="lg:w-1/2 w-full">
+<div class="relative bg-slate-900 p-8 rounded-[4rem] shadow-2xl border-[12px] border-slate-800 transform rotate-3 hover:rotate-0 transition-transform duration-700">
+<div class="bg-white rounded-[3rem] overflow-hidden aspect-[4/3] relative">
+<img alt="Tablet UI Mockup" class="w-full h-full object-cover opacity-95" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCSiB0c61JlSJMvKJCFdIgxnzx-cFcO2XrwJs_jfK4vgMAPLUjYWLQBW_mt14muNeGh7enaSIuH1bplY0lTjAcxjjWyUutVkgAtSdf2Yqi0pOM8xpjKmYGGH2vj1kXhqq_XkNvYDPpy-MoC2SZiyrdRIoQwwrrcaBbIPAA8NW56eEb-FzMM0dbiHUxdLQojKCuE39LMk9ajRvUnUo4i2uj_45aFzzM2DKyZJBTPD_qGxxxBnzgBKMDlQdBD0qikimNMuRxtRhewtZx"/>
+<div class="absolute inset-0 pointer-events-none">
+<div class="bg-white/95 backdrop-blur-xl p-10 rounded-3xl shadow-float border-2 border-pale-olive max-w-sm absolute top-16 right-16 hover:scale-105 transition-transform duration-300 cursor-default">
+<div class="flex items-center gap-3 mb-8 border-b-2 border-pale-olive/50 pb-6">
+<span class="material-symbols-outlined text-primary font-bold text-3xl">auto_awesome</span>
+<span class="text-sm font-black uppercase tracking-[0.25em] text-deep-forest">AI Feedback</span>
+</div>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-black uppercase tracking-widest text-slate-500">Concept Accuracy</span>
+<span class="text-base font-black text-green-700 bg-green-100 px-3 py-1 rounded-lg">10/10</span>
+</div>
+<div class="h-4 w-full bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-accent w-full rounded-full shadow-[0_0_15px_rgba(34,197,94,0.6)]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-black uppercase tracking-widest text-slate-500">Evidence Usage</span>
+<span class="text-base font-black text-primary bg-pale-olive px-3 py-1 rounded-lg">8/10</span>
+</div>
+<div class="h-4 w-full bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-4/5 rounded-full shadow-[0_0_15px_rgba(27,94,32,0.6)]"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t-2 border-slate-100 text-center bg-classic-beige/20 -mx-10 -mb-10 p-6 rounded-b-3xl">
+<div class="text-[12px] font-black tracking-widest text-slate-400 uppercase mb-2">Total Grade</div>
+<div class="text-5xl font-black text-deep-forest">92<span class="text-2xl font-bold text-slate-400">/100</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-32 bg-gradient-to-b from-white to-classic-beige/40 dark:from-slate-950 dark:to-slate-900">
+<div class="max-w-5xl mx-auto px-4 text-center">
+<h2 class="text-5xl md:text-7xl font-black mb-12 leading-[1.1] tracking-tight-plus text-deep-forest dark:text-white">
+                Ready to upgrade your <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">academic infrastructure?</span>
+</h2>
+<p class="text-slate-content dark:text-slate-300 mb-20 max-w-3xl mx-auto text-2xl font-semibold leading-relaxed-extra">
+                Join 500+ forward-thinking institutions using DASES to modernize assessment and reclaim faculty time.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-8">
+<button class="bg-accent hover:bg-primary text-white px-14 py-6 rounded-full font-black shadow-2xl shadow-green-900/20 dark:shadow-none transition-all w-full sm:w-auto text-2xl hover:scale-105 active:scale-95">
+                    Get Started Now
+                </button>
+<button class="bg-white dark:bg-slate-700 hover:bg-pale-olive/10 dark:hover:bg-slate-600 text-deep-forest dark:text-white px-14 py-6 rounded-full font-black border-4 border-pale-olive transition-all w-full sm:w-auto text-2xl">
+                    Contact Sales
+                </button>
+</div>
+</div>
+</section>
+<section class="py-40 bg-pale-olive/10 dark:bg-slate-900/50 relative overflow-hidden">
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-pale-olive/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-4xl mx-auto px-4 relative z-10">
+<div class="text-center mb-24">
+<div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-primary shadow-float mx-auto mb-12 border-2 border-pale-olive/50 dark:border-slate-700">
+<svg class="w-14 h-14 fill-none stroke-accent" style="stroke-width: 3.5;" viewBox="0 0 40 40">
+<path class="logo-d-path" d="M12 8C12 8 28 8 28 20C28 32 12 32 12 32V8Z"></path>
+<path class="stroke-primary" d="M15 20L20 25L32 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+</div>
+<h2 class="text-6xl font-black mb-8 tracking-tight-plus text-deep-forest dark:text-white">DASES Support</h2>
+<p class="text-slate-content dark:text-slate-400 text-2xl font-semibold max-w-2xl mx-auto leading-relaxed">Earth &amp; Tech Intelligence at your service. Expert answers for a more efficient grading ecosystem.</p>
+</div>
+<div class="space-y-10">
+<div class="bg-white dark:bg-slate-800 p-10 rounded-[2rem] border-2 border-pale-olive/30 dark:border-slate-700 shadow-float hover:shadow-card-hover transition-all cursor-pointer flex items-center justify-between group">
+<span class="font-black text-2xl text-deep-forest dark:text-white">Do we need to buy special scanners?</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-4xl font-bold">add</span>
+</div>
+<div class="bg-white dark:bg-slate-800 p-12 rounded-[2rem] border-4 border-accent shadow-2xl scale-[1.03]">
+<div class="flex items-center justify-between mb-8">
+<span class="font-black text-3xl text-deep-forest dark:text-white">How accurate is the handwriting recognition?</span>
+<span class="material-symbols-outlined bg-primary text-white p-2 rounded-full text-2xl cursor-pointer hover:bg-deep-forest">close</span>
+</div>
+<p class="text-slate-content dark:text-slate-300 leading-relaxed-extra text-xl font-semibold">
+                        Our AI models achieve <span class="text-primary font-black underline decoration-primary/30 decoration-4">95%+ accuracy</span> on handwritten student responses, significantly reducing the need for manual verification while maintaining academic integrity.
+                    </p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-10 rounded-[2rem] border-2 border-pale-olive/30 dark:border-slate-700 shadow-float hover:shadow-card-hover transition-all cursor-pointer flex items-center justify-between group">
+<span class="font-black text-2xl text-deep-forest dark:text-white">Can DASES handle multiple languages?</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-4xl font-bold">add</span>
+</div>
+<div class="bg-white dark:bg-slate-800 p-10 rounded-[2rem] border-2 border-pale-olive/30 dark:border-slate-700 shadow-float hover:shadow-card-hover transition-all cursor-pointer flex items-center justify-between group">
+<span class="font-black text-2xl text-deep-forest dark:text-white">How is data security managed?</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-4xl font-bold">add</span>
+</div>
+</div>
+</div>
+</section>
+<section class="py-40">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col lg:flex-row bg-white dark:bg-slate-900 rounded-[4rem] shadow-2xl border-4 border-pale-olive/20 dark:border-slate-800 overflow-hidden min-h-[800px]">
+<div class="lg:w-3/5 p-12 lg:p-24">
+<span class="text-primary font-black tracking-[0.3em] uppercase text-sm mb-8 block">Earth &amp; Tech Intelligence</span>
+<h2 class="text-6xl font-black mb-10 text-deep-forest dark:text-white">Initiate Your Pilot</h2>
+<p class="text-slate-500 dark:text-slate-400 mb-20 text-xl font-bold">Experience AI-driven precision in academic grading. Fill out the details to get started.</p>
+<form class="space-y-12">
+<div>
+<label class="block text-sm font-black text-deep-forest dark:text-slate-200 uppercase tracking-widest mb-4">Full Name</label>
+<input class="w-full border-2 border-pale-olive dark:border-slate-700 rounded-2xl bg-classic-beige/10 dark:bg-slate-800/50 px-6 py-5 focus:ring-8 focus:ring-primary/10 focus:border-primary placeholder:text-slate-400 font-black text-deep-forest transition-all text-lg" placeholder="e.g. Professor John Doe" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<div>
+<label class="block text-sm font-black text-deep-forest dark:text-slate-200 uppercase tracking-widest mb-4">Institution</label>
+<input class="w-full border-2 border-pale-olive dark:border-slate-700 rounded-2xl bg-classic-beige/10 dark:bg-slate-800/50 px-6 py-5 focus:ring-8 focus:ring-primary/10 focus:border-primary placeholder:text-slate-400 font-black text-deep-forest transition-all text-lg" placeholder="e.g. State University" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-black text-deep-forest dark:text-slate-200 uppercase tracking-widest mb-4">Role</label>
+<div class="relative">
+<select class="w-full border-2 border-pale-olive dark:border-slate-700 rounded-2xl bg-classic-beige/10 dark:bg-slate-800/50 px-6 py-5 focus:ring-8 focus:ring-primary/10 focus:border-primary text-deep-forest font-black transition-all appearance-none text-lg">
+<option>Select Role</option>
+<option>Faculty</option>
+<option>Administrator</option>
+<option>IT Support</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-6 pointer-events-none text-slate-500">
+<span class="material-symbols-outlined font-black">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-black text-deep-forest dark:text-slate-200 uppercase tracking-widest mb-4">Academic Email</label>
+<input class="w-full border-2 border-pale-olive dark:border-slate-700 rounded-2xl bg-classic-beige/10 dark:bg-slate-800/50 px-6 py-5 focus:ring-8 focus:ring-primary/10 focus:border-primary placeholder:text-slate-400 font-black text-deep-forest transition-all text-lg" placeholder="name@institution.edu" type="email"/>
+</div>
+<button class="bg-accent hover:bg-primary text-white w-full px-12 py-6 rounded-3xl font-black text-xl shadow-2xl shadow-green-900/20 dark:shadow-none transition-all mt-10 tracking-widest uppercase hover:scale-[1.02] active:scale-95">
+                            Start Pilot Program
+                        </button>
+</form>
+</div>
+<div class="lg:w-2/5 bg-deep-forest p-12 lg:p-24 text-white flex flex-col justify-between relative overflow-hidden">
+<div class="absolute inset-0 opacity-15 pointer-events-none mix-blend-overlay">
+<img alt="World Map background" class="w-full h-full object-cover grayscale invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdcHFihK5cfyQHwpEEdgBxL75NSkRrNf-GrNP0h3PkRuSnapMpTBWJ2R8EiKROwP_RD1Qe1JRbqqiDn9IfCjAI26rQBTF4K3DSA50gZxakCXa5HYF6tUZykIA0Up8bb55lpWVMKd0g4QS2hEHVXywaYdhr0sIniSaz3vK14J8zsFf07k8pvAr_xRiGX4dSnGFD2defi_uvkhu8wW-58LFhoptA-yD9-GSbFtiBjML4try8LwhPeqC-a357hlvihOEysrAIIPrulBxG"/>
+</div>
+<div class="relative z-10">
+<h3 class="text-5xl font-black mb-20 leading-tight">Ready to transform your grading?</h3>
+<div class="space-y-16">
+<div class="flex items-start gap-10 group">
+<div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-deep-forest transition-colors">
+<span class="material-symbols-outlined text-3xl font-bold">mail</span>
+</div>
+<div>
+<div class="text-xs font-black text-white/50 uppercase tracking-[0.3em] mb-3">Email Support</div>
+<div class="font-black text-2xl">hello@dases-intel.com</div>
+</div>
+</div>
+<div class="flex items-start gap-10 group">
+<div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-deep-forest transition-colors">
+<span class="material-symbols-outlined text-3xl font-bold">call</span>
+</div>
+<div>
+<div class="text-xs font-black text-white/50 uppercase tracking-[0.3em] mb-3">Inquiries</div>
+<div class="font-black text-2xl">+1 (555) 941-0808</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative z-10 flex items-center justify-between border-t-2 border-white/10 pt-12 mt-24">
+<div class="flex items-center gap-8">
+<span class="material-symbols-outlined text-2xl opacity-50 hover:opacity-100 cursor-pointer transition-opacity">public</span>
+<span class="material-symbols-outlined text-2xl opacity-50 hover:opacity-100 cursor-pointer transition-opacity">share</span>
+</div>
+<div class="text-xs text-white/40 uppercase tracking-widest font-black">© 2024 DASES AI</div>
+</div>
+</div>
+</div>
+<p class="text-center mt-12 text-slate-500 font-black text-lg">Confused? <a class="text-primary hover:underline" href="#">Browse the Knowledge Base</a></p>
+</div>
+</section>
+</main>
+<footer class="bg-cream dark:bg-slate-950 pt-32 pb-20 border-t-2 border-pale-olive/30 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-20 mb-24">
+<div class="lg:col-span-2">
+<div class="flex items-center gap-4 mb-10">
+<div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-900 rounded-xl shadow-md border border-pale-olive">
+<svg class="w-10 h-10 fill-none stroke-accent" style="stroke-width: 3.5;" viewBox="0 0 40 40">
+<path class="logo-d-path" d="M12 8C12 8 28 8 28 20C28 32 12 32 12 32V8Z"></path>
+<path class="stroke-primary" d="M15 20L20 25L32 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+</div>
+<span class="text-3xl font-black tracking-tight-plus text-deep-forest dark:text-white">DASES</span>
+</div>
+<p class="text-slate-content dark:text-slate-400 max-w-sm mb-12 leading-relaxed-extra font-bold text-lg">
+                    Empowering educators with fair, fast, and actionable assessment intelligence. Revolutionizing the way we evaluate academic growth.
+                </p>
+<div class="flex gap-6">
+<a class="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white hover:bg-primary transition-all duration-300 shadow-sm" href="#">
+<span class="material-symbols-outlined text-2xl font-bold">thumb_up</span>
+</a>
+<a class="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white hover:bg-primary transition-all duration-300 shadow-sm" href="#">
+<span class="material-symbols-outlined text-2xl font-bold">language</span>
+</a>
+</div>
+</div>
+<div>
+<h5 class="font-black text-deep-forest dark:text-white mb-10 tracking-widest uppercase text-sm">Product</h5>
+<ul class="space-y-6 text-slate-content dark:text-slate-400 text-base font-black">
+<li><a class="hover:text-primary transition-colors" href="#">Features</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Integrations</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Pricing</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Changelog</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-black text-deep-forest dark:text-white mb-10 tracking-widest uppercase text-sm">Resources</h5>
+<ul class="space-y-6 text-slate-content dark:text-slate-400 text-base font-black">
+<li><a class="hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">API Reference</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Community</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-black text-deep-forest dark:text-white mb-10 tracking-widest uppercase text-sm">Company</h5>
+<ul class="space-y-6 text-slate-content dark:text-slate-400 text-base font-black">
+<li><a class="hover:text-primary transition-colors" href="#">About</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Legal</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between pt-12 border-t-2 border-pale-olive/20 dark:border-slate-800 text-sm text-slate-500 font-black gap-8">
+<div>© 2024 DASES Inc. All rights reserved.</div>
+<div class="flex gap-12">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+
+```</body></html>

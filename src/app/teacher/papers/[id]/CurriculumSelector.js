@@ -1,7 +1,7 @@
 // src/app/teacher/papers/[id]/CurriculumSelector.js
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Share2, X, Users, Check, Loader2, BookOpen, Trash2, Plus, FileText, Sparkles } from "lucide-react";
+import { Share2, X, Users, Check, Loader2, BookOpen, Trash2, Plus, FileText, Sparkles, Edit2 } from "lucide-react";
 import styles from "./CurriculumSelector.module.css";
 
 export default function CurriculumSelector({
@@ -119,6 +119,13 @@ export default function CurriculumSelector({
         setExtractedCurriculum(updated);
     };
 
+    // Update unit weight
+    const updateUnitWeight = (unitIndex, newWeight) => {
+        const updated = { ...extractedCurriculum };
+        updated.structured_topics.units[unitIndex].weight = parseInt(newWeight) || 0;
+        setExtractedCurriculum(updated);
+    };
+
     // Update topic name
     const updateTopicName = (unitIndex, topicIndex, newName) => {
         const updated = { ...extractedCurriculum };
@@ -170,6 +177,75 @@ export default function CurriculumSelector({
         setExtractedCurriculum(updated);
     };
 
+    // Update CO description
+    const updateCODescription = (coIndex, newDesc) => {
+        const updated = { ...extractedCurriculum };
+        if (!updated.structured_topics.courseOutcomes) {
+            updated.structured_topics.courseOutcomes = [];
+        }
+        updated.structured_topics.courseOutcomes[coIndex].description = newDesc;
+        setExtractedCurriculum(updated);
+    };
+
+    // Update CO code
+    const updateCOCode = (coIndex, newCode) => {
+        const updated = { ...extractedCurriculum };
+        updated.structured_topics.courseOutcomes[coIndex].code = newCode;
+        updated.structured_topics.courseOutcomes[coIndex].id = newCode;
+        setExtractedCurriculum(updated);
+    };
+
+    // Add new CO
+    const addCO = () => {
+        const updated = { ...extractedCurriculum };
+        if (!updated.structured_topics.courseOutcomes) {
+            updated.structured_topics.courseOutcomes = [];
+        }
+        const coCount = updated.structured_topics.courseOutcomes.length + 1;
+        updated.structured_topics.courseOutcomes.push({
+            id: `CO${coCount}`,
+            code: `CO${coCount}`,
+            description: "New Course Outcome"
+        });
+        setExtractedCurriculum(updated);
+    };
+
+    // Delete CO
+    const deleteCO = (coIndex) => {
+        const updated = { ...extractedCurriculum };
+        updated.structured_topics.courseOutcomes.splice(coIndex, 1);
+        setExtractedCurriculum(updated);
+    };
+
+    // Update Unit's mapped COs
+    const updateUnitCOMapping = (unitIndex, coId, isChecked) => {
+        const updated = { ...extractedCurriculum };
+        const unit = updated.structured_topics.units[unitIndex];
+
+        if (!unit.mappedCOs) {
+            unit.mappedCOs = [];
+        }
+
+        if (isChecked) {
+            // Add CO if not already present
+            if (!unit.mappedCOs.includes(coId)) {
+                unit.mappedCOs.push(coId);
+            }
+        } else {
+            // Remove CO
+            unit.mappedCOs = unit.mappedCOs.filter(id => id !== coId);
+        }
+
+        setExtractedCurriculum(updated);
+    };
+
+    // Toggle CO mapping enabled
+    const toggleCOMapping = (enabled) => {
+        const updated = { ...extractedCurriculum };
+        updated.structured_topics.coMappingEnabled = enabled;
+        setExtractedCurriculum(updated);
+    };
+
     // Confirm and save updated curriculum
     const confirmCurriculum = async () => {
         try {
@@ -213,6 +289,13 @@ export default function CurriculumSelector({
         } catch (err) {
             console.error("Link error:", err);
         }
+    };
+
+    // Edit an existing curriculum
+    const editExistingCurriculum = (curriculum) => {
+        // Load the curriculum into edit mode
+        setExtractedCurriculum(curriculum);
+        setEditMode(true);
     };
 
     // Open share modal
@@ -274,73 +357,143 @@ export default function CurriculumSelector({
     if (editMode && extractedCurriculum) {
         const topics = extractedCurriculum.structured_topics;
         const totalTopics = topics.units?.reduce((sum, u) => sum + (u.topics?.length || 0), 0) || 0;
+        const totalCOs = topics.courseOutcomes?.length || 0;
 
         return (
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <BookOpen size={24} /> Review Extracted Curriculum
+            <div className={`${styles.container} ${styles.editModeContainer}`}>
+                {/* Glassmorphism Header */}
+                <div className={styles.editHeader}>
+                    <h3 className={styles.editHeaderTitle}>
+                        <BookOpen size={26} /> Review Extracted Curriculum
                     </h3>
-                    <p className={styles.subtitle}>
-                        {topics.units?.length || 0} units, {totalTopics} topics extracted. Review and edit if needed.
+                    <p className={styles.editHeaderMeta}>
+                        <span className={styles.metaBadge}>📚 {topics.units?.length || 0} Units</span>
+                        <span className={styles.metaBadge}>📝 {totalTopics} Topics</span>
+                        {totalCOs > 0 && <span className={styles.metaBadge}>🎯 {totalCOs} COs</span>}
                     </p>
+                </div>
+
+                {/* Course Outcomes Section */}
+                <div className={styles.coSection}>
+                    <div className={styles.coSectionHeader}>
+                        <h4 className={styles.coSectionTitle}>🎯 Course Outcomes</h4>
+                        <button onClick={addCO} className={styles.addTopicModern}>+ Add CO</button>
+                    </div>
+                    <div className={styles.coChipsContainer}>
+                        {topics.courseOutcomes?.map((co, ci) => (
+                            <div key={co.id} className={styles.coChip}>
+                                <input
+                                    type="text"
+                                    value={co.code}
+                                    onChange={(e) => updateCOCode(ci, e.target.value)}
+                                    className={styles.coChipCode}
+                                />
+                                <input
+                                    type="text"
+                                    value={co.description}
+                                    onChange={(e) => updateCODescription(ci, e.target.value)}
+                                    placeholder="Description"
+                                    className={styles.coChipDesc}
+                                />
+                                <button onClick={() => deleteCO(ci)} className={styles.coChipDelete}>✕</button>
+                            </div>
+                        ))}
+                        {(!topics.courseOutcomes || topics.courseOutcomes.length === 0) && (
+                            <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>No COs defined. Click "+ Add CO" to add.</span>
+                        )}
+                    </div>
+                </div>
+
+                {/* CO Mapping Toggle */}
+                {topics.courseOutcomes?.length > 0 && (
+                    <div className={`${styles.coToggleBar} ${topics.coMappingEnabled ? styles.coToggleBarEnabled : ''}`}>
+                        <label className={styles.coToggleLabel}>
+                            <input
+                                type="checkbox"
+                                checked={topics.coMappingEnabled || false}
+                                onChange={(e) => toggleCOMapping(e.target.checked)}
+                                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#16a34a' }}
+                            />
+                            {topics.coMappingEnabled ? '✓ CO Analysis Enabled' : 'Enable CO Analysis for Coverage Reports'}
+                        </label>
+                    </div>
+                )}
+
+                {/* Units Section Header */}
+                <div className={styles.coSectionHeader} style={{ marginBottom: '16px' }}>
+                    <h4 className={styles.coSectionTitle}>📚 Units & Topics</h4>
                 </div>
 
                 {/* Units List */}
                 <div className={styles.unitsContainer}>
                     {topics.units?.map((unit, ui) => (
-                        <div key={unit.id} className={styles.unitBlock}>
-                            <div className={styles.unitHeader}>
+                        <div key={unit.id} className={styles.floatingCard}>
+                            {/* Unit Header */}
+                            <div className={styles.unitCardHeader}>
                                 <input
                                     type="text"
                                     value={unit.name}
                                     onChange={(e) => updateUnitName(ui, e.target.value)}
-                                    className={styles.unitNameInput}
+                                    className={styles.unitNameLarge}
+                                    placeholder="Unit name..."
                                 />
-                                <button
-                                    onClick={() => deleteUnit(ui)}
-                                    className={styles.deleteBtn}
-                                    title="Delete unit"
-                                >
-                                    <Trash2 size={16} />
+                                <div className={styles.weightBadge}>
+                                    <span>Weight</span>
+                                    <input
+                                        type="number"
+                                        value={unit.weight || 0}
+                                        onChange={(e) => updateUnitWeight(ui, e.target.value)}
+                                        min="0" max="100"
+                                    />
+                                    <span>%</span>
+                                </div>
+                                <button onClick={() => deleteUnit(ui)} className={styles.deleteBtn} title="Delete unit">
+                                    <Trash2 size={14} />
                                 </button>
                             </div>
 
-                            <div className={styles.topicsList}>
+                            {/* Topics Area */}
+                            <div className={styles.topicsArea}>
                                 {unit.topics?.map((topic, ti) => (
-                                    <div key={topic.id} className={styles.topicRow}>
+                                    <div key={topic.id} className={styles.topicItemModern}>
+                                        <span className={styles.topicBullet}></span>
                                         <input
                                             type="text"
                                             value={topic.name}
                                             onChange={(e) => updateTopicName(ui, ti, e.target.value)}
-                                            className={styles.topicNameInput}
+                                            className={styles.topicInputModern}
+                                            placeholder="Topic name..."
                                         />
-                                        <input
-                                            type="number"
-                                            value={topic.weight}
-                                            onChange={(e) => updateTopicWeight(ui, ti, e.target.value)}
-                                            className={styles.weightInput}
-                                            title="Weight (importance)"
-                                        />
-                                        <button
-                                            onClick={() => deleteTopic(ui, ti)}
-                                            className={styles.deleteTopicBtn}
-                                        >
-                                            ✕
-                                        </button>
+                                        <button onClick={() => deleteTopic(ui, ti)} className={styles.topicDeleteBtn}>✕</button>
                                     </div>
                                 ))}
-                                <button
-                                    onClick={() => addTopic(ui)}
-                                    className={styles.addTopicBtn}
-                                >
-                                    + Add Topic
-                                </button>
+                                <button onClick={() => addTopic(ui)} className={styles.addTopicModern}>+ Add Topic</button>
                             </div>
+
+                            {/* CO Mapping Footer */}
+                            {topics.coMappingEnabled && topics.courseOutcomes?.length > 0 && (
+                                <div className={styles.coMappingFooter}>
+                                    <span className={styles.coMappingLabel}>Mapped COs</span>
+                                    <div className={styles.coPillContainer}>
+                                        {topics.courseOutcomes?.map(co => {
+                                            const isSelected = unit.mappedCOs?.includes(co.id) || unit.mappedCOs?.includes(co.code);
+                                            return (
+                                                <button
+                                                    key={co.id}
+                                                    onClick={() => updateUnitCOMapping(ui, co.id, !isSelected)}
+                                                    className={`${styles.coPill} ${isSelected ? styles.coPillActive : ''}`}
+                                                >
+                                                    {isSelected && '✓ '}{co.code}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ))}
 
-                    <button onClick={addUnit} className={styles.addUnitBtn}>
+                    <button onClick={addUnit} className={styles.addUnitCTA}>
                         + Add New Unit
                     </button>
                 </div>
@@ -415,6 +568,7 @@ export default function CurriculumSelector({
                                         </span>
                                     )}
                                 </button>
+
                                 {/* Share Button - only for owned curricula */}
                                 {c.isOwner && (
                                     <button
@@ -434,79 +588,7 @@ export default function CurriculumSelector({
                 </div>
             )}
 
-            {/* Upload New */}
-            {!currentCurriculumId && (
-                <div className={styles.section}>
-                    <button
-                        className={styles.uploadToggle}
-                        onClick={() => setShowUpload(!showUpload)}
-                    >
-                        {showUpload ? (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <X size={16} /> Cancel
-                            </span>
-                        ) : (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <Plus size={16} /> Upload New Curriculum
-                            </span>
-                        )}
-                    </button>
 
-                    {showUpload && (
-                        <div className={styles.uploadArea}>
-                            {/* File Upload */}
-                            <div className={styles.dropzone}>
-                                <input
-                                    ref={fileRef}
-                                    type="file"
-                                    accept=".pdf,.txt,.doc,.docx"
-                                    onChange={(e) => handleUpload(e.target.files[0])}
-                                    hidden
-                                />
-                                <button
-                                    className={styles.dropzoneBtn}
-                                    onClick={() => fileRef.current?.click()}
-                                    disabled={uploading}
-                                >
-                                    {uploading ? (
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <Loader2 size={16} className="animate-spin" /> Extracting...
-                                        </span>
-                                    ) : (
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <FileText size={16} /> Upload PDF or TXT
-                                        </span>
-                                    )}
-                                </button>
-                            </div>
-
-                            <div className={styles.orDivider}>— OR —</div>
-
-                            {/* Text Paste */}
-                            <textarea
-                                className={styles.textInput}
-                                placeholder="Paste your syllabus content here..."
-                                value={textInput}
-                                onChange={(e) => setTextInput(e.target.value)}
-                                rows={6}
-                            />
-                            <button
-                                className={styles.processBtn}
-                                onClick={handleTextUpload}
-                                disabled={uploading || !textInput.trim()}
-                            >
-                                {uploading ? "Processing..." : (
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <Sparkles size={16} /> Process with AI
-                                    </span>
-                                )}
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* Skip Option */}
             {!currentCurriculumId && (
                 <button
                     className={styles.skipBtn}

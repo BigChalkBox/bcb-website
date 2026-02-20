@@ -14,10 +14,10 @@ const testimonials = [
     img: "/images/image.png"
   },
   {
-    logo: "Dr. Lalit Sachan",
+    logo: "Prof. Lalit Sachan",
     quote:
       "We saw immediate impact. Faster grading, consistent rubrics, and detailed student feedback — DASES has set a new benchmark.",
-    name: "Dr. Lalit Sachan",
+    name: "Prof. Lalit Sachan",
     title: "Director AI/ML",
     img: "/images/image.png"
   },
@@ -98,7 +98,7 @@ export default function TestimonialStack() {
           <button className={styles.navBtn} onClick={next}>→</button>
         </div>
 
-       
+
       </div>
     </section>
   );

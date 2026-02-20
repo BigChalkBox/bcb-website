@@ -568,6 +568,7 @@ function blankSample() {
     answer: "",
     answerImages: [],
     rubric: { criteria: [] },
+    rubricInstructions: "",
   };
 }
 
@@ -576,8 +577,27 @@ function blankQuestion() {
     qid: uuid(),
     text: "",
     marks: 0,
+    type: "subjective", // "objective", "subjective", or "case_study"
+    options: null, // For MCQ: ["A. ...", "B. ...", "C. ...", "D. ..."]
+    correctAnswer: null, // For objective questions: "A", "True", "42", etc.
     samples: [],
-    isOr: false, // 🟩 CHANGE: Added isOr flag
+    isOr: false,
+    // Sub-parts support for case study questions
+    hasSubParts: false,
+    subParts: [], // Array of sub-questions with labels a, b, c...
+  };
+}
+
+function blankSubPart(label = "a") {
+  return {
+    id: uuid(),
+    label, // "a", "b", "c", etc.
+    text: "",
+    marks: 0,
+    type: "objective", // "objective" or "subjective"
+    correctAnswer: null, // For objective sub-parts
+    options: null,
+    samples: [], // For subjective sub-parts
   };
 }
 
@@ -1216,6 +1236,9 @@ export default function QuestionEditor({
                       <h4 className="question-title">
                         Q{i + 1}
                         <span className="or-badge">OR</span>
+                        <span className={`type-badge ${q.type === 'objective' ? 'objective' : 'subjective'}`}>
+                          {q.type === 'objective' ? '✓ Objective' : '📝 Subjective'}
+                        </span>
                         <span className="marks-badge">{q.marks} marks</span>
                       </h4>
                       {!isExpanded && <span className="question-preview">{previewText}...</span>}
@@ -1246,6 +1269,9 @@ export default function QuestionEditor({
                       <span className="expand-arrow">{isExpanded2 ? '▼' : '▶'}</span>
                       <h4 className="question-title">
                         Q{i + 2}
+                        <span className={`type-badge ${q2.type === 'objective' ? 'objective' : 'subjective'}`}>
+                          {q2.type === 'objective' ? '✓ Objective' : '📝 Subjective'}
+                        </span>
                         <span className="marks-badge">{q2.marks} marks</span>
                       </h4>
                       {!isExpanded2 && <span className="question-preview">{previewText2}...</span>}
@@ -1272,6 +1298,9 @@ export default function QuestionEditor({
                     <span className="expand-arrow">{isExpanded ? '▼' : '▶'}</span>
                     <h4 className="question-title">
                       Q{i + 1}
+                      <span className={`type-badge ${q.type === 'objective' ? 'objective' : q.type === 'case_study' ? 'case_study' : 'subjective'}`}>
+                        {q.type === 'objective' ? '✓ Objective' : q.type === 'case_study' ? '📋 Case Study' : '📝 Subjective'}
+                      </span>
                       <span className="marks-badge">{q.marks} marks</span>
                     </h4>
                     {!isExpanded && <span className="question-preview">{previewText}...</span>}
@@ -1437,8 +1466,174 @@ function QuestionCard({
           value={question.marks}
           onChange={(e) => setField("marks", Number(e.target.value))}
           className="form-input"
+          readOnly={question.type === 'case_study'}
+          style={question.type === 'case_study' ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
         />
+        {question.type === 'case_study' && (
+          <p className="form-hint">Marks are auto-calculated from sub-parts</p>
+        )}
       </div>
+
+      {/* QUESTION TYPE */}
+      <div className="form-group">
+        <label className="form-label">Question Type:</label>
+        <div className="type-toggle">
+          <button
+            className={`type-btn ${question.type !== 'objective' ? 'active' : ''}`}
+            onClick={() => setField("type", "subjective")}
+          >
+            📝 Subjective
+          </button>
+          <button
+            className={`type-btn ${question.type === 'objective' ? 'active' : ''}`}
+            onClick={() => setField("type", "objective")}
+          >
+            ✅ Objective
+          </button>
+          <button
+            className={`type-btn ${question.type === 'case_study' ? 'active' : ''}`}
+            onClick={() => {
+              setField("type", "case_study");
+              setField("hasSubParts", true);
+              if (!question.subParts || question.subParts.length === 0) {
+                setField("subParts", [blankSubPart("a")]);
+              }
+            }}
+          >
+            📋 Case Study
+          </button>
+        </div>
+        <p className="form-hint">
+          {question.type === 'objective'
+            ? 'MCQ, True/False, Fill-in-blank, Short answer (1-5 words)'
+            : question.type === 'case_study'
+              ? 'Main question with objective sub-parts (a, b, c...)'
+              : 'Essay, Derivation, Proof, Long-form answers'}
+        </p>
+      </div>
+
+      {/* CORRECT ANSWER (for objective questions) */}
+      {question.type === 'objective' && (
+        <div className="form-group objective-answer-section">
+          <label className="form-label">Correct Answer:</label>
+          <input
+            type="text"
+            value={question.correctAnswer || ''}
+            onChange={(e) => setField("correctAnswer", e.target.value)}
+            className="form-input"
+            placeholder="e.g., A, True, 42, Newton"
+          />
+          <p className="form-hint">Enter the correct answer for automatic grading</p>
+
+          {/* MCQ Options (optional) */}
+          {question.options && question.options.length > 0 && (
+            <div className="mcq-options">
+              <label className="form-label">Options:</label>
+              {question.options.map((opt, idx) => (
+                <div key={idx} className="mcq-option">
+                  <span>{opt}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* SUB-PARTS (for case study questions) */}
+      {question.type === 'case_study' && (
+        <div className="subparts-section">
+          <div className="subparts-header">
+            <h4 className="subparts-title">Sub-Parts</h4>
+            <button
+              className="btn btn-primary btn-small"
+              onClick={() => {
+                const nextLabel = String.fromCharCode(97 + (question.subParts?.length || 0)); // a, b, c...
+                setField("subParts", [...(question.subParts || []), blankSubPart(nextLabel)]);
+              }}
+            >
+              + Add Sub-Part
+            </button>
+          </div>
+
+          {(question.subParts || []).map((sub, idx) => (
+            <div key={sub.id} className="subpart-card">
+              <div className="subpart-header">
+                <span className="subpart-label">Part {sub.label.toUpperCase()}</span>
+                <span className="subpart-type-badge">✓ Objective</span>
+                <button
+                  className="btn-icon btn-delete-small"
+                  onClick={() => {
+                    if (confirm("Delete this sub-part?")) {
+                      setField("subParts", question.subParts.filter((_, i) => i !== idx));
+                    }
+                  }}
+                >
+                  🗑️
+                </button>
+              </div>
+
+              <div className="subpart-content">
+                <div className="form-group">
+                  <label className="form-label">Sub-question Text:</label>
+                  <textarea
+                    value={sub.text || ''}
+                    onChange={(e) => {
+                      const updated = [...question.subParts];
+                      updated[idx] = { ...sub, text: e.target.value };
+                      setField("subParts", updated);
+                    }}
+                    rows={2}
+                    className="form-textarea"
+                    placeholder={`Enter question for part ${sub.label}...`}
+                  />
+                </div>
+
+                <div className="subpart-marks-row">
+                  <div className="form-group">
+                    <label className="form-label">Marks:</label>
+                    <input
+                      type="number"
+                      value={sub.marks || 0}
+                      onChange={(e) => {
+                        const updated = [...question.subParts];
+                        updated[idx] = { ...sub, marks: Number(e.target.value) };
+                        setField("subParts", updated);
+                        // Auto-sum marks
+                        const totalMarks = updated.reduce((sum, s) => sum + (s.marks || 0), 0);
+                        setField("marks", totalMarks);
+                      }}
+                      className="form-input"
+                      style={{ width: '80px' }}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Correct Answer:</label>
+                    <input
+                      type="text"
+                      value={sub.correctAnswer || ''}
+                      onChange={(e) => {
+                        const updated = [...question.subParts];
+                        updated[idx] = { ...sub, correctAnswer: e.target.value };
+                        setField("subParts", updated);
+                      }}
+                      className="form-input"
+                      placeholder="A, True, 42..."
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {question.subParts?.length > 0 && (
+            <div className="subparts-total">
+              <strong>Total Marks: {question.subParts.reduce((sum, s) => sum + (s.marks || 0), 0)}</strong>
+            </div>
+          )
+          }
+        </div >
+      )}
 
 
 
@@ -1473,80 +1668,82 @@ function QuestionCard({
       </div>
 
       {/* CLARITY ANALYSIS SECTION */}
-      {(question.samples?.length > 0 && question.samples.some(s => s.answer?.trim())) && (
-        <div className="clarity-analysis-section">
-          <div className="clarity-header">
-            <h4>🔍 Question Clarity Check</h4>
-            <button
-              onClick={analyzeClarity}
-              disabled={analyzingClarity}
-              className="btn btn-analyze"
-            >
-              {analyzingClarity ? "Analyzing..." : "Analyze Clarity"}
-            </button>
-          </div>
-
-          {clarityAnalysis && (
-            <div className={`clarity-results ${clarityAnalysis.isUnambiguous ? 'clarity-success' : 'clarity-warning'}`}>
-              {clarityAnalysis.isUnambiguous ? (
-                <div className="clarity-status-good">
-                  <span className="status-icon">✅</span>
-                  <span>Question is clear and unambiguous!</span>
-                </div>
-              ) : (
-                <>
-                  <div className="clarity-status-warning">
-                    <span className="status-icon">⚠️</span>
-                    <span>Some issues found with question clarity</span>
-                  </div>
-
-                  {clarityAnalysis.issues?.length > 0 && (
-                    <div className="clarity-issues">
-                      <strong>Issues:</strong>
-                      <ul>
-                        {clarityAnalysis.issues.map((issue, idx) => (
-                          <li key={idx}>{issue}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {clarityAnalysis.reasoning && (
-                    <div className="clarity-reasoning">
-                      <strong>Analysis:</strong>
-                      <p>{clarityAnalysis.reasoning}</p>
-                    </div>
-                  )}
-
-                  {clarityAnalysis.suggestedQuestion && clarityAnalysis.suggestedQuestion !== question.text && (
-                    <div className="clarity-suggestion">
-                      <strong>Suggested Question:</strong>
-                      <div className="suggested-text">
-                        <Latex>{clarityAnalysis.suggestedQuestion}</Latex>
-                      </div>
-                      <div className="suggestion-actions">
-                        <button onClick={acceptSuggestedQuestion} className="btn btn-accept">
-                          ✓ Accept Suggestion
-                        </button>
-                        <button onClick={() => setClarityAnalysis(null)} className="btn btn-dismiss">
-                          ✕ Dismiss
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
+      {
+        (question.samples?.length > 0 && question.samples.some(s => s.answer?.trim())) && (
+          <div className="clarity-analysis-section">
+            <div className="clarity-header">
+              <h4>🔍 Question Clarity Check</h4>
+              <button
+                onClick={analyzeClarity}
+                disabled={analyzingClarity}
+                className="btn btn-analyze"
+              >
+                {analyzingClarity ? "Analyzing..." : "Analyze Clarity"}
+              </button>
             </div>
-          )}
-        </div>
-      )}
+
+            {clarityAnalysis && (
+              <div className={`clarity-results ${clarityAnalysis.isUnambiguous ? 'clarity-success' : 'clarity-warning'}`}>
+                {clarityAnalysis.isUnambiguous ? (
+                  <div className="clarity-status-good">
+                    <span className="status-icon">✅</span>
+                    <span>Question is clear and unambiguous!</span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="clarity-status-warning">
+                      <span className="status-icon">⚠️</span>
+                      <span>Some issues found with question clarity</span>
+                    </div>
+
+                    {clarityAnalysis.issues?.length > 0 && (
+                      <div className="clarity-issues">
+                        <strong>Issues:</strong>
+                        <ul>
+                          {clarityAnalysis.issues.map((issue, idx) => (
+                            <li key={idx}>{issue}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {clarityAnalysis.reasoning && (
+                      <div className="clarity-reasoning">
+                        <strong>Analysis:</strong>
+                        <p>{clarityAnalysis.reasoning}</p>
+                      </div>
+                    )}
+
+                    {clarityAnalysis.suggestedQuestion && clarityAnalysis.suggestedQuestion !== question.text && (
+                      <div className="clarity-suggestion">
+                        <strong>Suggested Question:</strong>
+                        <div className="suggested-text">
+                          <Latex>{clarityAnalysis.suggestedQuestion}</Latex>
+                        </div>
+                        <div className="suggestion-actions">
+                          <button onClick={acceptSuggestedQuestion} className="btn btn-accept">
+                            ✓ Accept Suggestion
+                          </button>
+                          <button onClick={() => setClarityAnalysis(null)} className="btn btn-dismiss">
+                            ✕ Dismiss
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        )
+      }
 
       <div className="save-section">
         <button onClick={onSaveSingle} className="btn btn-secondary">
           Save Question
         </button>
       </div>
-    </div>
+    </div >
   );
 }
 
@@ -1695,6 +1892,7 @@ function SampleCard({
             maxMarks: questionMarks,
             sampleImages: sample.answerImages || [],
             questionText: questionText || "",
+            rubricInstructions: sample.rubricInstructions || "",
           }),
         }
       );
@@ -1824,6 +2022,19 @@ function SampleCard({
         />
       </div>
 
+      {/* RUBRIC GENERATION GUIDANCE */}
+      <div className="form-group">
+        <label className="form-label">Rubric Generation Guidance <span className="label-hint">(optional)</span></label>
+        <p className="field-description">Provide specific instructions for DASES AI when generating the rubric (e.g., focus areas, strictness level, specific criteria to include).</p>
+        <textarea
+          value={sample.rubricInstructions || ""}
+          onChange={(e) => onChange({ rubricInstructions: e.target.value })}
+          rows={2}
+          className="form-textarea"
+          placeholder="e.g., Focus on procedural steps, be strict on legal provisions, include presentation marks..."
+        />
+      </div>
+
       {/* GENERATE RUBRIC */}
       <button
         onClick={generateRubric}
@@ -1873,7 +2084,7 @@ function ImageThumbs({ paths, onDelete }) {
     <div className="image-thumbnails">
       {paths.map((p, i) => (
         <div key={i} className="image-thumb">
-          <Image src={p} alt={`img-${i}`} />
+          <img src={p} alt={`img-${i}`} />
           <button
             type="button"
             onClick={() => onDelete(i)}

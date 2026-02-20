@@ -25,7 +25,8 @@ function extractJsonFromMarkdown(md) {
 export async function POST(req) {
     try {
         // Get current user for ownership
-        const supabase = createRouteHandlerClient({ cookies });
+        const cookieStore = await cookies();
+        const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
         const { data: { user } } = await supabase.auth.getUser();
         const ownerId = user?.id || null;
 
@@ -68,11 +69,11 @@ export async function POST(req) {
 
             console.log(`[Curriculum] File ready, extracting topics...`);
 
-            // Prompt for syllabus extraction
+            // Prompt for syllabus extraction with Course Outcomes
             const prompt = `
 You are analyzing a course syllabus/curriculum document for: ${subjectName}
 
-TASK: Extract ALL units, chapters, and topics from this syllabus.
+TASK: Extract ALL units, chapters, topics, AND Course Outcomes (COs) from this syllabus.
 Analyze each page carefully and extract the complete course structure.
 
 For each topic, estimate its relative weight (importance) from 0-100 based on:
@@ -82,12 +83,25 @@ For each topic, estimate its relative weight (importance) from 0-100 based on:
 
 Return ONLY valid JSON (no markdown, no explanation):
 {
+  "courseOutcomes": [
+    {
+      "id": "CO1",
+      "code": "CO1",
+      "description": "Course Outcome description as written in syllabus"
+    },
+    {
+      "id": "CO2",
+      "code": "CO2",
+      "description": "Another Course Outcome"
+    }
+  ],
   "units": [
     {
       "id": "unit-1",
       "name": "Unit Name as written in syllabus",
       "weight": 25,
       "hours": 10,
+      "mappedCOs": ["CO1", "CO2"],
       "topics": [
         { "id": "u1-t1", "name": "Topic Name", "weight": 10 },
         { "id": "u1-t2", "name": "Another Topic", "weight": 8 }
@@ -99,12 +113,15 @@ Return ONLY valid JSON (no markdown, no explanation):
 }
 
 Rules:
+- Extract ALL Course Outcomes (COs) mentioned in the syllabus
+- For each unit, identify which COs it addresses (mappedCOs)
 - Extract EVERY unit/module mentioned
 - Extract EVERY topic and subtopic
 - Use exact names from the syllabus
-- Create unique sequential IDs (unit-1, unit-2, u1-t1, etc.)
+- Create unique sequential IDs (unit-1, unit-2, u1-t1, CO1, CO2, etc.)
 - Weights should approximately sum to 100
 - Include hours if mentioned in syllabus
+- If COs are not explicitly mentioned, infer them from learning objectives or outcomes
 `;
 
             // Build content with file reference
@@ -137,24 +154,32 @@ Rules:
             rawContent = textContent;
 
             const prompt = `
-Extract course units and topics from this syllabus text for: ${subjectName}
+Extract course units, topics, AND Course Outcomes (COs) from this syllabus text for: ${subjectName}
 
 SYLLABUS TEXT:
 ${textContent.substring(0, 30000)}
 
 Return ONLY valid JSON:
 {
+  "courseOutcomes": [
+    { "id": "CO1", "code": "CO1", "description": "Course Outcome description" }
+  ],
   "units": [
     {
       "id": "unit-1",
       "name": "Unit Name",
       "weight": 25,
+      "mappedCOs": ["CO1"],
       "topics": [
         { "id": "u1-t1", "name": "Topic", "weight": 10 }
       ]
     }
   ]
 }
+
+Rules:
+- Extract ALL Course Outcomes mentioned (or infer from learning objectives)
+- Map each unit to the COs it addresses
 `;
 
             const result = await ai.models.generateContent({
@@ -185,8 +210,9 @@ Return ONLY valid JSON:
             (sum, u) => sum + (u.topics?.length || 0),
             0
         ) || 0;
+        const cosCount = structuredTopics.courseOutcomes?.length || 0;
 
-        console.log(`[Curriculum] Extracted ${unitsCount} units, ${topicsCount} topics`);
+        console.log(`[Curriculum] Extracted ${unitsCount} units, ${topicsCount} topics, ${cosCount} Course Outcomes`);
 
         // Store in database with owner
         const { data, error } = await supabaseAdmin
@@ -212,8 +238,10 @@ Return ONLY valid JSON:
         return NextResponse.json({
             success: true,
             curriculum: data,
+            curriculumId: data.id,
             unitsExtracted: unitsCount,
             topicsExtracted: topicsCount,
+            courseOutcomesExtracted: cosCount,
         });
 
     } catch (err) {

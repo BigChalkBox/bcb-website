@@ -5,6 +5,7 @@ import styles from "./EvaluationsPage.module.css";
 import Header from "@/components/HeaderSub";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Copy, PenTool, FileText, X } from "lucide-react";
 
 // Initialize Authenticated Supabase client (for signed URLs)
 const supabase = createClientComponentClient();
@@ -16,23 +17,32 @@ export default function EvaluationsPage() {
   const [detecting, setDetecting] = useState(null);
   const [detectProgress, setDetectProgress] = useState("");
   const [loading, setLoading] = useState(true);
-  const pdfJsLoaded = useRef(false);
 
-  // Load pdf.js from CDN
-  useEffect(() => {
-    if (pdfJsLoaded.current) return;
+  // Detection Modal State
+  const [showDetectModal, setShowDetectModal] = useState(false);
+  const [detectConfig, setDetectConfig] = useState({ id: null, path: null, mode: 'none' });
 
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-    script.onload = () => {
-      // Set worker source
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-      pdfJsLoaded.current = true;
-      console.log("✅ pdf.js loaded");
-    };
-    document.head.appendChild(script);
-  }, []);
+  // Bulk Detection State
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkConfig, setBulkConfig] = useState({
+    paperId: null,
+    paperName: '',
+    submissions: [],
+    batchSize: 3,
+    mode: 'none'
+  });
+  const [bulkProgress, setBulkProgress] = useState({ running: false, current: 0, total: 0, results: [] });
+
+  // Bulk Evaluation State
+  const [showBulkEvalModal, setShowBulkEvalModal] = useState(false);
+  const [bulkEvalConfig, setBulkEvalConfig] = useState({
+    paperId: null,
+    paperName: '',
+    submissions: [],
+    batchSize: 2
+  });
+  const [bulkEvalProgress, setBulkEvalProgress] = useState({ running: false, current: 0, total: 0, results: [] });
+
 
   // 🔹 Fetch grouped submissions (paper-wise)
   const fetchGroupedSubmissions = useCallback(async () => {
@@ -89,145 +99,201 @@ export default function EvaluationsPage() {
     }
   };
 
-  // 🔍 CLIENT-SIDE PDF to Image + Question Detection
-  const handleDetect = async (submissionId, filePath) => {
-    if (!confirm("Start question number detection for this submission?")) return;
-    if (!pdfJsLoaded.current) {
-      alert("PDF.js is still loading. Please wait a moment and try again.");
-      return;
-    }
+  // 🔍 PYTHON BACKEND PDF PROCESSING
+  const runDetection = async () => {
+    const { id: submissionId, path: filePath, mode: extractionMode } = detectConfig;
+    if (!submissionId) return;
+
+    setShowDetectModal(false); // Close modal
 
     setDetecting(submissionId);
-    setDetectProgress("Loading PDF...");
+    setDetectProgress("Queuing Python Job...");
 
     try {
-      // 1. Get the PDF URL (Signed URL for private buckets)
-      console.log("📄 Pth:", filePath);
-      const { data: fileData, error: urlError } = await supabase.storage
-        .from("submissions")
-        .createSignedUrl(filePath, 3600); // Valid for 1 hour
-
-      if (urlError) throw new Error("Failed to get PDF URL: " + urlError.message);
-      const pdfUrl = fileData.signedUrl;
-
-      console.log("📄 Loading PDF:", pdfUrl);
-
-      // 2. Load PDF with pdf.js
-      const loadingTask = window.pdfjsLib.getDocument(pdfUrl);
-      const pdfDoc = await loadingTask.promise;
-      const numPages = pdfDoc.numPages;
-      console.log(`📚 PDF loaded: ${numPages} pages`);
-
-      const results = [];
-
-      // 3. Process each page
-      for (let i = 1; i <= numPages; i++) {
-        setDetectProgress(`Processing page ${i}/${numPages}...`);
-        console.log(`🖼️ Processing page ${i}...`);
-
-        // Get page
-        const page = await pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 });
-
-        // Create canvas
-        const canvas = document.createElement("canvas");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext("2d");
-
-        // Render page to canvas
-        await page.render({
-          canvasContext: ctx,
-          viewport: viewport,
-        }).promise;
-
-        // Convert full page to blob
-        const fullBlob = await new Promise((resolve) =>
-          canvas.toBlob(resolve, "image/jpeg", 0.8)
-        );
-
-        // Crop top 25% for question detection
-        const cropHeight = Math.floor(viewport.height * 0.25);
-        const croppedCanvas = document.createElement("canvas");
-        croppedCanvas.width = viewport.width;
-        croppedCanvas.height = cropHeight;
-        const croppedCtx = croppedCanvas.getContext("2d");
-        croppedCtx.drawImage(
-          canvas,
-          0, 0, viewport.width, cropHeight,
-          0, 0, viewport.width, cropHeight
-        );
-
-        // Convert cropped to base64
-        const croppedBase64 = croppedCanvas.toDataURL("image/jpeg", 0.85);
-
-        // 4. Send to API for question detection
-        setDetectProgress(`Detecting Q number for page ${i}...`);
-        const detectRes = await fetch("/api/detect-question", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: croppedBase64 }),
-        });
-        const detectJson = await detectRes.json();
-        const questionNo = detectJson.question_no;
-        console.log(`📝 Page ${i}: Q${questionNo || "?"}`);
-
-        // 5. Upload full image via server API (bypasses RLS)
-        const fullBase64 = canvas.toDataURL("image/jpeg", 0.8);
-
-        setDetectProgress(`Uploading page ${i}...`);
-        const uploadRes = await fetch("/api/upload-page-image", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            submissionId,
-            questionNo,
-            pageNumber: i,
-            imageBase64: fullBase64,
-          }),
-        });
-        const uploadJson = await uploadRes.json();
-
-        if (!uploadJson.success) {
-          console.error(`⚠️ Upload error (page ${i}):`, uploadJson.error);
-        } else {
-          console.log(`✅ Uploaded page ${i} to ${uploadJson.path}`);
-        }
-
-        const uploadPath = uploadJson.path || `${submissionId}/${questionNo ? `q${questionNo}` : "unassigned"}/page_${i}.png`;
-
-        results.push({
-          page: i,
-          question_no: questionNo,
-          uploaded_to: uploadPath,
-        });
-      }
-
-      // 6. Update evaluation status in database
-      setDetectProgress("Updating database...");
-      const updateRes = await fetch(`/api/evaluations/${submissionId}`, {
+      // Trigger Python processing via Next.js Proxy
+      const res = await fetch("/api/process-pdf-python", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          status: "Pages Detected",
-          result: { total_pages: results.length, pages: results },
+          submissionId,
+          extractionMode
         }),
       });
 
-      const updateJson = await updateRes.json();
-      if (updateJson.success) {
-        alert(`✅ Detection complete! Processed ${results.length} pages.`);
+      const json = await res.json();
+
+      if (json.success) {
+        alert(`✅ Processing complete! Processed ${json.data?.length || 0} pages.`);
         await fetchGroupedSubmissions();
       } else {
-        alert("❌ Failed to update status: " + updateJson.error);
+        console.error("Python processing failed:", json);
+        alert("❌ Processing failed: " + (json.error || "Unknown error"));
       }
     } catch (err) {
       console.error("Detection error:", err);
-      alert("Error during question detection: " + err.message);
+      alert("Error during processing: " + err.message);
     } finally {
       setDetecting(null);
       setDetectProgress("");
     }
+  };
+
+  const handleOpenDetectModal = (id, path) => {
+    setDetectConfig({ id, path, mode: 'none' });
+    setShowDetectModal(true);
+  };
+
+  // 📦 BULK DETECTION - Open modal for entire paper
+  const handleOpenBulkModal = (paperId, paperName, submissions) => {
+    // Filter submissions that haven't been detected yet (Pending status)
+    const pendingSubmissions = submissions.filter(s =>
+      !s.evaluation_status || s.evaluation_status === 'Pending'
+    );
+    setBulkConfig({
+      paperId,
+      paperName,
+      submissions: pendingSubmissions,
+      batchSize: 3,
+      mode: 'none'
+    });
+    setShowBulkModal(true);
+  };
+
+  // 📦 BULK DETECTION - Process submissions in batches
+  const runBulkDetection = async () => {
+    const { submissions, batchSize, mode } = bulkConfig;
+    if (!submissions.length) {
+      alert("No pending submissions to process.");
+      setShowBulkModal(false);
+      return;
+    }
+
+    setShowBulkModal(false);
+    setBulkProgress({ running: true, current: 0, total: submissions.length, results: [] });
+
+    let successCount = 0;
+    let failCount = 0;
+    const results = [];
+
+    for (let i = 0; i < submissions.length; i += batchSize) {
+      const batch = submissions.slice(i, i + batchSize);
+
+      // Process batch concurrently
+      const batchPromises = batch.map(async (s, idx) => {
+        try {
+          console.log(`[Bulk] Processing ${i + idx + 1}/${submissions.length}: ${s.id}`);
+          const res = await fetch("/api/process-pdf-python", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ submissionId: s.id, extractionMode: mode }),
+          });
+          const json = await res.json();
+          if (json.success) {
+            successCount++;
+            return { id: s.id, success: true };
+          } else {
+            failCount++;
+            return { id: s.id, success: false, error: json.error };
+          }
+        } catch (err) {
+          failCount++;
+          return { id: s.id, success: false, error: err.message };
+        }
+      });
+
+      const batchResults = await Promise.all(batchPromises);
+      results.push(...batchResults);
+      setBulkProgress(prev => ({
+        ...prev,
+        current: Math.min(i + batchSize, submissions.length),
+        results
+      }));
+
+      // Add a small delay between batches to avoid overwhelming the API
+      if (i + batchSize < submissions.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    setBulkProgress({ running: false, current: submissions.length, total: submissions.length, results });
+    alert(`✅ Bulk detection complete!\n\nSuccess: ${successCount}\nFailed: ${failCount}`);
+    await fetchGroupedSubmissions();
+  };
+
+  // 📊 BULK EVALUATION - Open modal for entire paper
+  const handleOpenBulkEvalModal = (paperId, paperName, submissions) => {
+    // Filter submissions that have been detected (or already evaluated for re-evaluation)
+    const eligibleSubmissions = submissions.filter(s =>
+      s.evaluation_status === 'Pages Detected' || s.evaluation_status === 'Evaluated'
+    );
+    setBulkEvalConfig({
+      paperId,
+      paperName,
+      submissions: eligibleSubmissions,
+      batchSize: 2
+    });
+    setShowBulkEvalModal(true);
+  };
+
+  // 📊 BULK EVALUATION - Process submissions in batches
+  const runBulkEvaluation = async () => {
+    const { submissions, batchSize, paperId } = bulkEvalConfig;
+    if (!submissions.length) {
+      alert("No detected submissions to evaluate.");
+      setShowBulkEvalModal(false);
+      return;
+    }
+
+    setShowBulkEvalModal(false);
+    setBulkEvalProgress({ running: true, current: 0, total: submissions.length, results: [] });
+
+    let successCount = 0;
+    let failCount = 0;
+    const results = [];
+
+    for (let i = 0; i < submissions.length; i += batchSize) {
+      const batch = submissions.slice(i, i + batchSize);
+
+      // Process batch concurrently
+      const batchPromises = batch.map(async (s, idx) => {
+        try {
+          console.log(`[Bulk Eval] Processing ${i + idx + 1}/${submissions.length}: ${s.id}`);
+          const res = await fetch(`/api/evaluations/${s.id}/evaluate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ paperId }),
+          });
+          const json = await res.json();
+          if (json.success) {
+            successCount++;
+            return { id: s.id, success: true };
+          } else {
+            failCount++;
+            return { id: s.id, success: false, error: json.error };
+          }
+        } catch (err) {
+          failCount++;
+          return { id: s.id, success: false, error: err.message };
+        }
+      });
+
+      const batchResults = await Promise.all(batchPromises);
+      results.push(...batchResults);
+      setBulkEvalProgress(prev => ({
+        ...prev,
+        current: Math.min(i + batchSize, submissions.length),
+        results
+      }));
+
+      // Add delay between batches to avoid overwhelming the API (evaluation is heavy)
+      if (i + batchSize < submissions.length) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+
+    setBulkEvalProgress({ running: false, current: submissions.length, total: submissions.length, results });
+    alert(`✅ Bulk evaluation complete!\n\nSuccess: ${successCount}\nFailed: ${failCount}`);
+    await fetchGroupedSubmissions();
   };
 
   if (loading) return <p>Loading evaluations...</p>;
@@ -252,12 +318,38 @@ export default function EvaluationsPage() {
                   <div>
                     <h3>{paper.paper_name}</h3>
                     <p>
-                      {paper.program || "Program"} | Sem {paper.semester || "-"}
+                      {paper.program || "Program"} | Sem {paper.semester || "-"} | {paper.submissions?.length || 0} submission(s)
                     </p>
                   </div>
-                  <button className={styles.toggleBtn}>
-                    {expanded[paper.paper_id] ? "▲ Hide" : "▼ View Submissions"}
-                  </button>
+                  <div className={styles.paperActions}>
+                    <button
+                      className={styles.bulkDetectBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenBulkModal(paper.paper_id, paper.paper_name, paper.submissions);
+                      }}
+                      disabled={bulkProgress.running || bulkEvalProgress.running}
+                    >
+                      {bulkProgress.running && bulkConfig.paperId === paper.paper_id
+                        ? `Processing ${bulkProgress.current}/${bulkProgress.total}...`
+                        : "📦 Bulk Detect"}
+                    </button>
+                    <button
+                      className={styles.bulkEvalBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenBulkEvalModal(paper.paper_id, paper.paper_name, paper.submissions);
+                      }}
+                      disabled={bulkProgress.running || bulkEvalProgress.running}
+                    >
+                      {bulkEvalProgress.running && bulkEvalConfig.paperId === paper.paper_id
+                        ? `Evaluating ${bulkEvalProgress.current}/${bulkEvalProgress.total}...`
+                        : "📊 Bulk Evaluate"}
+                    </button>
+                    <button className={styles.toggleBtn}>
+                      {expanded[paper.paper_id] ? "▲ Hide" : "▼ View Submissions"}
+                    </button>
+                  </div>
                 </div>
 
                 {expanded[paper.paper_id] && (
@@ -311,7 +403,7 @@ export default function EvaluationsPage() {
 
                             <button
                               disabled={detecting === s.id}
-                              onClick={() => handleDetect(s.id, s.file_path)}
+                              onClick={() => handleOpenDetectModal(s.id, s.file_path)}
                               className={styles.detectBtn}
                             >
                               {detecting === s.id
@@ -329,6 +421,213 @@ export default function EvaluationsPage() {
           </div>
         )}
       </div>
+
+
+      {/* DETECTION SETTINGS MODAL */}
+      {
+        showDetectModal && (
+          <div className={styles.modalOverlay} onClick={() => setShowDetectModal(false)}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalTitle}>
+                <PenTool size={20} /> Detect Pages & Extract Text
+              </div>
+              <p className={styles.modalSubtitle}>Configure optional text extraction for this submission.</p>
+
+              <div className={styles.radioGroup}>
+                {/* Option 1: None */}
+                <label className={`${styles.radioOption} ${detectConfig.mode === 'none' ? styles.selected : ''}`}>
+                  <input
+                    type="radio"
+                    name="extraction"
+                    checked={detectConfig.mode === 'none'}
+                    onChange={() => setDetectConfig({ ...detectConfig, mode: 'none' })}
+                    className={styles.radioInput}
+                  />
+                  <div>
+                    <span className={styles.optionLabel}>Detection Only</span>
+                    <span className={styles.optionDesc}>Only detect question numbers. Use images for evaluation. (Default)</span>
+                  </div>
+                </label>
+
+                {/* Option 2: Handwritten (Gemini) */}
+                <label className={`${styles.radioOption} ${detectConfig.mode === 'handwritten' ? styles.selected : ''}`}>
+                  <input
+                    type="radio"
+                    name="extraction"
+                    checked={detectConfig.mode === 'handwritten'}
+                    onChange={() => setDetectConfig({ ...detectConfig, mode: 'handwritten' })}
+                    className={styles.radioInput}
+                  />
+                  <div>
+                    <span className={styles.optionLabel}>Handwritten Text (Gemini AI)</span>
+                    <span className={styles.optionDesc}>Extract handwritten answers using Gemini OCR. Best for scanned sheets.</span>
+                  </div>
+                </label>
+
+                {/* Option 3: Digital (PDF) */}
+                <label className={`${styles.radioOption} ${detectConfig.mode === 'digital' ? styles.selected : ''}`}>
+                  <input
+                    type="radio"
+                    name="extraction"
+                    checked={detectConfig.mode === 'digital'}
+                    onChange={() => setDetectConfig({ ...detectConfig, mode: 'digital' })}
+                    className={styles.radioInput}
+                  />
+                  <div>
+                    <span className={styles.optionLabel}>Digital / Typed Text</span>
+                    <span className={styles.optionDesc}>Extract embedded text from digital PDFs. Best for typed submissions.</span>
+                  </div>
+                </label>
+              </div>
+
+              <div className={styles.modalActions}>
+                <button className={styles.cancelBtn} onClick={() => setShowDetectModal(false)}>Cancel</button>
+                <button className={styles.startBtn} onClick={runDetection}>Start Detection</button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {/* BULK DETECTION MODAL */}
+      {showBulkModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowBulkModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalTitle}>
+              📦 Bulk Detection for "{bulkConfig.paperName}"
+            </div>
+            <p className={styles.modalSubtitle}>
+              Process {bulkConfig.submissions.length} pending submission(s) in batches.
+            </p>
+
+            {/* Batch Size Selector */}
+            <div className={styles.batchSizeContainer}>
+              <label htmlFor="batchSize">Batch Size: {bulkConfig.batchSize}</label>
+              <input
+                type="range"
+                id="batchSize"
+                min="1"
+                max="10"
+                value={bulkConfig.batchSize}
+                onChange={(e) => setBulkConfig({ ...bulkConfig, batchSize: parseInt(e.target.value) })}
+                className={styles.batchSlider}
+              />
+              <span className={styles.batchHint}>
+                {Math.ceil(bulkConfig.submissions.length / bulkConfig.batchSize)} batch(es) of ~{bulkConfig.batchSize}
+              </span>
+            </div>
+
+            {/* Extraction Mode - Same options as single detection */}
+            <div className={styles.radioGroup}>
+              <label className={`${styles.radioOption} ${bulkConfig.mode === 'none' ? styles.selected : ''}`}>
+                <input
+                  type="radio"
+                  name="bulkExtraction"
+                  checked={bulkConfig.mode === 'none'}
+                  onChange={() => setBulkConfig({ ...bulkConfig, mode: 'none' })}
+                  className={styles.radioInput}
+                />
+                <div>
+                  <span className={styles.optionLabel}>Detection Only</span>
+                  <span className={styles.optionDesc}>Only detect question numbers. (Default)</span>
+                </div>
+              </label>
+
+              <label className={`${styles.radioOption} ${bulkConfig.mode === 'handwritten' ? styles.selected : ''}`}>
+                <input
+                  type="radio"
+                  name="bulkExtraction"
+                  checked={bulkConfig.mode === 'handwritten'}
+                  onChange={() => setBulkConfig({ ...bulkConfig, mode: 'handwritten' })}
+                  className={styles.radioInput}
+                />
+                <div>
+                  <span className={styles.optionLabel}>Handwritten Text (Gemini AI)</span>
+                  <span className={styles.optionDesc}>Extract handwritten answers using Gemini OCR.</span>
+                </div>
+              </label>
+
+              <label className={`${styles.radioOption} ${bulkConfig.mode === 'digital' ? styles.selected : ''}`}>
+                <input
+                  type="radio"
+                  name="bulkExtraction"
+                  checked={bulkConfig.mode === 'digital'}
+                  onChange={() => setBulkConfig({ ...bulkConfig, mode: 'digital' })}
+                  className={styles.radioInput}
+                />
+                <div>
+                  <span className={styles.optionLabel}>Digital / Typed Text</span>
+                  <span className={styles.optionDesc}>Extract embedded text from digital PDFs.</span>
+                </div>
+              </label>
+            </div>
+
+            <div className={styles.modalActions}>
+              <button className={styles.cancelBtn} onClick={() => setShowBulkModal(false)}>Cancel</button>
+              <button
+                className={styles.startBtn}
+                onClick={runBulkDetection}
+                disabled={bulkConfig.submissions.length === 0}
+              >
+                Start Bulk Detection ({bulkConfig.submissions.length})
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BULK EVALUATION MODAL */}
+      {showBulkEvalModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowBulkEvalModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalTitle}>
+              📊 Bulk Evaluation for "{bulkEvalConfig.paperName}"
+            </div>
+            <p className={styles.modalSubtitle}>
+              Evaluate {bulkEvalConfig.submissions.length} detected submission(s) in batches.
+            </p>
+
+            {bulkEvalConfig.submissions.length === 0 ? (
+              <div className={styles.warningBox}>
+                ⚠️ No eligible submissions. Run detection first on pending submissions.
+              </div>
+            ) : (
+              <>
+                {/* Batch Size Selector */}
+                <div className={styles.batchSizeContainer}>
+                  <label htmlFor="evalBatchSize">Batch Size: {bulkEvalConfig.batchSize}</label>
+                  <input
+                    type="range"
+                    id="evalBatchSize"
+                    min="1"
+                    max="5"
+                    value={bulkEvalConfig.batchSize}
+                    onChange={(e) => setBulkEvalConfig({ ...bulkEvalConfig, batchSize: parseInt(e.target.value) })}
+                    className={styles.batchSlider}
+                  />
+                  <span className={styles.batchHint}>
+                    {Math.ceil(bulkEvalConfig.submissions.length / bulkEvalConfig.batchSize)} batch(es) of ~{bulkEvalConfig.batchSize}
+                  </span>
+                  <span className={styles.batchWarning}>
+                    ⚡ Evaluation is resource-intensive. Lower batch sizes recommended.
+                  </span>
+                </div>
+              </>
+            )}
+
+            <div className={styles.modalActions}>
+              <button className={styles.cancelBtn} onClick={() => setShowBulkEvalModal(false)}>Cancel</button>
+              <button
+                className={styles.startBtn}
+                onClick={runBulkEvaluation}
+                disabled={bulkEvalConfig.submissions.length === 0}
+              >
+                Start Bulk Evaluation ({bulkEvalConfig.submissions.length})
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

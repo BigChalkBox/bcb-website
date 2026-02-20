@@ -3,11 +3,28 @@
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
-import { CheckCircle2, XCircle, FileText, ClipboardList, Upload, BookOpen, Play } from "lucide-react";
+import { CheckCircle2, XCircle, FileText, ClipboardList, Upload, BookOpen, Play, Clock, Trash2 } from "lucide-react";
 import styles from "./Dashboard.module.css";
 import { downloadPaperAsPDF } from "@/utils/pdfGenerator";
 import { downloadCompleteQuestionPaper } from "@/utils/completePdfGenerator";
 import Header from "@/components/HeaderSub";
+
+// Helper function to format relative time
+const formatRelativeTime = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  return date.toLocaleDateString();
+};
 
 export default function TeacherDashboard() {
   const supabase = createClientComponentClient();
@@ -22,18 +39,24 @@ export default function TeacherDashboard() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Create new paper
+  // Create new paper and redirect to setup
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
     const res = await fetch("/api/teacher/create-paper", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
     const result = await res.json();
-    if (result.error) setMessage(result.error);
-    else setMessage("Paper created!");
-    setFormData({});
+    if (result.error) {
+      setMessage(result.error);
+    } else if (result.paper?.id) {
+      // Redirect to paper setup page
+      window.location.href = `/teacher/papers/${result.paper.id}`;
+    } else {
+      setMessage("Paper created! Redirecting...");
+    }
   };
 
   // Fetch papers + students
@@ -85,6 +108,26 @@ export default function TeacherDashboard() {
     window.location.href = `/teacher/papers/${paperId}/submissions`;
   };
 
+  const handleDeletePaper = async (paperId) => {
+    if (!confirm("Are you sure you want to delete this paper? This action cannot be undone.")) return;
+
+    try {
+      const res = await fetch(`/api/papers/${paperId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setPapers(papers.filter(p => p.id !== paperId));
+      } else {
+        alert("Failed to delete paper: " + (data.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Error deleting paper:", err);
+      alert("Error deleting paper");
+    }
+  };
+
   return (
 
     <>
@@ -111,15 +154,35 @@ export default function TeacherDashboard() {
 
         {/* Main Content */}
         <main className={styles.main}>
-          {/* Quick Actions */}
+          {/* Quick Actions - New Card Style */}
           <section className={styles.quickActions}>
             <h2>Quick Actions</h2>
-            <div className={styles.actions}>
-              <button onClick={() => setModalOpen(true)}>+ Upload New Paper</button>
-              <Link href="/teacher/demo">
-                <button className={styles.demoButton}>
-                  <Play size={16} /> Try Demo
-                </button>
+            <div className={styles.actionCardsGrid}>
+              {/* Set Curriculum Card */}
+              <Link href="/teacher/curricula/new" className={styles.actionCard}>
+                <div className={`${styles.actionCardIcon} ${styles.actionCardIconGreen}`}>
+                  <BookOpen size={28} />
+                </div>
+                <span className={styles.actionCardTitle}>Set Curriculum</span>
+                <span className={styles.actionCardDesc}>Upload syllabus & define topics</span>
+              </Link>
+
+              {/* Set Paper Card */}
+              <div className={styles.actionCard} onClick={() => setModalOpen(true)}>
+                <div className={`${styles.actionCardIcon} ${styles.actionCardIconBlue}`}>
+                  <FileText size={28} />
+                </div>
+                <span className={styles.actionCardTitle}>Set Paper</span>
+                <span className={styles.actionCardDesc}>Create & moderate questions</span>
+              </div>
+
+              {/* Try Demo Card */}
+              <Link href="/teacher/demo" className={styles.actionCard}>
+                <div className={`${styles.actionCardIcon} ${styles.actionCardIconPurple}`}>
+                  <Play size={28} />
+                </div>
+                <span className={styles.actionCardTitle}>Try Demo</span>
+                <span className={styles.actionCardDesc}>See how it works</span>
               </Link>
             </div>
           </section>
@@ -128,68 +191,102 @@ export default function TeacherDashboard() {
           <section className={styles.papers}>
             <h2>Your Question Papers</h2>
             {papers.length === 0 ? (
-              <p>No papers created yet.</p>
+              <p>No papers created yet. Click "Set Paper" to get started.</p>
             ) : (
-              papers.map((paper) => (
-                <div key={paper.id} className={styles.paperCard}>
-                  <h3>
-                    {paper.subject_name} ({paper.subject_code})
-                  </h3>
-                  <p>
-                    {paper.exam_type} - {paper.exam_month_year}
-                  </p>
-                  <p>
-                    Program: {paper.program} | Sem: {paper.semester}
-                  </p>
-                  <p>Max Marks: {paper.max_marks}</p>
-                  <p>Status: {paper.status}</p>
-                  <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    Active: {paper.is_active ? (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <CheckCircle2 size={16} style={{ color: '#10b981' }} /> Yes
-                      </span>
-                    ) : (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <XCircle size={16} style={{ color: '#ef4444' }} /> No
-                      </span>
-                    )}
-                  </p>
-                  <div className={styles.paperActions}>
-                    {paper.status !== "final" ? (
-                      <Link href={`/teacher/papers/${paper.id}`}>
-                        <button>Continue</button>
-                      </Link>
-                    ) : (
-                      <>
+              papers.map((paper) => {
+                // Determine stage
+                const getStageInfo = () => {
+                  if (paper.status === 'final') return { label: 'Final', class: styles.stageFinal };
+                  if (paper.status === 'questions_set') return { label: 'Questions Set', class: styles.stageQuestionsSet };
+                  if (paper.status === 'moderated') return { label: 'Moderated', class: styles.stageModerated };
+                  if (paper.status === 'questions_added') return { label: 'Questions Added', class: styles.stageQuestions };
+                  return { label: 'Draft', class: styles.stageDraft };
+                };
+                const stage = getStageInfo();
+
+                return (
+                  <div key={paper.id} className={styles.paperCard}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                      <h3 style={{ margin: 0 }}>
+                        {paper.subject_name} ({paper.subject_code})
+                      </h3>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <span className={`${styles.stageBadge} ${stage.class}`}>{stage.label}</span>
                         <button
-                          className={`${styles.buttonBase} ${styles.primaryButton}`}
-                          onClick={() => downloadPaperAsPDF(paper)}
+                          onClick={() => handleDeletePaper(paper.id)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#ef4444',
+                            cursor: 'pointer',
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '4px',
+                            transition: 'background 0.2s'
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.background = '#fee2e2'}
+                          onMouseOut={(e) => e.currentTarget.style.background = 'none'}
+                          title="Delete Paper"
                         >
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <FileText size={16} /> Download PDF
-                          </span>
+                          <Trash2 size={16} />
                         </button>
-
-                        <button
-                          className={`${styles.buttonBase} ${styles.primaryButton}`}
-                          onClick={() => downloadCompleteQuestionPaper(paper, { includeAll: true })}
-                        >
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <ClipboardList size={16} /> Download Complete Paper
-                          </span>
-                        </button>
-
-
-                        <button onClick={() => handleUploadSubmissions(paper.id)}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Upload size={16} /> Upload Submissions
-                          </span>
-                        </button>
-                      </>
+                      </div>
+                    </div>
+                    <p>
+                      {paper.exam_type} - {paper.exam_month_year}
+                    </p>
+                    <p>
+                      Program: {paper.program} | Sem: {paper.semester}
+                    </p>
+                    <p>Max Marks: {paper.max_marks}</p>
+                    {(paper.updated_at || paper.created_at) && (
+                      <p style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '0.85rem' }}>
+                        <Clock size={14} /> Updated {formatRelativeTime(paper.updated_at || paper.created_at)}
+                      </p>
                     )}
+
+                    <div className={styles.paperActions}>
+                      {paper.status === 'final' ? (
+                        <>
+                          <button
+                            className={`${styles.buttonBase} ${styles.primaryButton}`}
+                            onClick={() => downloadPaperAsPDF(paper)}
+                          >
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <FileText size={16} /> Download PDF
+                            </span>
+                          </button>
+                          <button
+                            className={`${styles.buttonBase} ${styles.primaryButton}`}
+                            onClick={() => downloadCompleteQuestionPaper(paper, { includeAll: true })}
+                          >
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <ClipboardList size={16} /> Complete Paper
+                            </span>
+                          </button>
+                          <button onClick={() => handleUploadSubmissions(paper.id)}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <Upload size={16} /> Upload Submissions
+                            </span>
+                          </button>
+                        </>
+                      ) : paper.status === 'questions_set' ? (
+                        <Link href={`/teacher/papers/${paper.id}/studio`}>
+                          <button className={styles.continueBtn}>
+                            Set Sample Answers & Rubrics
+                          </button>
+                        </Link>
+                      ) : (
+                        <Link href={`/teacher/papers/${paper.id}`}>
+                          <button className={styles.continueBtn}>Continue Setup</button>
+                        </Link>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </section>
 
@@ -242,102 +339,73 @@ export default function TeacherDashboard() {
                 <input
                   type="text"
                   name="subject_name"
-                  placeholder="Subject Name"
+                  placeholder="Subject Name *"
                   onChange={handleChange}
                   required
                 />
                 <input
                   type="text"
                   name="subject_code"
-                  placeholder="Subject Code"
+                  placeholder="Subject Code *"
                   onChange={handleChange}
                   required
                 />
-                <input
-                  type="number"
-                  name="year"
-                  placeholder="Year"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="faculty_name"
-                  placeholder="Faculty Name"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="exam_type"
-                  placeholder="Exam Type (Midterm/Final)"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="exam_month_year"
-                  placeholder="Exam Month-Year (e.g. May 2025)"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="program"
-                  placeholder="Program (e.g. B.Tech CSE)"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="number"
-                  name="semester"
-                  placeholder="Semester"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="course"
-                  placeholder="Course"
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="time_allowed"
-                  placeholder="Time Allowed (e.g. 3 Hours)"
-                  onChange={handleChange}
-                />
-                <input
-                  type="number"
-                  name="max_marks"
-                  placeholder="Max Marks"
-                  onChange={handleChange}
-                />
-                <textarea
-                  name="instructions"
-                  placeholder="Instructions"
-                  onChange={handleChange}
-                ></textarea>
-
-                <label>
+                <div className={styles.formRow}>
+                  <select
+                    name="exam_type"
+                    onChange={handleChange}
+                    required
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Exam Type *</option>
+                    <option value="Midterm">Midterm</option>
+                    <option value="Final">Final</option>
+                    <option value="Quiz">Quiz</option>
+                    <option value="Assignment">Assignment</option>
+                  </select>
                   <input
-                    type="checkbox"
-                    name="is_active"
-                    onChange={(e) =>
-                      handleChange({
-                        target: { name: "is_active", value: e.target.checked },
-                      })
-                    }
+                    type="text"
+                    name="exam_month_year"
+                    placeholder="Month-Year (e.g. May 2025)"
+                    onChange={handleChange}
                   />
-                  Complete
-                </label>
+                </div>
+                <div className={styles.formRow}>
+                  <input
+                    type="text"
+                    name="program"
+                    placeholder="Program (e.g. B.Tech CSE)"
+                    onChange={handleChange}
+                  />
+                  <input
+                    type="number"
+                    name="semester"
+                    placeholder="Semester"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className={styles.formRow}>
+                  <input
+                    type="number"
+                    name="max_marks"
+                    placeholder="Max Marks"
+                    onChange={handleChange}
+                  />
+                  <input
+                    type="text"
+                    name="time_allowed"
+                    placeholder="Time (e.g. 3 Hours)"
+                    onChange={handleChange}
+                  />
+                </div>
 
-                {message && <p>{message}</p>}
+                {message && <p className={styles.formMessage}>{message}</p>}
                 <div className={styles.modalActions}>
-                  <button type="submit">Create</button>
-                  <button type="button" onClick={() => setModalOpen(false)}>
+                  <button type="button" onClick={() => setModalOpen(false)} className={styles.cancelBtn}>
                     Cancel
+                  </button>
+                  <button type="submit" className={styles.createBtn}>
+                    Create & Continue
                   </button>
                 </div>
               </form>
@@ -348,3 +416,4 @@ export default function TeacherDashboard() {
     </>
   );
 }
+
