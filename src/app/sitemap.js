@@ -1,5 +1,5 @@
 export default function sitemap() {
-    const baseUrl = 'https://dases.in'
+    const baseUrl = 'https://dases.esun.solutions'
 
     return [
         {

@@ -215,8 +215,8 @@ export default function LandingPage() {
                         <div className="lp-container">
                             <FadeIn>
                                 <h2>
-                                    Faculty spend 40+ hours grading one batch of descriptive answer sheets. <br />
-                                    <span className="highlight">DASES brings that down to minutes</span> — with better feedback than manual grading.
+                                    Grading descriptive answers takes days of valuable teaching time. <br />
+                                    <span className="highlight">DASES brings that down to minutes</span> empowering you to focus on teaching.
                                 </h2>
                             </FadeIn>
                         </div>

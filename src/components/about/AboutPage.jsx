@@ -107,7 +107,7 @@ export default function AboutPage() {
                                             </div>
                                             <div>
                                                 <h4>The Problem</h4>
-                                                <p>Faculty spend 40+ hours grading one batch of descriptive exams. Feedback is inconsistent. Students get a number, not insight.</p>
+                                                <p>Grading descriptive answers consumes days of valuable teaching time. Feedback is often inconsistent, and students just get a number instead of true insight.</p>
                                             </div>
                                         </div>
                                         <div className="ap-feature-row">
