@@ -12,7 +12,7 @@ export default function SiteHeader() {
             <div className="site-header-inner">
                 <Link href="/" className="site-logo">
                     <div className="site-logo-box">
-                        <img src="/logo/logo-dases-green.png" alt="DASES" style={{ width: '2rem', height: '2rem', objectFit: 'contain' }} />
+                        <img src="/logo/logo-dases-green.png" alt="DASES" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.8)' }} />
                     </div>
                     <span className="site-logo-text">DASES</span>
                 </Link>

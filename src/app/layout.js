@@ -4,78 +4,89 @@ import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
 
 export const metadata = {
-  metadataBase: new URL('https://dases.in'),
+  metadataBase: new URL('https://dases.esun.solutions'),
 
   title: {
-    default: 'DASES | AI-Powered Handwritten Exam Grading',
-    template: '%s | DASES',
+    default: 'DASES | Best AI Answer Sheet Checker & Grading Software',
+    template: '%s | DASES By eSun Smart Solutions',
   },
 
   description:
-    'Grade handwritten answer sheets with AI at 98% rubric accuracy. 500 sheets in parallel, 15 seconds per sheet. Detailed per-question feedback for universities and coaching institutes.',
+    'DASES is the ultimate AI answer sheet checking software. Grade handwritten answer sheets with 98% accuracy, process 500 papers in parallel, and get per-question feedback in 15 seconds. Perfect for universities, schools, and coaching institutes.',
 
   keywords: [
-    'AI Grading',
-    'Exam Evaluation Software',
-    'Handwritten Answer Checker',
-    'Automated Rubric Grading',
+    'AI answer sheet checker',
+    'AI paper checking',
+    'AI grading software',
+    'automated answer sheet evaluation',
+    'handwritten exam evaluation software',
+    'digital answer sheet evaluation system',
+    'AI marking software for schools',
+    'teacher grading automation tool',
+    'AI grader for coaching institutes',
+    'automated rubric grading',
+    'fast exam checking AI',
+    'AI software for teachers',
     'DASES',
+    'DASES evaluation system',
     'eSun Smart Solutions Pvt. Ltd.',
   ],
 
-  authors: [{ name: 'eSun Smart Solutions Pvt. Ltd.', url: 'https://dases.in' }],
+  authors: [{ name: 'eSun Smart Solutions Pvt. Ltd.', url: 'https://dases.esun.solutions' }],
   creator: 'eSun Smart Solutions Pvt. Ltd.',
   publisher: 'eSun Smart Solutions Pvt. Ltd.',
 
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    siteName: 'DASES',
-    title: 'DASES | AI-Powered Handwritten Exam Grading',
+    siteName: 'DASES AI Grading',
+    title: 'DASES | AI-Powered Handwritten Answer Sheet Checking',
     description:
-      'Grade handwritten answer sheets with AI at 98% rubric accuracy. 500 sheets in parallel, 15s per sheet.',
-    url: 'https://dases.in',
+      'Grade handwritten answer sheets with AI at 98% rubric accuracy. Automate school & coaching exam checking. 500 sheets in parallel, 15s per sheet.',
+    url: 'https://dases.esun.solutions',
     images: [
       {
         url: '/logo/logo.png',
         width: 600,
         height: 600,
-        alt: 'DASES — AI-Powered Exam Grading',
+        alt: 'DASES — AI-Powered Answer Sheet Checking Software',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'DASES | AI-Powered Handwritten Exam Grading',
+    title: 'DASES | AI Answer Sheet Evaluation Software',
     description:
-      'Grade 500 handwritten answer sheets in parallel with 98% accuracy. Per-question feedback in 15 seconds.',
+      'Evaluate 500 handwritten answer sheets in parallel with 98% accuracy. DASES gives per-question feedback in 15 seconds.',
     images: ['/logo/logo.png'],
   },
 
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
-      'max-snippet': -1,
-      'max-image-preview': 'large',
       'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
 
   alternates: {
-    canonical: 'https://dases.in',
+    canonical: 'https://dases.esun.solutions',
   },
 
-  category: 'technology',
+  category: 'educational technology',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta name="google-site-verification" content="GcYQMhck8ndTHyu3wEaSgEsD08NdCsOUT3vVmDn9EYc" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

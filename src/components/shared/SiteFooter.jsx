@@ -11,7 +11,7 @@ export default function SiteFooter() {
                     <div className="site-footer-brand">
                         <Link href="/" className="site-footer-logo">
                             <div className="site-footer-logo-box">
-                                <img src="/logo/logo-dases-green.png" alt="DASES" style={{ width: '2.75rem', height: '2.75rem', objectFit: 'contain' }} />
+                                <img src="/logo/logo-dases-green.png" alt="DASES" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.8)' }} />
                             </div>
                             <span className="site-footer-logo-text">DASES</span>
                         </Link>
