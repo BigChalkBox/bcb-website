@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
 
 export const metadata = {
-  metadataBase: new URL('https://dases.esun.solutions'),
+  metadataBase: new URL('https://dasesai.com'),
 
   title: {
     default: 'DASES | Best AI Answer Sheet Checker & Grading Software',
@@ -32,7 +32,7 @@ export const metadata = {
     'eSun Smart Solutions Pvt. Ltd.',
   ],
 
-  authors: [{ name: 'eSun Smart Solutions Pvt. Ltd.', url: 'https://dases.esun.solutions' }],
+  authors: [{ name: 'eSun Smart Solutions Pvt. Ltd.', url: 'https://dasesai.com' }],
   creator: 'eSun Smart Solutions Pvt. Ltd.',
   publisher: 'eSun Smart Solutions Pvt. Ltd.',
 
@@ -43,7 +43,7 @@ export const metadata = {
     title: 'DASES | AI-Powered Handwritten Answer Sheet Checking',
     description:
       'Grade handwritten answer sheets with AI at 98% rubric accuracy. Automate school & coaching exam checking. 500 sheets in parallel, 15s per sheet.',
-    url: 'https://dases.esun.solutions',
+    url: 'https://dasesai.com',
     images: [
       {
         url: '/logo/logo.png',
@@ -76,7 +76,7 @@ export const metadata = {
   },
 
   alternates: {
-    canonical: 'https://dases.esun.solutions',
+    canonical: 'https://dasesai.com',
   },
 
   category: 'educational technology',

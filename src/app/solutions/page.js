@@ -5,13 +5,13 @@ export const metadata = {
     description:
         'Automate your entire exam workflow — question paper creation, AI rubric generation, handwritten answer evaluation at 98% accuracy, and detailed student feedback reports. Grade 500 sheets in parallel.',
     alternates: {
-        canonical: 'https://dases.in/solutions',
+        canonical: 'https://dasesai.com/solutions',
     },
     openGraph: {
         title: 'DASES Solutions | End-to-End AI Exam Automation',
         description:
             'From paper creation to evaluation reports — automate every step of the exam lifecycle with AI. 98% rubric accuracy on handwritten answers.',
-        url: 'https://dases.in/solutions',
+        url: 'https://dasesai.com/solutions',
         type: 'website',
     },
     twitter: {
@@ -27,11 +27,11 @@ const jsonLd = {
     name: 'DASES Solutions',
     description:
         'End-to-end AI-powered exam automation — paper creation, rubric generation, handwritten evaluation, and professional reports.',
-    url: 'https://dases.in/solutions',
+    url: 'https://dasesai.com/solutions',
     isPartOf: {
         '@type': 'WebSite',
         name: 'DASES',
-        url: 'https://dases.in',
+        url: 'https://dasesai.com',
     },
 }
 

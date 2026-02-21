@@ -7,6 +7,6 @@ export default function robots() {
                 disallow: ['/SignIn', '/unauthorized', '/view-pdf', '/sample-report', '/DASESLanding', '/api/'],
             },
         ],
-        sitemap: 'https://dases.in/sitemap.xml',
+        sitemap: 'https://dasesai.com/sitemap.xml',
     }
 }

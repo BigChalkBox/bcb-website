@@ -172,8 +172,8 @@ export default function LandingPage() {
                                             <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>edit_note</span>
                                         </div>
                                         <div>
-                                            <span className="label-small">AI Engine</span>
-                                            <span className="label-main">Handwriting OCR</span>
+                                            <span className="label-small">No Manual Checking</span>
+                                            <span className="label-main">Reads Any Handwriting</span>
                                         </div>
                                     </div>
                                     <div className="lp-float-badge lp-float-right">
@@ -181,8 +181,8 @@ export default function LandingPage() {
                                             <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>check_circle</span>
                                         </div>
                                         <div>
-                                            <span className="label-small">Status</span>
-                                            <span className="label-main">Feedback Ready</span>
+                                            <span className="label-small">Per Question</span>
+                                            <span className="label-main">Detailed Remarks</span>
                                         </div>
                                     </div>
 
@@ -191,8 +191,8 @@ export default function LandingPage() {
                                             <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>verified</span>
                                         </div>
                                         <div>
-                                            <span className="label-small">Rubric Accuracy</span>
-                                            <span className="label-main">98%</span>
+                                            <span className="label-small">Only on DASES</span>
+                                            <span className="label-main">QuickPass™</span>
                                         </div>
                                     </div>
 
@@ -201,11 +201,23 @@ export default function LandingPage() {
                                             <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>bolt</span>
                                         </div>
                                         <div>
-                                            <span className="label-small">Per Sheet</span>
-                                            <span className="label-main">~15 seconds</span>
+                                            <span className="label-small">500 Sheets at Once</span>
+                                            <span className="label-main">15 sec / sheet</span>
                                         </div>
                                     </div>
                                 </div>
+                                <p style={{
+                                    fontSize: '0.65rem',
+                                    color: 'var(--slate-content)',
+                                    opacity: 0.55,
+                                    marginTop: '0.6rem',
+                                    textAlign: 'right',
+                                    fontWeight: 500,
+                                    letterSpacing: '0.01em',
+                                    paddingRight: '0.25rem',
+                                }}>
+                                    * For illustration purposes only. No real student data is shown. DASES secures all data with end-to-end encryption.
+                                </p>
                             </FadeIn>
                         </div>
                     </section>
@@ -238,7 +250,7 @@ export default function LandingPage() {
                                         <span className="material-symbols-outlined" style={{ fontSize: '2rem', fontWeight: 'bold' }}>rate_review</span>
                                     </div>
                                     <h3>Per-Question Feedback</h3>
-                                    <p>Every answer gets criterion-level scores and written feedback — not just a number. Students actually learn from their evaluation.</p>
+                                    <p>Go beyond a simple grade. Deliver detailed scores and actionable written feedback for every answer so students gain clear, personalized insights. Bonus: they can download their complete performance report as a PDF.</p>
                                     <div className="lp-blockquote">
                                         <span className="hl">Q3:</span> &quot;Bubble sort compares adjacent elements and swaps them if they are in wrong order...&quot;<br />
                                         <span style={{ color: 'var(--accent)', fontWeight: 700 }}>✓ Concept: 4/4</span> · <span style={{ color: '#eab308', fontWeight: 700 }}>⚠ Complexity: 1/2</span> · <span style={{ fontWeight: 600 }}>Score: 8/10</span>
@@ -263,8 +275,8 @@ export default function LandingPage() {
                                     <div className="lp-card-icon" style={{ background: '#dcfce7', color: 'var(--accent)' }}>
                                         <span className="material-symbols-outlined" style={{ fontSize: '2rem', fontWeight: 'bold' }}>fact_check</span>
                                     </div>
-                                    <h3>Your Rubric, Your Standards</h3>
-                                    <p>Upload grading criteria or let AI generate rubrics from your model answers. Supports multiple valid approaches per question.</p>
+                                    <h3>Standardised Rubrics</h3>
+                                    <p>Instantly turn your sample answers into comprehensive rubrics. You retain absolute control to adjust, refine, and perfect every single criterion before the grading process even begins.</p>
                                     <ul className="lp-checklist" style={{ marginTop: '1rem' }}>
                                         <li><span className="material-symbols-outlined">check_circle</span> Criterion-Based Scoring</li>
                                         <li><span className="material-symbols-outlined">check_circle</span> Partial Credit Logic</li>

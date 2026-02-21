@@ -142,3 +142,70 @@ export function cleanLLMOutput(raw) {
 
 // Export the fallback models list for reference
 export { FALLBACK_MODELS };
+
+/**
+ * Sanitize backslashes in a JSON string so that lone backslashes
+ * (e.g. LaTeX: \cos, \frac, \pi, \sqrt) become valid JSON (\\cos).
+ */
+export function sanitizeJsonBackslashes(str) {
+    return str.replace(/(?<!\\)\\(?!["\\/bfnrtu])/g, "\\\\");
+}
+
+/**
+ * Robustly extract and parse JSON from LLM output.
+ * Handles cases where LLM includes conversational text with LaTeX before the JSON block,
+ * and handles improperly escaped backslashes.
+ * @param {string} text - Raw text from LLM
+ * @returns {Object|null} - Parsed JSON object, or null if parsing fails
+ */
+export function extractFirstJson(text) {
+    if (!text || typeof text !== "string") return null;
+    let t = text.trim();
+    t = t.replace(/^\uFEFF/, "");
+
+    let candidate = "";
+
+    // Attempt 1: Look for markdown code block ```json ... ``` or just ``` ... ```
+    const blockMatch = t.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    if (blockMatch && blockMatch[1]) {
+        candidate = blockMatch[1].trim();
+    } else {
+        // Attempt 2: Find the first { that is followed by a quote (heuristic for JSON object start)
+        const startIdx = t.search(/\{\s*["']/);
+        if (startIdx !== -1) {
+            const lastIdx = t.lastIndexOf("}");
+            if (lastIdx > startIdx) {
+                candidate = t.substring(startIdx, lastIdx + 1);
+            } else {
+                candidate = t.substring(startIdx);
+            }
+        } else {
+            // Fallback
+            candidate = t;
+        }
+    }
+
+    if (!candidate) return null;
+
+    // Phase 1: parse as-is
+    try {
+        return JSON.parse(candidate);
+    } catch { /* fall through */ }
+
+    // Phase 2: sanitize LaTeX / invalid backslashes
+    const sanitized = sanitizeJsonBackslashes(candidate);
+    try {
+        return JSON.parse(sanitized);
+    } catch { /* fall through */ }
+
+    // Phase 3: fix unquoted keys + trailing commas + sanitize
+    const fixed = sanitized
+        .replace(/([^{,:\s]+)\s*:/g, (m, p1) => (p1.startsWith('"') ? m : `"${p1}":`))
+        .replace(/,(\s*[}\]])/g, "$1");
+    try {
+        return JSON.parse(fixed);
+    } catch (err) {
+        console.warn("extractFirstJson failed to parse candidate JSON.");
+        return null;
+    }
+}

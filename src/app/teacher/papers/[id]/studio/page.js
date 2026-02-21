@@ -82,6 +82,7 @@ export default function PaperStudioPage() {
     const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 });
 
     // Bulk Rubric Generation State
+    const [bulkRubricInstruction, setBulkRubricInstruction] = useState("");
     const [bulkRubricGenerating, setBulkRubricGenerating] = useState(false);
     const [bulkRubricProgress, setBulkRubricProgress] = useState({ current: 0, total: 0 });
 
@@ -415,6 +416,7 @@ export default function PaperStudioPage() {
                     sampleAnswer: sample.answer,
                     maxMarks: question.marks || 10,
                     questionText: question.text || "",
+                    rubricInstructions: sample.rubricInstructions || "",
                 }),
             });
 
@@ -573,6 +575,7 @@ export default function PaperStudioPage() {
                                 sampleAnswer: sample.answer,
                                 maxMarks: question.marks || 10,
                                 questionText: question.text || "",
+                                rubricInstructions: bulkRubricInstruction || "",
                             }),
                         });
 
@@ -828,6 +831,33 @@ export default function PaperStudioPage() {
                     <div className={styles.fieldBlock}>
                         <div className={styles.fieldLabel} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span>Rubric (Marks: {rubricTotal}/{q.marks || '-'})</span>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                            </div>
+                        </div>
+                        {/* Rubric Instructions */}
+                        <div style={{ marginBottom: '10px', background: '#fffbeb', padding: '10px', borderRadius: '6px', border: '1px solid #fcd34d' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 600, color: '#92400e', marginBottom: '6px', display: 'flex', justifyContent: 'space-between' }}>
+                                <span>🎯 Rubric Instructions (Optional)</span>
+                                <span style={{ fontSize: '11px', fontWeight: 400, color: '#b45309' }}>Guide how the rubric is generated</span>
+                            </div>
+                            <textarea
+                                placeholder="e.g., 'Be strict on steps', 'Include marks for diagrams', 'Focus on theoretical concepts'..."
+                                value={sample.rubricInstructions || ''}
+                                onChange={(e) => updateSample(qIdx, sIdx, 'rubricInstructions', e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '8px 12px',
+                                    border: '1px solid #fcd34d',
+                                    borderRadius: '6px',
+                                    fontSize: '13px',
+                                    minHeight: '50px',
+                                    resize: 'vertical',
+                                    background: 'white'
+                                }}
+                            />
+                        </div>
+                        <div className={styles.fieldLabel} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '12px', color: '#64748b' }}>Criteria</span>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <button
                                     onClick={() => generateRubric(qIdx, sIdx)}
@@ -1394,6 +1424,12 @@ export default function PaperStudioPage() {
                                 <p style={{ fontSize: '12px', color: '#92400e', marginBottom: '8px' }}>
                                     Generate rubrics for all samples that have answers.
                                 </p>
+                                <textarea
+                                    placeholder="Instructions for rubric generation (e.g., 'Be strict on procedural steps', 'Focus on conceptual understanding', 'Include marks for diagrams')"
+                                    value={bulkRubricInstruction}
+                                    onChange={(e) => setBulkRubricInstruction(e.target.value)}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #fcd34d', marginBottom: '8px', minHeight: '60px', resize: 'vertical', background: 'white', fontSize: '13px' }}
+                                />
                                 <button
                                     onClick={handleBulkRubricGenerate}
                                     disabled={bulkRubricGenerating}

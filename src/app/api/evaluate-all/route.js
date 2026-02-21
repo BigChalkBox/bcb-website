@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
+import { extractFirstJson } from "@/lib/gemini";
 
 const genAI = new GoogleGenAI({
   apiKey: process.env.GOOGLE_API_KEY,
@@ -139,7 +140,12 @@ Return strictly in JSON format:
   "suggestedScore": number,
   "feedback": "overall feedback"
 }
-IMPORTANT: Return ONLY JSON, no text outside JSON.
+IMPORTANT JSON FORMATTING RULES:
+1. Your output MUST be strictly valid JSON.
+2. Return ONLY JSON, no text outside JSON.
+3. If you include LaTeX, you MUST escape backslashes properly for JSON strings (e.g., use "\\cos^2", "\\frac" instead of "\\cos^2", "\\frac").
+4. Do not use literal newlines inside JSON strings. Use "\\n".
+5. Do not include trailing commas.
 `;
 
   const inputParts = [
@@ -149,28 +155,64 @@ IMPORTANT: Return ONLY JSON, no text outside JSON.
 
   console.log(`🧠 Sending Q${index} (${question.marks} marks) to Gemini...`);
 
-  const response = await genAI.models.generateContent({
-    model: "gemini-2.5-pro", // ✅ latest accurate model for evaluation
-    contents: [
-      {
-        role: "user",
-        parts: inputParts,
-      },
-    ],
-  });
-
-  // 🧠 Extract output text properly for @google/genai
+  let parseSuccess = false;
+  let parseAttempts = 0;
+  const MAX_PARSE_RETRIES = 2; // Up to 3 tries total
+  let parsed = null;
   let resultText = "";
-  if (response.text) {
-    resultText = response.text.trim();
-  } else if (response.candidates?.length) {
-    resultText =
-      response.candidates[0].content?.parts?.[0]?.text?.trim() || "";
+
+  while (!parseSuccess && parseAttempts <= MAX_PARSE_RETRIES) {
+    parseAttempts++;
+    try {
+      const response = await genAI.models.generateContent({
+        model: "gemini-2.5-pro", // ✅ latest accurate model for evaluation
+        contents: [
+          {
+            role: "user",
+            parts: inputParts,
+          },
+        ],
+      });
+
+      // 🧠 Extract output text properly for @google/genai
+      resultText = "";
+      if (response.text) {
+        resultText = response.text.trim();
+      } else if (response.candidates?.length) {
+        resultText =
+          response.candidates[0].content?.parts?.[0]?.text?.trim() || "";
+      }
+
+      console.log(`✅ Q${index} generated successfully (parse attempt ${parseAttempts}).`);
+
+      parsed = extractFirstJson(resultText);
+      if (parsed && parsed.criteria && typeof parsed.suggestedScore !== "undefined") {
+        parseSuccess = true;
+      } else {
+        console.warn(`⚠️ Failed to parse LLM JSON for Q${index} (attempt ${parseAttempts})\nRaw:`, resultText.slice(0, 200));
+        if (parseAttempts <= MAX_PARSE_RETRIES) {
+          // Add the bad response and a reminder
+          inputParts.push({ text: `Failed JSON output:\n${resultText}` });
+          inputParts.push({ text: "REMINDER: Your previous response was NOT valid JSON or failed to parse. You MUST return strictly valid JSON structure. Please try again." });
+        }
+      }
+    } catch (err) {
+      console.error(`Error generating Q${index} (attempt ${parseAttempts}):`, err);
+      if (parseAttempts > MAX_PARSE_RETRIES) break;
+      await new Promise(r => setTimeout(r, 2000));
+    }
   }
 
-  console.log(`✅ Q${index} evaluated successfully.`);
+  if (!parseSuccess) {
+    return {
+      suggestedScore: 0,
+      feedback: "Error parsing evaluation response after retries",
+      criteria: [],
+      error: "LLM did not return valid JSON"
+    };
+  }
 
-  return parseLLMResponse(resultText);
+  return parsed;
 }
 
 /* ---------- Utilities ---------- */
@@ -180,21 +222,4 @@ function detectMimeType(url) {
   return "image/png";
 }
 
-function parseLLMResponse(text) {
-  try {
-    const cleanText = text.replace(/^[^{]*/, "").replace(/[^}]*$/, "");
-    if (!cleanText.startsWith("{")) throw new Error("No valid JSON in LLM response");
-    const parsed = JSON.parse(cleanText);
-    if (!parsed.criteria || typeof parsed.suggestedScore === "undefined") {
-      throw new Error("Missing required fields");
-    }
-    return parsed;
-  } catch (err) {
-    console.error("⚠️ Failed to parse LLM JSON:", err.message, "\nRaw:", text);
-    return {
-      suggestedScore: 0,
-      feedback: "Error parsing evaluation response",
-      criteria: [],
-    };
-  }
-}
+

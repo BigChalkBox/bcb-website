@@ -1,6 +1,6 @@
 // src/app/api/evaluations/[submissionId]/evaluate/route.js
 
-import { generateContentWithFallback, extractTextFromResponse } from "@/lib/gemini";
+import { generateContentWithFallback, extractTextFromResponse, extractFirstJson } from "@/lib/gemini";
 import { createClient } from "@supabase/supabase-js";
 
 // Supabase (service role)
@@ -141,30 +141,7 @@ export async function POST(request, { params }) {
             }
         }
 
-        function extractFirstJson(text) {
-            if (!text || typeof text !== "string") return null;
-            let t = text.trim();
-            t = t.replace(/^\uFEFF/, "");
-            t = t.replace(/^```(?:json)?\s*/, "");
-            t = t.replace(/```$/, "").trim();
-            const firstBrace = t.indexOf("{");
-            const lastBrace = t.lastIndexOf("}");
-            if (firstBrace === -1 || lastBrace === -1) return null;
-            const candidate = t.slice(firstBrace, lastBrace + 1);
-            try {
-                return JSON.parse(candidate);
-            } catch {
-                const fixed = candidate
-                    .replace(/([^{,:\s]+)\s*:/g, (m, p1) => (p1.startsWith('"') ? m : `"${p1}":`))
-                    .replace(/,(\s*[}\]])/g, "$1");
-                try {
-                    return JSON.parse(fixed);
-                } catch (err2) {
-                    console.warn("extractFirstJson failed to parse candidate JSON:", err2.message);
-                    return null;
-                }
-            }
-        }
+
 
         // 4️⃣ Map pages → questions
         const questionToStudentImages = {};
@@ -403,6 +380,11 @@ First, carefully and thoroughly read the student's handwritten answer images.
 - Clearly understand what the student has written.
 - Ignore any content that has been crossed out by the student.
 
+IMPORTANT JSON FORMATTING RULES:
+1. Your output MUST be strictly valid JSON.
+2. If you include LaTeX, you MUST escape backslashes properly for JSON strings (e.g., use "\\cos^2", "\\frac" instead of "\\cos^2", "\\frac").
+3. Do not use literal newlines inside JSON strings. Use "\\n".
+4. Do not include trailing commas.
 
 Return STRICTLY valid JSON (no markdown, no commentary) structured as:
 {
@@ -484,53 +466,75 @@ ${sampleBlocks}
             console.log(`Sending Q${qNumber} (qid=${q.qid || "n/a"}) to Gemini — parts: ${parts.length}`);
 
             let responseObjRaw = null;
-            try {
-                // 🧠 Log what we send to Gemini
-                appendToLog({
-                    submissionId,
-                    question_number: qNumber,
-                    qid: q.qid || null,
-                    type: "REQUEST_TO_GEMINI",
-                    payload: parts.map((p) => (p.text ? { text: p.text.slice(0, 3000) } : { inlineData: "[image data]" })),
-                });
+            let parseSuccess = false;
+            let parseAttempts = 0;
+            const MAX_PARSE_RETRIES = 2; // Up to 3 tries total
+            let lastRaw = "";
 
-                const { response, model } = await generateContentWithFallback({
-                    contents: [{ role: "user", parts }],
-                    preferredModel: "gemini-2.5-flash",
-                    maxRetries: 2,
-                    baseDelay: 1000,
-                });
+            while (!parseSuccess && parseAttempts <= MAX_PARSE_RETRIES) {
+                parseAttempts++;
+                try {
+                    // 🧠 Log what we send to Gemini
+                    appendToLog({
+                        submissionId,
+                        question_number: qNumber,
+                        qid: q.qid || null,
+                        type: "REQUEST_TO_GEMINI",
+                        payload: parts.map((p) => (p.text ? { text: p.text.slice(0, 3000) } : { inlineData: "[image data]" })),
+                        parseAttempt: parseAttempts
+                    });
 
-                const raw = extractTextFromResponse(response);
-                console.log(`Q${qNumber} evaluated with model: ${model}`);
+                    const { response, model } = await generateContentWithFallback({
+                        contents: [{ role: "user", parts }],
+                        preferredModel: "gemini-2.5-flash",
+                        maxRetries: 2,
+                        baseDelay: 1000,
+                    });
 
-                // 🧠 Log what we received
-                appendToLog({
-                    submissionId,
-                    question_number: qNumber,
-                    qid: q.qid || null,
-                    type: "RESPONSE_FROM_GEMINI",
-                    rawResponse: raw.slice(0, 10000),
-                });
+                    const raw = extractTextFromResponse(response);
+                    lastRaw = raw;
+                    console.log(`Q${qNumber} evaluated with model: ${model} (parse attempt ${parseAttempts})`);
 
-                const parsed = extractFirstJson(raw);
-                if (!parsed) {
-                    console.warn(`Q${qNumber}: LLM returned uninterpretable JSON. Raw:`, raw.slice(0, 200));
-                    responseObjRaw = { error: "LLM did not return valid JSON", raw, parsed: null };
-                } else {
-                    responseObjRaw = parsed;
+                    // 🧠 Log what we received
+                    appendToLog({
+                        submissionId,
+                        question_number: qNumber,
+                        qid: q.qid || null,
+                        type: "RESPONSE_FROM_GEMINI",
+                        rawResponse: raw.slice(0, 10000),
+                    });
+
+                    const parsed = extractFirstJson(raw);
+                    if (parsed) {
+                        responseObjRaw = parsed;
+                        parseSuccess = true;
+                    } else {
+                        console.warn(`Q${qNumber}: Parse attempt ${parseAttempts} failed. Raw:`, raw.slice(0, 200));
+                        if (parseAttempts <= MAX_PARSE_RETRIES) {
+                            parts.push({ role: "model", parts: [{ text: raw }] });
+                            parts.push({ text: "REMINDER: Your previous response was NOT valid JSON or failed to parse. You MUST return strictly valid JSON structure. Please try again." });
+                        }
+                    }
+                } catch (err) {
+                    console.error(`Error evaluating Q${qNumber} (attempt ${parseAttempts}):`, err);
+                    if (parseAttempts > MAX_PARSE_RETRIES) {
+                        appendToLog({
+                            submissionId,
+                            question_number: qNumber,
+                            qid: q.qid || null,
+                            type: "ERROR",
+                            message: err.message,
+                            stack: err.stack,
+                        });
+                        responseObjRaw = { error: err.message };
+                        break;
+                    }
+                    await new Promise(r => setTimeout(r, 2000));
                 }
-            } catch (err) {
-                console.error(`Error evaluating Q${qNumber}:`, err);
-                appendToLog({
-                    submissionId,
-                    question_number: qNumber,
-                    qid: q.qid || null,
-                    type: "ERROR",
-                    message: err.message,
-                    stack: err.stack,
-                });
-                responseObjRaw = { error: err.message };
+            }
+
+            if (!parseSuccess && (!responseObjRaw || !responseObjRaw.error)) {
+                responseObjRaw = { error: "LLM did not return valid JSON after retries", raw: lastRaw, parsed: null };
             }
 
             evaluationsPerQuestion.push({

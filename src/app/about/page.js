@@ -7,7 +7,7 @@ export const metadata = {
     openGraph: {
         type: 'website',
         locale: 'en_IN',
-        url: 'https://dases.in/about',
+        url: 'https://dasesai.com/about',
         title: 'About DASES | Built by eSun Smart Solutions Pvt. Ltd.',
         description:
             'A team of engineers and educators transforming descriptive grading. Learn how DASES achieves 98% accuracy on handwritten exams.',
@@ -20,7 +20,7 @@ export const metadata = {
             '400+ sheets evaluated • 98% accuracy • 20+ educators. Built by eSun Smart Solutions Pvt. Ltd. in India.',
     },
     alternates: {
-        canonical: 'https://dases.in/about',
+        canonical: 'https://dasesai.com/about',
     },
     authors: [
         {
@@ -37,7 +37,7 @@ const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'eSun Smart Solutions Pvt. Ltd.',
-    url: 'https://dases.in',
+    url: 'https://dasesai.com',
     email: 'support@esun.solutions',
     telephone: '+917529836117',
     description:

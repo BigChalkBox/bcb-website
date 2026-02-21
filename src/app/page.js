@@ -5,13 +5,13 @@ export const metadata = {
     description:
         'Grade 500 handwritten answer sheets in parallel with AI that reads handwriting, scores against your rubric, and delivers per-question feedback. 98% accuracy. Built for universities.',
     alternates: {
-        canonical: 'https://dases.in',
+        canonical: 'https://dasesai.com',
     },
     openGraph: {
         title: 'DASES | AI-Powered Handwritten Exam Grading — 98% Accuracy',
         description:
             'Grade handwritten exams with AI in 15 seconds per sheet. 500 sheets in parallel, 98% rubric accuracy, detailed per-question feedback.',
-        url: 'https://dases.in',
+        url: 'https://dasesai.com',
         type: 'website',
     },
     twitter: {
@@ -31,7 +31,7 @@ const jsonLd = {
             operatingSystem: 'Web',
             description:
                 'AI-powered handwritten exam evaluation platform that grades descriptive answer sheets with 98% rubric accuracy, processes 500 sheets in parallel, and delivers per-question feedback in 15 seconds per sheet.',
-            url: 'https://dases.in',
+            url: 'https://dasesai.com',
             author: {
                 '@type': 'Organization',
                 name: 'eSun Smart Solutions Pvt. Ltd.',
@@ -53,7 +53,7 @@ const jsonLd = {
         {
             '@type': 'WebSite',
             name: 'DASES',
-            url: 'https://dases.in',
+            url: 'https://dasesai.com',
         },
         {
             '@type': 'FAQPage',
