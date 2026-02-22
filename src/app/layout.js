@@ -7,8 +7,8 @@ export const metadata = {
   metadataBase: new URL('https://dasesai.com'),
 
   title: {
-    default: 'DASES | Best AI Answer Sheet Checker & Grading Software',
-    template: '%s | DASES By eSun Smart Solutions',
+    default: 'DASES | AI-Powered Answer Sheet Checker & Grading Software',
+    template: '%s | DASES',
   },
 
   description:

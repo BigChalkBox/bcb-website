@@ -1,7 +1,7 @@
 import LandingPage from '../components/landing/LandingPage'
 
 export const metadata = {
-    title: 'DASES | AI-Powered Handwritten Exam Grading — 98% Accuracy, 15s Per Sheet',
+    title: 'DASES | AI-Powered Handwritten Exam Grading',
     description:
         'Grade 500 handwritten answer sheets in parallel with AI that reads handwriting, scores against your rubric, and delivers per-question feedback. 98% accuracy. Built for universities.',
     alternates: {

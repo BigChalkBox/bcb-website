@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import SiteHeader from '../shared/SiteHeader'
 import SiteFooter from '../shared/SiteFooter'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import TestimonialStack from '../TestimonialStack'
@@ -52,6 +53,7 @@ export default function LandingPage() {
                     events: {
                         onReady: (event) => {
                             event.target.setVolume(15);
+                            event.target.getIframe().setAttribute('title', 'DASES AI Grading Workflow Demonstration');
                         }
                     }
                 });
@@ -291,6 +293,7 @@ export default function LandingPage() {
                                         loop
                                         muted
                                         playsInline
+                                        aria-label="QuickPass Paper Analysis tool preview showing mismatch highlighting"
                                         src="/videos/final.mp4"
                                         style={{
                                             width: '100%',
@@ -370,9 +373,9 @@ export default function LandingPage() {
                                             )
                                         })}
                                     </div>
-                                    <a className="lp-link-arrow" href="/solutions">
+                                    <Link className="lp-link-arrow" href="/solutions">
                                         See all capabilities <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>
-                                    </a>
+                                    </Link>
                                 </FadeIn>
                                 <FadeIn className="lp-tablet-wrap" delay={0.2}>
                                     <div className="lp-tablet">
@@ -396,8 +399,8 @@ export default function LandingPage() {
                                 Join 20+ educators already using DASES to deliver faster, fairer, and more meaningful assessment feedback.
                             </p>
                             <div className="lp-cta-buttons">
-                                <a href="#contact"><button className="lp-btn-primary">Book a Free Demo</button></a>
-                                <a href="/solutions"><button className="lp-btn-secondary">Explore Solutions</button></a>
+                                <Link href="/#contact"><button className="lp-btn-primary">Book a Free Demo</button></Link>
+                                <Link href="/solutions"><button className="lp-btn-secondary">Explore Solutions</button></Link>
                             </div>
                         </FadeIn>
                     </section >
