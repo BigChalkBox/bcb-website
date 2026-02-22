@@ -255,7 +255,7 @@
 .lp-dash-wrap {
     position: relative;
     max-width: 72rem;
-    margin: 0 auto;
+    margin: 2.5rem auto 0;
 }
 
 .lp-dash-outer {

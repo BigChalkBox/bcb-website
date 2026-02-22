@@ -166,6 +166,14 @@ export default function LandingPage() {
                             <p className="lp-hero-sub">
                                 AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback — at 98% accuracy.
                             </p>
+                            <FadeIn delay={0.1} className="lp-cta-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', position: 'relative', zIndex: 10 }}>
+                                <Link href="https://www.youtube.com/watch?v=k13pAnWj0Tc&list=TLGGtZTxRZOBne8yMjAyMjAyNg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                    <button className="lp-btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.875rem 1.5rem', background: 'white' }}>
+                                        <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>play_circle</span>
+                                        Watch a quick demo video
+                                    </button>
+                                </Link>
+                            </FadeIn>
                             <FadeIn className="lp-dash-wrap" delay={0.2}>
                                 <div className="lp-dash-outer">
                                     <img alt="DASES Evaluation Dashboard Preview" src="/images/landing/dashboard_preview.png" />
