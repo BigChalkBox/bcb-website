@@ -39,12 +39,12 @@ export default function LandingPage() {
         const initPlayer = () => {
             if (window.YT && window.YT.Player) {
                 new window.YT.Player('dases-workflow-video', {
-                    videoId: 'k13pAnWj0Tc',
+                    videoId: 'tR1Oq9q4fZY',
                     playerVars: {
                         autoplay: 0,
                         controls: 1,
                         loop: 0,
-                        playlist: 'k13pAnWj0Tc',
+                        playlist: 'tR1Oq9q4fZY',
                         playsinline: 1,
                         rel: 0,
                         disablekb: 0,
