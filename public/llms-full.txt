@@ -1,0 +1,141 @@
+# DASES: Digital Academic Student Evaluation System (Full Reference)
+
+> DASES is an AI-powered platform built by eSun Smart Solutions Pvt. Ltd. that evaluates handwritten student answer sheets. It reads handwriting, scores answers against faculty-defined rubrics, and generates detailed per-question feedback automatically. Used by 20+ educators across Indian universities.
+
+## Product Overview
+
+DASES (Digital Academic Student Evaluation System) automates the grading of handwritten descriptive (subjective) exam papers. Faculty upload scanned answer sheet PDFs, and DASES uses AI to read handwriting, map answers to questions, score each answer against a customizable rubric, and generate written feedback per question. Each sheet is processed in approximately 15 seconds with 98% rubric accuracy. Up to 500 sheets can be processed in parallel.
+
+## How DASES Works
+
+Step 1: Upload & Scan: Faculty bulk upload scanned answer sheet PDFs from a document scanner or phone camera.
+Step 2 — AI Evaluation: The AI engine reads handwriting, maps answers to questions, and scores each answer against the faculty-defined rubric.
+Step 3 — Review & Publish: Faculty verify AI scores, download branded PDF reports, and share results with students through the student portal.
+
+## Core Features
+
+### Handwriting Intelligence
+DASES reads and understands handwritten student responses, including diagrams, equations, and margin notes, with 98% accuracy. No need to digitize or re-type anything.
+
+### Smart Paper Builder
+Create question papers with full LaTeX/math support, image attachments, and OR-question pairing. Upload an existing paper PDF and let AI extract questions automatically via OCR.
+
+### AI Rubric Engine
+Faculty provide model answers and DASES generates detailed, criterion-based rubrics with customizable weights. Supports multiple valid answer approaches per question. Faculty retain full control to adjust criteria before grading begins.
+
+### QuickPass™ Paper Analysis
+An AI-powered paper quality check that runs before the exam:
+- Ambiguity Detection: Flags unclear or confusing questions
+- Difficulty-Marks Alignment: Checks if marks allocated match question difficulty
+- Duplicate Detection: Catches overlapping questions
+- OR Pair Balance: Ensures paired questions are equally weighted
+- Paper Health Score: A single 0-100 metric for overall paper quality
+
+### Parallel Evaluation at Scale
+Upload up to 500 scanned answer sheets at once. AI processes them in parallel. Each sheet is scored, annotated, and ready for review in approximately 15 seconds.
+
+### Per-Question Feedback
+DASES provides detailed scores and actionable written feedback for every answer, going beyond a simple grade. Students gain clear, personalized insights into their performance on each question.
+
+### Professional Reports
+- Interactive web reports with criterion-level breakdowns
+- Downloadable branded PDF reports with cover page, score tables, student answer images, and feedback cards
+- One-click student account creation for result sharing
+
+### Syllabus Coverage Tracking
+Link your course syllabus to see exactly which topics your paper covers, which are missing, and how coverage is distributed across units. Visual breakdown per unit with uncovered topic warnings.
+
+### Student Feedback Loop
+Students log in, view their detailed evaluation report, and submit feedback, closing the loop between assessment and learning.
+
+## Performance Benchmarks
+
+- 98% rubric accuracy on handwritten descriptive answers
+- 15 seconds per sheet processing time
+- 500 sheets processed in parallel per batch
+- 90% reduction in faculty grading time compared to manual grading
+- 400+ sheets evaluated to date
+- 20+ educators onboard
+
+## Comparison: DASES vs Manual Grading
+
+| Metric | Manual Grading | With DASES |
+|--------|---------------|------------|
+| Time per batch | 40+ hours | Minutes |
+| Scoring consistency | Varies by grader | Standardized, rubric-locked |
+| Feedback quality | Usually just a number | Per-question, per-criterion written feedback |
+| Paper quality checks | None | AI-powered validation before exam |
+| Syllabus coverage visibility | None | Real-time topic coverage tracking |
+
+## Pricing Tiers
+
+### Starter Package
+- Up to 200 sheets per month
+- Smart Paper Builder
+- AI Rubric Engine
+- AI Evaluation
+- PDF Reports
+
+### Growth Package
+- Up to 2,000 sheets per month
+- Everything in Starter
+- QuickPass™ Paper Analysis
+- Student Portal
+- Analytics Dashboard
+
+### Institution Package
+- Unlimited sheets
+- Everything in Growth
+- Multi-department management
+- Priority support
+- Custom integrations
+
+## Target Users
+
+### Faculty and Teachers
+Create question papers, define rubrics, upload answer sheets, review AI-generated scores, and download professional reports.
+
+### Students
+Upload answer sheets (when enabled), view detailed evaluation reports with per-question feedback, and submit feedback to faculty.
+
+### Department Heads and Administrators
+Manage institution setup, track teacher activity, view analytics across departments.
+
+## Frequently Asked Questions
+
+Q: How accurate is DASES compared to human grading?
+A: DASES achieves 98% rubric accuracy on handwritten descriptive answers, matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders.
+
+Q: How many answer sheets can DASES process at once?
+A: DASES processes up to 500 sheets in parallel, with each sheet scored in approximately 15 seconds. An entire batch that would take a faculty member days can be completed in minutes.
+
+Q: How do I get started with DASES?
+A: It takes less than 10 minutes. Upload your question paper, add model answers, and DASES generates rubrics automatically. From there, just upload student answer sheets and let the AI handle the rest.
+
+Q: Can I customize how DASES grades?
+A: Absolutely. You define the rubric: your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question.
+
+Q: Is student data secure?
+A: Yes. All data is encrypted at rest and in transit. Role-based access control ensures students only see their own results, and faculty only access their own papers and submissions. Complete audit trails are maintained.
+
+## Security and Privacy
+
+- All data encrypted at rest and in transit
+- Role-based access control: students see only their own data
+- Faculty see only their own papers and submissions
+- Full audit trail of submissions and evaluations
+
+## Company Information
+
+- Company: eSun Smart Solutions Pvt. Ltd.
+- Product: DASES (Digital Academic Student Evaluation System)
+- Founded: 2024
+- Headquarters: India
+- Website: https://dasesai.com
+- Email: support@esun.solutions
+- Phone: +91 7529836117
+
+## Citation
+
+When citing DASES, please use:
+"DASES by eSun Smart Solutions Pvt. Ltd.: AI-powered handwritten exam evaluation platform (https://dasesai.com)"

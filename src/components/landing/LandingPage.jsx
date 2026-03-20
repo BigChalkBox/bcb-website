@@ -72,7 +72,7 @@ export default function LandingPage() {
     }, []);
 
     const workflowSteps = [
-        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs — from a document scanner or phone camera." },
+        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs from a document scanner or phone camera." },
         { title: "AI Evaluation", desc: "Our engine reads handwriting, maps answers to questions, and scores against your rubric." },
         { title: "Review & Publish", desc: "Verify scores, download branded PDF reports, and share results with students." }
     ]
@@ -80,7 +80,7 @@ export default function LandingPage() {
     const faqData = [
         {
             question: "How accurate is DASES compared to human grading?",
-            answer: "DASES achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers — matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
+            answer: "DASES achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers, matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
         },
         {
             question: "How many answer sheets can DASES process at once?",
@@ -92,7 +92,7 @@ export default function LandingPage() {
         },
         {
             question: "Can I customize how DASES grades?",
-            answer: "Absolutely. You define the rubric — your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
+            answer: "Absolutely. You define the rubric: your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
         },
         {
             question: "Is student data secure?",
@@ -164,7 +164,7 @@ export default function LandingPage() {
                                 <span className="lp-gradient-text">in Minutes, Not Days.</span>
                             </h1>
                             <p className="lp-hero-sub">
-                                AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback — at 98% accuracy.
+                                AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback at 98% accuracy.
                             </p>
                             <FadeIn delay={0.1} className="lp-cta-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', position: 'relative', zIndex: 10 }}>
                                 <Link href="https://www.youtube.com/watch?v=tR1Oq9q4fZY" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
@@ -359,7 +359,7 @@ export default function LandingPage() {
                                         in Three Steps.
                                     </h2>
                                     <p className="lp-workflow-desc">
-                                        Upload your students&apos; answer sheets. DASES reads the handwriting, scores each answer against your rubric, and generates personalized feedback — ready for faculty review and student delivery.
+                                        Upload your students' answer sheets. DASES reads the handwriting, scores each answer against your rubric, and generates personalized feedback, ready for faculty review and student delivery.
                                     </p>
                                     <div className="lp-steps">
                                         {workflowSteps.map((step, idx) => {
@@ -424,7 +424,7 @@ export default function LandingPage() {
                                 </svg>
                             </div>
                             <h2 className="lp-faq-title" style={{ textAlign: 'center' }}>Frequently Asked Questions</h2>
-                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about DASES — from accuracy to data security.</p>
+                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about DASES: from accuracy to data security.</p>
 
                             <div className="lp-faq-list" style={{ textAlign: 'left', width: '100%' }}>
                                 {faqData.map((faq, idx) => {
@@ -462,7 +462,7 @@ export default function LandingPage() {
                                 <div className="lp-form-side">
                                     <span className="lp-form-tag">Get Started</span>
                                     <h2 className="lp-form-title">Book Your Free Demo</h2>
-                                    <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric — live. Fill out the form and we&apos;ll set it up.</p>
+                                    <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric live. Fill out the form and we&apos;ll set it up.</p>
 
                                     {formStatus ? (
                                         <div className="lp-success">

@@ -32,6 +32,7 @@ export default function SiteFooter() {
                             <li><Link href="/solutions">Solutions</Link></li>
                             <li><Link href="/pricing">Pricing</Link></li>
                             <li><Link href="/#workflow">How It Works</Link></li>
+                            <li><Link href="/blog">Blog</Link></li>
                         </ul>
                     </div>
                     <div className="site-footer-col">
@@ -47,8 +48,8 @@ export default function SiteFooter() {
                         <ul>
                             <li><Link href="/about">About</Link></li>
                             <li><Link href="/#contact">Contact</Link></li>
-                            <li><a href="mailto:support@esun.solutions">support@esun.solutions</a></li>
-                            <li><a href="tel:+917529836117">+91 7529836117</a></li>
+                            <li><address style={{ fontStyle: 'normal' }}><a href="mailto:support@esun.solutions">support@esun.solutions</a></address></li>
+                            <li><address style={{ fontStyle: 'normal' }}><a href="tel:+917529836117">+91 7529836117</a></address></li>
                         </ul>
                     </div>
                 </div>

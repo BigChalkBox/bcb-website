@@ -68,7 +68,7 @@ export default function FeaturesFinal() {
 
                         <div className={styles.featureBox1}>
                             <h2>Transparent, Detailed Feedback</h2>
-                            <p>Go beyond a score — get question-level insights, rubric-based feedback, and professional student performance reports.</p>
+                            <p>Go beyond a score: get question-level insights, rubric-based feedback, and professional student performance reports.</p>
                         </div>
 
                         <div className={styles.featureBox1}>

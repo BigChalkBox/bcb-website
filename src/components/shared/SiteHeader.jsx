@@ -25,6 +25,7 @@ export default function SiteHeader() {
                     <Link href="/solutions" className={pathname === '/solutions' ? 'active' : ''}>Solutions</Link>
                     <Link href="/about" className={pathname === '/about' ? 'active' : ''}>About</Link>
                     <Link href="/pricing" className={pathname === '/pricing' ? 'active' : ''}>Pricing</Link>
+                    <Link href="/blog" className={pathname.startsWith('/blog') ? 'active' : ''}>Blog</Link>
                 </nav>
                 <div className="site-header-actions">
                     <Link className="site-login-link" href="/SignIn">Log In</Link>
@@ -52,6 +53,7 @@ export default function SiteHeader() {
                         <Link href="/solutions" onClick={() => setMobileMenuOpen(false)} className={pathname === '/solutions' ? 'active' : ''}>Solutions</Link>
                         <Link href="/about" onClick={() => setMobileMenuOpen(false)} className={pathname === '/about' ? 'active' : ''}>About</Link>
                         <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className={pathname === '/pricing' ? 'active' : ''}>Pricing</Link>
+                        <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className={pathname.startsWith('/blog') ? 'active' : ''}>Blog</Link>
                         <Link className="mobile-login-link" href="/SignIn" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
                         <Link href="/#contact" onClick={() => setMobileMenuOpen(false)} className="mobile-btn-demo">
                             Book Demo <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>

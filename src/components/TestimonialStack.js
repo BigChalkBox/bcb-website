@@ -16,7 +16,7 @@ const testimonials = [
   {
     logo: "Prof. Lalit Sachan",
     quote:
-      "We saw immediate impact. Faster grading, consistent rubrics, and detailed student feedback — DASES has set a new benchmark.",
+      "We saw immediate impact. Faster grading, consistent rubrics, and detailed student feedback: DASES has set a new benchmark.",
     name: "Prof. Lalit Sachan",
     title: "Director AI/ML",
     img: "/images/image.png"
@@ -90,7 +90,7 @@ export default function TestimonialStack() {
         <p className={styles.tag}>Ready for the Future of Grading?</p>
         <h2 className={styles.heading}>Transform Assessment with DASES</h2>
         <p className={styles.sub}>
-          Join the institutions redefining descriptive evaluation. Increase fairness, speed, and transparency — without compromising academic integrity.
+          Join the institutions redefining descriptive evaluation. Increase fairness, speed, and transparency without compromising academic integrity.
         </p>
 
         <div className={styles.navBtns}>

@@ -497,7 +497,7 @@ export default function ReviewPage() {
         rendered.push(
           <div key={`or-pair-${q.qid}`} className={styles.orPairContainer}>
             <div className={styles.orPairLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Zap size={16} /> OR Pair — Attempt any one
+              <Zap size={16} /> OR Pair: Attempt any one
             </div>
             {renderQuestionBlock(q, i)}
             <div className={styles.orDivider}><span>OR</span></div>

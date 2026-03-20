@@ -3,7 +3,7 @@ import PricingPage from '../../components/pricing/PricingPage'
 export const metadata = {
     title: 'Pricing | Starter, Growth & Institution Packages',
     description:
-        'Pick the DASES package that fits — Starter (200 sheets/mo), Growth (2,000 sheets/mo), or Institution (unlimited). AI rubric engine, QuickPass™ analysis, student portal, and more.',
+        'Pick the DASES package that fits: Starter (200 sheets/mo), Growth (2,000 sheets/mo), or Institution (unlimited). AI rubric engine, QuickPass™ analysis, student portal, and more.',
     alternates: {
         canonical: 'https://dasesai.com/pricing',
     },
@@ -23,16 +23,65 @@ export const metadata = {
 
 const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: 'DASES Pricing',
-    description:
-        'Modular AI evaluation packages — Starter, Growth, and Institution.',
-    url: 'https://dasesai.com/pricing',
-    isPartOf: {
-        '@type': 'WebSite',
-        name: 'DASES',
-        url: 'https://dasesai.com',
-    },
+    '@graph': [
+        {
+            '@type': 'Product',
+            name: 'DASES AI Evaluation Platform',
+            description:
+                'AI-powered handwritten exam evaluation platform with modular pricing for institutions of all sizes.',
+            brand: {
+                '@type': 'Brand',
+                name: 'DASES',
+            },
+            url: 'https://dasesai.com/pricing',
+            offers: [
+                {
+                    '@type': 'Offer',
+                    name: 'Starter Package',
+                    description:
+                        'Up to 200 sheets per month. Includes Smart Paper Builder, AI Rubric Engine, AI Evaluation, and PDF Reports.',
+                    priceCurrency: 'INR',
+                    availability: 'https://schema.org/InStock',
+                    url: 'https://dasesai.com/pricing',
+                },
+                {
+                    '@type': 'Offer',
+                    name: 'Growth Package',
+                    description:
+                        'Up to 2,000 sheets per month. Includes everything in Starter plus QuickPass™ Paper Analysis, Student Portal, and Analytics Dashboard.',
+                    priceCurrency: 'INR',
+                    availability: 'https://schema.org/InStock',
+                    url: 'https://dasesai.com/pricing',
+                },
+                {
+                    '@type': 'Offer',
+                    name: 'Institution Package',
+                    description:
+                        'Unlimited sheets. Includes everything in Growth plus multi-department management, priority support, and custom integrations.',
+                    priceCurrency: 'INR',
+                    availability: 'https://schema.org/InStock',
+                    url: 'https://dasesai.com/pricing',
+                },
+            ],
+        },
+        {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Home',
+                    item: 'https://dasesai.com',
+                },
+                {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'Pricing',
+                    item: 'https://dasesai.com/pricing',
+                },
+            ],
+        },
+    ],
 }
 
 export default function Pricing() {

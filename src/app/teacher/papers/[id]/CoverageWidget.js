@@ -305,7 +305,7 @@ export default function CoverageWidget({ paperId, curriculumId, autoAnalyze = fa
                                             <span className={styles.topicQuestions}>
                                                 {topic.questions?.length > 0
                                                     ? topic.questions.map(q => `Q${q.index}`).join(", ")
-                                                    : <span className={styles.noQuestions}>—</span>}
+                                                    : <span className={styles.noQuestions}>-</span>}
                                             </span>
                                         </div>
                                     ))}
@@ -335,7 +335,7 @@ export default function CoverageWidget({ paperId, curriculumId, autoAnalyze = fa
                                 <span className={styles.topicQuestions}>
                                     {topic.questions?.length > 0
                                         ? topic.questions.map(q => `Q${q.index}`).join(", ")
-                                        : <span className={styles.noQuestions}>—</span>}
+                                        : <span className={styles.noQuestions}>-</span>}
                                 </span>
                             </div>
                         ))

@@ -3,7 +3,7 @@ import AboutPage from '../../components/about/AboutPage'
 export const metadata = {
     title: 'About | AI-Powered Exam Evaluation by eSun Smart Solutions Pvt. Ltd.',
     description:
-        'DASES is built by eSun Smart Solutions Pvt. Ltd. — solving the hardest problems in academic assessment. 98% rubric accuracy on handwritten answers, 400+ sheets evaluated, 20+ educators onboard.',
+        'DASES is built by eSun Smart Solutions Pvt. Ltd., solving the hardest problems in academic assessment. 98% rubric accuracy on handwritten answers, 400+ sheets evaluated, 20+ educators onboard.',
     openGraph: {
         type: 'website',
         locale: 'en_IN',
@@ -25,38 +25,66 @@ export const metadata = {
     authors: [
         {
             name: 'eSun Smart Solutions Pvt. Ltd.',
-            url: 'https://eSun.solutions',
+            url: 'https://dasesai.com',
             email: 'support@esun.solutions',
         },
     ],
     summary:
-        'eSun Smart Solutions Pvt. Ltd. builds DASES — an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
+        'eSun Smart Solutions Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
 }
 
 const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'eSun Smart Solutions Pvt. Ltd.',
-    url: 'https://dasesai.com',
-    email: 'support@esun.solutions',
-    telephone: '+917529836117',
-    description:
-        'eSun Smart Solutions Pvt. Ltd. builds DASES — an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
-    address: {
-        '@type': 'PostalAddress',
-        addressCountry: 'IN',
-    },
-    foundingDate: '2024',
-    sameAs: [],
-    makesOffer: {
-        '@type': 'Offer',
-        itemOffered: {
-            '@type': 'SoftwareApplication',
-            name: 'DASES',
-            applicationCategory: 'EducationalApplication',
-            operatingSystem: 'Web',
+    '@graph': [
+        {
+            '@type': 'Organization',
+            name: 'eSun Smart Solutions Pvt. Ltd.',
+            url: 'https://dasesai.com',
+            email: 'support@esun.solutions',
+            telephone: '+917529836117',
+            description:
+                'eSun Smart Solutions Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy. Based in India, the team of engineers and educators is solving the hardest problems in academic assessment.',
+            address: {
+                '@type': 'PostalAddress',
+                addressCountry: 'IN',
+            },
+            foundingDate: '2024',
+            areaServed: {
+                '@type': 'Country',
+                name: 'India',
+            },
+            sameAs: [],
+            makesOffer: {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'SoftwareApplication',
+                    name: 'DASES',
+                    alternateName: 'Digital Academic Student Evaluation System',
+                    applicationCategory: 'EducationalApplication',
+                    operatingSystem: 'Web',
+                    description:
+                        'AI-powered handwritten exam evaluation platform with 98% rubric accuracy. Processes 500 sheets in parallel with per-question feedback.',
+                },
+            },
         },
-    },
+        {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Home',
+                    item: 'https://dasesai.com',
+                },
+                {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'About',
+                    item: 'https://dasesai.com/about',
+                },
+            ],
+        },
+    ],
 }
 
 export default function About() {

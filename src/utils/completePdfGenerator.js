@@ -552,12 +552,12 @@ export const downloadCompleteQuestionPaper = async (paper) => {
 
       // Map database fields correctly
       const institute = String(paper.institute || paper.institution || "Institute Name");
-      const teacherName = truncate(String(paper.teacher_name || paper.teacherName || "—"), 20);
-      const teacherId = truncate(String(paper.teacher_id || "—"), 15);
+      const teacherName = truncate(String(paper.teacher_name || paper.teacherName || "-"), 20);
+      const teacherId = truncate(String(paper.teacher_id || "-"), 15);
       const subjectName = String(paper.subject_name || "Subject");
-      const facultyName = truncate(String(paper.faculty_name || paper.faculty || "—"), 18);
+      const facultyName = truncate(String(paper.faculty_name || paper.faculty || "-"), 18);
       const yearVal = String(paper.year || new Date().getFullYear());
-      const examPeriod = truncate(String(paper.exam_month_year || "—"), 18);
+      const examPeriod = truncate(String(paper.exam_month_year || "-"), 18);
       const totalQuestions = String((paper.paper_data?.questions || []).length);
 
       // Info Card with shadow
@@ -877,7 +877,7 @@ export const downloadCompleteQuestionPaper = async (paper) => {
 
               pdf.setFont(FONT.heading, "bold");
               setColor(COLORS.primary);
-              pdf.text(String(crit.weight || crit.marks || "—"), tableX + col1W + 6, y + 11);
+              pdf.text(String(crit.weight || crit.marks || "-"), tableX + col1W + 6, y + 11);
 
               y += rowH;
             });
@@ -1014,7 +1014,7 @@ export const downloadCompleteQuestionPaper = async (paper) => {
           pdf.setFont(FONT.heading, "bold");
           pdf.setFontSize(10);
           setColor(COLORS.muted);
-          pdf.text("— OR —", margin + contentWidth / 2 - 20, y);
+          pdf.text("OR", margin + contentWidth / 2 - 20, y);
           y += 15;
 
           const nextQ = questions[i + 1];
@@ -1253,7 +1253,7 @@ export const downloadCompleteQuestionPaper = async (paper) => {
             pdf.setFont(FONT.heading, "normal");
             pdf.setFontSize(9);
             setColor(COLORS.muted);
-            pdf.text(`[${issue.qid || "—"}]`, margin + 25, y);
+            pdf.text(`[${issue.qid || "-"}]`, margin + 25, y);
 
             pdf.setFont(FONT.body, "normal");
             setColor(COLORS.text);

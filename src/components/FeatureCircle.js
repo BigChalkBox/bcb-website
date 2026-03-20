@@ -12,7 +12,7 @@ const sections = [
   {
     id: 2,
     title: "Generate Fair Rubrics",
-    text: "Let AI design clear, unbiased rubrics tailored to your exam needs — you stay in control of the final call."
+    text: "Let AI design clear, unbiased rubrics tailored to your exam needs: you stay in control of the final call."
   },
   {
     id: 3,
@@ -22,12 +22,12 @@ const sections = [
   {
     id: 4,
     title: "Upload & Scan",
-    text: "Easily scan and upload handwritten or typed sheets — the platform processes them with precision."
+    text: "Easily scan and upload handwritten or typed sheets: the platform processes them with precision."
   },
   {
     id: 5,
     title: "Get Detailed Reports",
-    text: "Receive polished, professional reports packed with results, analytics, and insights — instantly shareable."
+    text: "Receive polished, professional reports packed with results, analytics, and insights instantly shareable."
   }
 ];
 

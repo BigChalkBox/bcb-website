@@ -274,7 +274,7 @@ export default function PaperPage() {
       <main className={styles.main}>
         <header className={styles.header}>
           <h1>
-            {paper.subject_name} — {paper.subject_code} ({paper.year})
+            {paper.subject_name}: {paper.subject_code} ({paper.year})
           </h1>
           <h3>
             Faculty: {paper.faculty_name} | Program: {paper.program} | Sem: {paper.semester}
@@ -796,7 +796,7 @@ function AnalysisDetailContent({ type, data, questions = [] }) {
                         <tr key={`or-header-${i}`} style={{ background: '#f5f3ff', borderBottom: 'none' }}>
                           <td colSpan={4} style={{ padding: '8px 20px', fontSize: '0.75rem', fontWeight: 700, color: '#7c3aed', display: 'flex', alignItems: 'center', gap: '6px' }}>
                             <span style={{ background: '#ede9fe', color: '#7c3aed', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>OR PAIR</span>
-                            Student answers one — avg time counted
+                            Student answers one: avg time counted
                           </td>
                         </tr>
                       );

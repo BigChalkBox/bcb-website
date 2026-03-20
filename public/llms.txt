@@ -1,0 +1,43 @@
+# DASES: Digital Academic Student Evaluation System
+
+> DASES is an AI-powered platform that evaluates handwritten student answer sheets. It reads handwriting, scores answers against faculty-defined rubrics, and generates detailed per-question feedback automatically.
+
+## Key Facts
+
+- Product: DASES (Digital Academic Student Evaluation System)
+- Company: eSun Smart Solutions Pvt. Ltd.
+- Website: https://dasesai.com
+- Category: Educational Technology / AI Grading Software
+- Country: India
+- Founded: 2024
+
+## Core Capabilities
+
+- Reads and evaluates handwritten student answers with 98% rubric accuracy
+- Processes up to 500 answer sheets in parallel
+- Each sheet scored in approximately 15 seconds
+- Generates per-question, per-criterion written feedback
+- AI-generated rubrics from model answers
+- QuickPass™ paper quality analysis before exams
+- Downloadable branded PDF reports for students
+- Syllabus coverage tracking linked to course outcomes
+- Student portal for viewing evaluation reports
+
+## Who Uses DASES
+
+- Faculty and Teachers: Create papers, define rubrics, review AI grades
+- Students: View detailed evaluation reports and provide feedback
+- Department Heads and Administrators: Track activity and analytics
+
+## Contact
+
+- Email: support@esun.solutions
+- Phone: +91 7529836117
+- Website: https://dasesai.com
+
+## For More Information
+
+- Full details: https://dasesai.com/llms-full.txt
+- Solutions: https://dasesai.com/solutions
+- Pricing: https://dasesai.com/pricing
+- About: https://dasesai.com/about

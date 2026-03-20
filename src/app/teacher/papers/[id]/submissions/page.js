@@ -584,7 +584,7 @@ export default function SubmissionsPage() {
                 <td>
                   {sub.submitted_at
                     ? new Date(sub.submitted_at).toLocaleString()
-                    : "—"}
+                    : "-"}
                 </td>
               </tr>
             ))}

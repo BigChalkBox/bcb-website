@@ -22,7 +22,7 @@ const solutionCards = [
     {
         icon: 'edit_note',
         title: 'Smart Paper Builder',
-        desc: 'Create question papers in minutes — upload a PDF and let AI extract questions, or build from scratch with full LaTeX and math support.',
+        desc: 'Create question papers in minutes: upload a PDF and let AI extract questions, or build from scratch with full LaTeX and math support.',
         tag: 'Paper Creation',
     },
     {
@@ -40,13 +40,13 @@ const solutionCards = [
     {
         icon: 'menu_book',
         title: 'Syllabus Coverage Tracking',
-        desc: 'Link your course syllabus and see exactly which topics are covered, which are missing, and how coverage is distributed — visually.',
+        desc: 'Link your course syllabus and see exactly which topics are covered, which are missing, and how coverage is distributed visually.',
         tag: 'Curriculum Alignment',
     },
     {
         icon: 'visibility',
         title: 'Handwriting Intelligence',
-        desc: 'AI reads handwritten student responses — including diagrams, equations, and margin notes — with 98% accuracy. No retyping needed.',
+        desc: 'AI reads handwritten student responses, including diagrams, equations, and margin notes, with 98% accuracy. No retyping needed.',
         tag: 'AI Evaluation',
     },
     {
@@ -64,7 +64,7 @@ const solutionCards = [
     {
         icon: 'forum',
         title: 'Student Feedback Loop',
-        desc: 'One-click student account creation. Students view detailed evaluation reports and submit feedback — closing the learning loop.',
+        desc: 'One-click student account creation. Students view detailed evaluation reports and submit feedback, closing the learning loop.',
         tag: 'Student Engagement',
     },
 ]
@@ -86,7 +86,7 @@ export default function SolutionsPage() {
                                     <span className="accent">Handled.</span>
                                 </h1>
                                 <p className="sp-hero-sub">
-                                    From question paper creation to AI-powered grading to student feedback — DASES covers the complete assessment lifecycle so faculty can focus on what matters: teaching.
+                                    From question paper creation to AI-powered grading to student feedback, DASES covers the complete assessment lifecycle so faculty can focus on what matters: teaching.
                                 </p>
                             </FadeIn>
                         </div>
@@ -125,7 +125,7 @@ export default function SolutionsPage() {
                             <FadeIn>
                                 <div className="sp-grid-header">
                                     <h2>Everything You Need to Run Exams at Scale</h2>
-                                    <p>Eight integrated modules that replace your entire assessment workflow — no patchwork, no manual steps.</p>
+                                    <p>Eight integrated modules that replace your entire assessment workflow: no patchwork, no manual steps.</p>
                                 </div>
                                 <div className="sp-grid">
                                     {solutionCards.map((card, idx) => (

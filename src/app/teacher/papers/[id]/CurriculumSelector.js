@@ -594,7 +594,7 @@ export default function CurriculumSelector({
                     className={styles.skipBtn}
                     onClick={() => onSelect("skip")}
                 >
-                    Skip — analyze without curriculum
+                    Skip: analyze without curriculum
                 </button>
             )}
 

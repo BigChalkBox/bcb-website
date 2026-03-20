@@ -1,5 +1,8 @@
+import { getAllSlugs } from './blog/articles'
+
 export default function sitemap() {
     const baseUrl = 'https://dasesai.com'
+    const blogSlugs = getAllSlugs()
 
     return [
         {
@@ -26,5 +29,17 @@ export default function sitemap() {
             changeFrequency: 'monthly',
             priority: 0.7,
         },
+        {
+            url: `${baseUrl}/blog`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        },
+        ...blogSlugs.map(slug => ({
+            url: `${baseUrl}/blog/${slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        })),
     ]
 }

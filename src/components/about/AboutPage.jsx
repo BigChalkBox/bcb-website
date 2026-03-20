@@ -30,7 +30,7 @@ const dnaCards = [
     {
         icon: 'precision_manufacturing',
         title: 'Accuracy First',
-        desc: '98% rubric accuracy on handwritten descriptive answers — matching human evaluator standards.',
+        desc: '98% rubric accuracy on handwritten descriptive answers, matching human evaluator standards.',
     },
     {
         icon: 'bolt',
@@ -116,7 +116,7 @@ export default function AboutPage() {
                                             </div>
                                             <div>
                                                 <h4>Our Solution</h4>
-                                                <p>DASES reads handwritten answers, scores each criterion against your rubric, and writes per-question feedback — in 15 seconds per sheet.</p>
+                                                <p>DASES reads handwritten answers, scores each criterion against your rubric, and writes per-question feedback in 15 seconds per sheet.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +176,7 @@ export default function AboutPage() {
                                 <div className="ap-team-header">
                                     <div>
                                         <h2 className="ap-team-title">BUILT BY<br />ESUN SMART SOLUTIONS<br />PVT. LTD.</h2>
-                                        <p className="ap-team-sub">A team of engineers and educators solving the hardest problems in academic assessment — from handwriting recognition to rubric-based AI evaluation at scale.</p>
+                                        <p className="ap-team-sub">A team of engineers and educators solving the hardest problems in academic assessment: from handwriting recognition to rubric-based AI evaluation at scale.</p>
                                     </div>
                                     <Link href="/#contact">
                                         <button className="ap-team-cta">

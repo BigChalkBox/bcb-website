@@ -17,7 +17,7 @@ export default function PaperEditor({ paperId, initialPaper }) {
   return (
     <div style={{ padding: 20 }}>
       <h1>
-        {paper.subject_name} — {paper.subject_code} ({paper.year})
+        {paper.subject_name}: {paper.subject_code} ({paper.year})
       </h1>
       <h3>Faculty: {paper.faculty_name}</h3>
 
