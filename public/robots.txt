@@ -1,0 +1,14 @@
+# DASES Robots.txt — Optimized for Humans and AI Crawlers
+
+User-agent: *
+Allow: /
+Allow: /blog
+Allow: /blog/*
+
+# Sitemap link for search engines
+Sitemap: https://dasesai.com/sitemap.xml
+
+# AI Crawler instructions (GEO strategy)
+# Linked to our public AI context files
+# Full Reference: https://dasesai.com/llms-full.txt
+# Summary: https://dasesai.com/llms.txt
