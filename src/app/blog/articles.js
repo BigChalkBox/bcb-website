@@ -327,7 +327,7 @@ export const articles = [
             },
             {
                 question: 'Is there a free trial to compare DASES and Gradescope?',
-                answer: 'Yes. DASES offers a free pilot for institutions. You can upload a real exam — question paper, model answers, and a batch of scanned student sheets — and see the full evaluation output before committing to any plan. Contact the team at support@esun.solutions to arrange your pilot.',
+                answer: 'Yes. DASES offers a free pilot for institutions. You can upload a real exam — question paper, model answers, and a batch of scanned student sheets — and see the full evaluation output before committing to any plan. Contact the team at admin.dasesai@gmail.com to arrange your pilot.',
             },
             {
                 question: 'How does DASES handle exams where students can answer any N of M questions?',

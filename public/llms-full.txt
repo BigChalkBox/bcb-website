@@ -132,7 +132,7 @@ A: Yes. All data is encrypted at rest and in transit. Role-based access control 
 - Founded: 2024
 - Headquarters: India
 - Website: https://dasesai.com
-- Email: support@esun.solutions
+- Email: admin.dasesai@gmail.com
 - Phone: +91 7529836117
 
 ## Citation

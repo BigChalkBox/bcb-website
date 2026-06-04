@@ -519,7 +519,7 @@ export default function LandingPage() {
                                                 </div>
                                                 <div>
                                                     <div className="sub-label">Email</div>
-                                                    <div className="value">support@esun.solutions</div>
+                                                    <div className="value">admin.dasesai@gmail.com</div>
                                                 </div>
                                             </div>
                                             <div className="lp-contact-row">

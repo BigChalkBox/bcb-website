@@ -51,7 +51,7 @@ const jsonLd = {
                 '@type': 'Organization',
                 name: 'Big Chalk Box Pvt. Ltd.',
                 url: 'https://dasesai.com',
-                email: 'support@esun.solutions',
+                email: 'admin.dasesai@gmail.com',
                 telephone: '+917529836117',
                 foundingDate: '2024',
                 address: {

@@ -26,7 +26,7 @@ export const metadata = {
         {
             name: 'Big Chalk Box Pvt. Ltd.',
             url: 'https://dasesai.com',
-            email: 'support@esun.solutions',
+            email: 'admin.dasesai@gmail.com',
         },
     ],
     summary:
@@ -40,7 +40,7 @@ const jsonLd = {
             '@type': 'Organization',
             name: 'Big Chalk Box Pvt. Ltd.',
             url: 'https://dasesai.com',
-            email: 'support@esun.solutions',
+            email: 'admin.dasesai@gmail.com',
             telephone: '+917529836117',
             description:
                 'Big Chalk Box Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy. Based in India, the team of engineers and educators is solving the hardest problems in academic assessment.',

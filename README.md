@@ -101,7 +101,7 @@ Students log in, view their detailed evaluation report, and submit feedback — 
 
 Ready to run a pilot at your institution?
 
-📧 **Email:** support@esun.solutions  
+📧 **Email:** admin.dasesai@gmail.com  
 📞 **Phone:** +91 7529836117  
 🌐 **Website:** [dases.in](https://dases.in)
 

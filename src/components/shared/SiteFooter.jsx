@@ -17,7 +17,7 @@ export default function SiteFooter() {
                         </Link>
                         <p>AI-powered handwritten exam evaluation. 98% rubric accuracy, 500 sheets in parallel, detailed per-question feedback.</p>
                         <div className="site-footer-social">
-                            <a href="mailto:support@esun.solutions" aria-label="Email">
+                            <a href="mailto:admin.dasesai@gmail.com" aria-label="Email">
                                 <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>mail</span>
                             </a>
                             <a href="tel:+917529836117" aria-label="Phone">
@@ -48,7 +48,7 @@ export default function SiteFooter() {
                         <ul>
                             <li><Link href="/about">About</Link></li>
                             <li><Link href="/#contact">Contact</Link></li>
-                            <li><address style={{ fontStyle: 'normal' }}><a href="mailto:support@esun.solutions">support@esun.solutions</a></address></li>
+                            <li><address style={{ fontStyle: 'normal' }}><a href="mailto:admin.dasesai@gmail.com">admin.dasesai@gmail.com</a></address></li>
                             <li><address style={{ fontStyle: 'normal' }}><a href="tel:+917529836117">+91 7529836117</a></address></li>
                         </ul>
                     </div>
