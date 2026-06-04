@@ -54,7 +54,7 @@ export default function SiteFooter() {
                     </div>
                 </div>
                 <div className="site-footer-bottom">
-                    <div>© 2026 DASES by eSun Smart Solutions Pvt. Ltd. All rights reserved.</div>
+                    <div>© 2026 DASES by Big Chalk Box Pvt. Ltd. All rights reserved.</div>
                 </div>
             </div>
         </footer>

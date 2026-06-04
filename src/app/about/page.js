@@ -1,36 +1,36 @@
 import AboutPage from '../../components/about/AboutPage'
 
 export const metadata = {
-    title: 'About | AI-Powered Exam Evaluation by eSun Smart Solutions Pvt. Ltd.',
+    title: 'About | AI-Powered Exam Evaluation by Big Chalk Box Pvt. Ltd.',
     description:
-        'DASES is built by eSun Smart Solutions Pvt. Ltd., solving the hardest problems in academic assessment. 98% rubric accuracy on handwritten answers, 400+ sheets evaluated, 20+ educators onboard.',
+        'DASES is built by Big Chalk Box Pvt. Ltd., solving the hardest problems in academic assessment. 98% rubric accuracy on handwritten answers, 400+ sheets evaluated, 20+ educators onboard.',
     openGraph: {
         type: 'website',
         locale: 'en_IN',
         url: 'https://dasesai.com/about',
-        title: 'About DASES | Built by eSun Smart Solutions Pvt. Ltd.',
+        title: 'About DASES | Built by Big Chalk Box Pvt. Ltd.',
         description:
             'A team of engineers and educators transforming descriptive grading. Learn how DASES achieves 98% accuracy on handwritten exams.',
         siteName: 'DASES',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'About DASES | eSun Smart Solutions Pvt. Ltd.',
+        title: 'About DASES | Big Chalk Box Pvt. Ltd.',
         description:
-            '400+ sheets evaluated • 98% accuracy • 20+ educators. Built by eSun Smart Solutions Pvt. Ltd. in India.',
+            '400+ sheets evaluated • 98% accuracy • 20+ educators. Built by Big Chalk Box Pvt. Ltd. in India.',
     },
     alternates: {
         canonical: 'https://dasesai.com/about',
     },
     authors: [
         {
-            name: 'eSun Smart Solutions Pvt. Ltd.',
+            name: 'Big Chalk Box Pvt. Ltd.',
             url: 'https://dasesai.com',
             email: 'support@esun.solutions',
         },
     ],
     summary:
-        'eSun Smart Solutions Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
+        'Big Chalk Box Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
 }
 
 const jsonLd = {
@@ -38,12 +38,12 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'Organization',
-            name: 'eSun Smart Solutions Pvt. Ltd.',
+            name: 'Big Chalk Box Pvt. Ltd.',
             url: 'https://dasesai.com',
             email: 'support@esun.solutions',
             telephone: '+917529836117',
             description:
-                'eSun Smart Solutions Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy. Based in India, the team of engineers and educators is solving the hardest problems in academic assessment.',
+                'Big Chalk Box Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy. Based in India, the team of engineers and educators is solving the hardest problems in academic assessment.',
             address: {
                 '@type': 'PostalAddress',
                 addressCountry: 'IN',

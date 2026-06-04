@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
             type: 'article',
             publishedTime: article.publishedAt,
             modifiedTime: article.updatedAt,
-            authors: ['eSun Smart Solutions Pvt. Ltd.'],
+            authors: ['Big Chalk Box Pvt. Ltd.'],
             tags: article.tags,
         },
         twitter: {
@@ -86,7 +86,7 @@ export default async function BlogArticlePage({ params }) {
                 abstract: article.heroAnswer,
                 author: {
                     '@type': 'Organization',
-                    name: 'eSun Smart Solutions Pvt. Ltd.',
+                    name: 'Big Chalk Box Pvt. Ltd.',
                     url: 'https://dasesai.com',
                 },
                 publisher: {

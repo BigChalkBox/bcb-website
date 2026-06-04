@@ -130,7 +130,7 @@ export default function Home() {
               Trusted by educators. Designed with academic integrity at the core.
             </p>
             <p className={styles.trust}>
-              2026 © DASES by eSun Smart Solutions Pvt. Ltd.
+              2026 © DASES by Big Chalk Box Pvt. Ltd.
               <br />
               All rights reserved.
             </p>

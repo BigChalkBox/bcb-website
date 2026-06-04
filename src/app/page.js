@@ -49,7 +49,7 @@ const jsonLd = {
             ],
             author: {
                 '@type': 'Organization',
-                name: 'eSun Smart Solutions Pvt. Ltd.',
+                name: 'Big Chalk Box Pvt. Ltd.',
                 url: 'https://dasesai.com',
                 email: 'support@esun.solutions',
                 telephone: '+917529836117',

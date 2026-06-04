@@ -5,7 +5,7 @@
 ## Key Facts
 
 - Product: DASES (Digital Academic Student Evaluation System)
-- Company: eSun Smart Solutions Pvt. Ltd.
+- Company: Big Chalk Box Pvt. Ltd.
 - Website: https://dasesai.com
 - Category: Educational Technology / AI Grading Software
 - Country: India

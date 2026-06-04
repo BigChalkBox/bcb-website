@@ -107,4 +107,4 @@ Ready to run a pilot at your institution?
 
 ---
 
-© 2026 DASES by eSun Solutions. All rights reserved.
+© 2026 DASES by Big Chalk Box. All rights reserved.

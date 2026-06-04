@@ -538,7 +538,7 @@ export default function LandingPage() {
                                             <span className="material-symbols-outlined">public</span>
                                             <span className="material-symbols-outlined">share</span>
                                         </div>
-                                        <div className="copy">© 2026 DASES by eSun Smart Solutions Pvt. Ltd.</div>
+                                        <div className="copy">© 2026 DASES by Big Chalk Box Pvt. Ltd.</div>
                                     </div>
                                 </div>
                             </FadeIn>

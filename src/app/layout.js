@@ -29,12 +29,12 @@ export const metadata = {
     'AI software for teachers',
     'DASES',
     'DASES evaluation system',
-    'eSun Smart Solutions Pvt. Ltd.',
+    'Big Chalk Box Pvt. Ltd.',
   ],
 
-  authors: [{ name: 'eSun Smart Solutions Pvt. Ltd.', url: 'https://dasesai.com' }],
-  creator: 'eSun Smart Solutions Pvt. Ltd.',
-  publisher: 'eSun Smart Solutions Pvt. Ltd.',
+  authors: [{ name: 'Big Chalk Box Pvt. Ltd.', url: 'https://dasesai.com' }],
+  creator: 'Big Chalk Box Pvt. Ltd.',
+  publisher: 'Big Chalk Box Pvt. Ltd.',
 
   openGraph: {
     type: 'website',

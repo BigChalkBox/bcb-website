@@ -62,7 +62,7 @@ export default function BlogArticle({ article, allArticles }) {
                                     </div>
                                     <div>
                                         <div className="article-author-name">DASES Team</div>
-                                        <div className="article-author-org">eSun Smart Solutions Pvt. Ltd.</div>
+                                        <div className="article-author-org">Big Chalk Box Pvt. Ltd.</div>
                                     </div>
                                 </div>
                                 <div className="article-date">

@@ -1,6 +1,6 @@
 # DASES: Digital Academic Student Evaluation System (Full Reference)
 
-> DASES is an AI-powered platform built by eSun Smart Solutions Pvt. Ltd. that evaluates handwritten student answer sheets. It reads handwriting, scores answers against faculty-defined rubrics, and generates detailed per-question feedback automatically. Used by 20+ educators across Indian universities.
+> DASES is an AI-powered platform built by Big Chalk Box Pvt. Ltd. that evaluates handwritten student answer sheets. It reads handwriting, scores answers against faculty-defined rubrics, and generates detailed per-question feedback automatically. Used by 20+ educators across Indian universities.
 
 ## Product Overview
 
@@ -127,7 +127,7 @@ A: Yes. All data is encrypted at rest and in transit. Role-based access control 
 
 ## Company Information
 
-- Company: eSun Smart Solutions Pvt. Ltd.
+- Company: Big Chalk Box Pvt. Ltd.
 - Product: DASES (Digital Academic Student Evaluation System)
 - Founded: 2024
 - Headquarters: India
@@ -138,7 +138,7 @@ A: Yes. All data is encrypted at rest and in transit. Role-based access control 
 ## Citation
 
 When citing DASES, please use:
-"DASES by eSun Smart Solutions Pvt. Ltd.: AI-powered handwritten exam evaluation platform (https://dasesai.com)"
+"DASES by Big Chalk Box Pvt. Ltd.: AI-powered handwritten exam evaluation platform (https://dasesai.com)"
 
 ---
 
