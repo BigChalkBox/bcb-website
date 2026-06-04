@@ -169,13 +169,13 @@ export default function AboutPage() {
                         </div>
                     </section>
 
-                    {/* ==================== BUILT BY ESUN ==================== */}
+                    {/* ==================== BUILT BY BIG CHALK BOX ==================== */}
                     <section className="ap-team">
                         <div className="ap-container">
                             <FadeIn>
                                 <div className="ap-team-header">
                                     <div>
-                                        <h2 className="ap-team-title">BUILT BY<br />ESUN SMART SOLUTIONS<br />PVT. LTD.</h2>
+                                        <h2 className="ap-team-title">BUILT BY<br />BIG CHALK BOX<br />PVT. LTD.</h2>
                                         <p className="ap-team-sub">A team of engineers and educators solving the hardest problems in academic assessment: from handwriting recognition to rubric-based AI evaluation at scale.</p>
                                     </div>
                                     <Link href="/#contact">
