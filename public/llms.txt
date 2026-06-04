@@ -87,3 +87,6 @@
 - https://dasesai.com/blog/quickpass-paper-quality-analysis — QuickPass™: How DASES Checks Exam Paper Quality Before Students Sit It
 - https://dasesai.com/blog/dases-student-portal — The DASES Student Portal: Results, Feedback, and Progress Tracking
 - https://dasesai.com/blog/setting-up-dases-first-exam — Setting Up Your First Exam on DASES: A Step-by-Step Faculty Guide
+
+### Glossary
+- https://dasesai.com/blog/what-is-a-rubric-in-ai — What is a Rubric in AI? Meaning & How It Works

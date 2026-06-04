@@ -1986,6 +1986,71 @@ export const articles = [
             },
         ],
     },
+    {
+        slug: 'what-is-a-rubric-in-ai',
+        title: 'What is a Rubric in AI? Meaning & How It Works',
+        excerpt: 'A rubric in AI is a structured set of evaluation criteria that an artificial intelligence model uses to score and grade subjective content. Learn the meaning, definition, and how rubric-based AI grading works.',
+        publishedAt: '2026-06-03',
+        updatedAt: '2026-06-03',
+        category: 'Glossary & Definitions',
+        tags: ['rubric meaning in ai', 'what is a rubric in ai', 'what are rubrics in ai', 'AI glossary'],
+        heroAnswer: 'A rubric in AI is a structured set of evaluation criteria, usually defined by human experts, that an artificial intelligence model uses to score and evaluate subjective content. In education, an AI rubric tells the grading model exactly what to look for—such as concept accuracy, application, or clarity—and assigns specific weights to each criterion. This ensures the AI evaluates subjective handwritten answers with the same rigorous, consistent standard as a human teacher, rather than guessing a holistic score.',
+        content: [
+            {
+                type: 'text',
+                content: [
+                    'If you are exploring automated grading systems or educational technology, you have likely encountered the term "AI rubric" or "rubric-based AI grading." But what exactly does this mean, and how does it differ from a standard rubric?',
+                    'In this glossary guide, we explain the meaning of a rubric in AI, how artificial intelligence uses these criteria to evaluate complex subjective answers, and why it is the most reliable method for automated exam grading.'
+                ]
+            },
+            {
+                type: 'section',
+                heading: 'The Meaning of a Rubric in AI',
+                content: [
+                    'In traditional education, a rubric is a scoring guide used to evaluate the quality of students\\' constructed responses. It lists the criteria that must be met and the marks allocated to each criterion.',
+                    'A **rubric in AI** follows the exact same principle, but it is translated into a machine-readable framework. It acts as a strict set of instructions for the Large Language Model (LLM) or evaluation algorithm. Instead of letting the AI "guess" a holistic score based on its general training, an AI rubric forces the system to break down the student\\'s answer and look for specific concepts, keywords, logic steps, and structural elements.',
+                    'For example, if a 5-mark question asks "Explain the process of photosynthesis," an AI rubric might instruct the model to look for:',
+                    '• Mentioning light energy conversion (1 mark)',
+                    '• Mentioning carbon dioxide and water (2 marks)',
+                    '• Mentioning glucose and oxygen production (2 marks)'
+                ]
+            },
+            {
+                type: 'section',
+                heading: 'How Rubric-Based AI Evaluation Works',
+                content: [
+                    'When an AI evaluation system, like Big Chalk Box\\'s DASES platform, grades a descriptive exam paper, it follows a strict rubric-based workflow:',
+                    '1. **Ingestion of Criteria:** The faculty uploads a model answer and allocates marks. The AI parses this into distinct, weighted rubric criteria.',
+                    '2. **Semantic Matching:** The AI reads the student\\'s handwritten answer (after OCR) and checks it against criterion #1. It uses semantic understanding to recognize correct concepts even if the student used different vocabulary than the model answer.',
+                    '3. **Partial Credit Allocation:** If the student partially met the criterion, the AI uses partial credit logic (defined in the rubric) to award proportional marks.',
+                    '4. **Feedback Generation:** Because the AI evaluated the answer criterion-by-criterion, it can automatically generate precise feedback explaining exactly which criterion the student missed.'
+                ]
+            },
+            {
+                type: 'section',
+                heading: 'Why Are AI Rubrics Important?',
+                content: [
+                    'Without a strict rubric, AI evaluation models are prone to hallucination, inconsistency, and bias. They might give a high score to a beautifully written essay that entirely misses the core scientific concept, or penalize a correct technical answer because of poor grammar.',
+                    '**AI Rubrics solve this by enforcing constraint.** They anchor the AI\\'s judgment to the specific academic standards defined by the university faculty. This is how platforms like DASES achieve 98% rubric accuracy when grading complex, handwritten descriptive exams.',
+                    'By utilizing rubric-based evaluation, institutions ensure that their AI grading software is fair, transparent, and fully aligned with the syllabus.'
+                ]
+            }
+        ],
+        faqs: [
+            {
+                question: 'What is a rubric in AI?',
+                answer: 'A rubric in AI is a structured set of evaluation criteria that an artificial intelligence model uses to score and evaluate subjective content. It tells the AI exactly which concepts to look for and how many marks to assign to each concept.',
+            },
+            {
+                question: 'Can AI generate its own rubrics?',
+                answer: 'Yes, advanced evaluation systems like DASES can automatically generate a structured AI rubric based on a model answer provided by the teacher. The teacher can then review and edit the rubric before grading begins.',
+            },
+            {
+                question: 'Why is rubric-based AI grading better than holistic AI grading?',
+                answer: 'Holistic AI grading assigns a single overall score based on general impression, which is often inconsistent and opaque. Rubric-based AI grading breaks the score down by specific criteria, ensuring fairness, consistency, and the ability to generate detailed, actionable feedback for the student.',
+            }
+        ]
+    }
 ]
 
 export function getArticleBySlug(slug) {

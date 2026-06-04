@@ -308,3 +308,8 @@ Answer: The DASES student portal is a secure, institution-branded web interface 
 ### Setting Up Your First Exam on DASES
 URL: https://dasesai.com/blog/setting-up-dases-first-exam
 Answer: Setting up a real exam on DASES involves four stages. Stage 1 — Paper Configuration (10-15 min): create a new paper, enter or upload questions, specify mark allocations and question types. Stage 2 — Model Answers and Rubric (10-15 min): enter the ideal answer for each descriptive question, review the AI-generated rubric, adjust criterion weights, and add alternative acceptable answers. Stage 3 — Batch Upload (5 min + 20-30 min processing): import your student roster, upload scanned answer sheet PDFs, and allow the AI to process the batch. Stage 4 — Review and Publish (60-120 min): review AI scores in the dashboard, adjust flagged answers, and publish results to the student portal.
+
+
+## 33. What is a Rubric in AI? Meaning & How It Works
+- URL: https://dasesai.com/blog/what-is-a-rubric-in-ai
+- Answer: A rubric in AI is a structured set of evaluation criteria, usually defined by human experts, that an artificial intelligence model uses to score and evaluate subjective content. In education, an AI rubric tells the grading model exactly what to look for—such as concept accuracy, application, or clarity—and assigns specific weights to each criterion. This ensures the AI evaluates subjective handwritten answers with the same rigorous, consistent standard as a human teacher, rather than guessing a holistic score.
