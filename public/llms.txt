@@ -41,3 +41,49 @@
 - Solutions: https://dasesai.com/solutions
 - Pricing: https://dasesai.com/pricing
 - About: https://dasesai.com/about
+
+## Blog Corpus (32 articles — https://dasesai.com/blog)
+
+### Existing Articles
+- https://dasesai.com/blog/dases-vs-gradescope — DASES vs Gradescope: Which AI Grading Platform Is Right for Indian Universities?
+- https://dasesai.com/blog/ai-grading-accuracy — How Accurate Is AI Grading? Understanding DASES's 98% Rubric Accuracy
+- https://dasesai.com/blog/handwriting-recognition-exam — How DASES Reads Handwritten Exam Papers: The Technology Behind AI Evaluation
+- https://dasesai.com/blog/reduce-grading-time — How to Reduce Exam Grading Time by 80%: A Faculty Guide
+- https://dasesai.com/blog/student-feedback-ai — How AI Generates Per-Question Exam Feedback for Every Student
+
+### Wave 1 — Demand Capture
+- https://dasesai.com/blog/gradescope-alternative-india — Gradescope Alternative for India: Why Indian Universities Need a Local AI Grading Platform
+- https://dasesai.com/blog/answer-sheet-checking-software — Answer Sheet Checking Software: The Complete Guide for Indian Institutions
+- https://dasesai.com/blog/exam-grading-software-coaching-institutes — Exam Grading Software for Coaching Institutes: JEE, NEET, and Board Exam Evaluation
+- https://dasesai.com/blog/what-is-ai-exam-grading — What Is AI Exam Grading? A Plain-Language Guide for Faculty and Administrators
+- https://dasesai.com/blog/ai-grading-software-universities-india — AI Grading Software for Universities in India: What to Look for in 2026
+
+### Wave 2 — Educational Authority
+- https://dasesai.com/blog/how-dases-works — How DASES Works: The Complete Technical Walkthrough of AI Exam Evaluation
+- https://dasesai.com/blog/how-ai-reads-handwriting-exam-papers — How AI Reads Handwriting in Exam Papers: OCR, ICR, and Semantic Understanding
+- https://dasesai.com/blog/is-ai-grading-fair-accurate — Is AI Grading Fair and Accurate? An Evidence-Based Answer for Educators
+- https://dasesai.com/blog/can-ai-replace-human-graders — Can AI Replace Human Graders? What the Evidence Says
+- https://dasesai.com/blog/ocr-cannot-grade-exams — Why OCR Alone Cannot Grade Exam Papers: The Difference Between Reading and Evaluating
+
+### Wave 4 — Fill the Funnel
+- https://dasesai.com/blog/automated-exam-feedback-software — Automated Exam Feedback Software: Per-Question Feedback for Every Student at Scale
+- https://dasesai.com/blog/exam-paper-checking-software — Exam Paper Checking Software: A 2026 Buyer's Guide for Indian Institutions
+- https://dasesai.com/blog/how-to-reduce-exam-grading-time — How to Reduce Exam Grading Time: 5 Evidence-Based Strategies for Faculty
+- https://dasesai.com/blog/ai-rubric-generator — AI Rubric Generator: How DASES Builds Evaluation Rubrics from Model Answers
+- https://dasesai.com/blog/best-ai-grading-software-2026 — Best AI Grading Software in 2026: A Comparison for Indian Higher Education
+
+### Wave 5 — Complete Coverage
+- https://dasesai.com/blog/ai-grading-system-schools — AI Grading System for Schools: Automating Class Tests and Terminal Exams in K-12
+- https://dasesai.com/blog/ai-vs-manual-grading-cost-time — AI vs Manual Grading: A Detailed Cost and Time Comparison for Indian Institutions
+- https://dasesai.com/blog/ai-grading-math-science-exams — AI Grading for Math and Science Exams: Equations, Derivations, and Diagrams
+- https://dasesai.com/blog/end-of-semester-exam-automation — End-of-Semester Exam Automation: How Indian Universities Streamline Evaluation
+- https://dasesai.com/blog/digital-assessment-engineering-colleges — Digital Assessment for Engineering Colleges: Lab Reports, Vivas, and Theory Exams
+- https://dasesai.com/blog/partial-credit-scoring-ai — How AI Handles Partial Credit Scoring in Exam Grading: A Complete Explainer
+- https://dasesai.com/blog/lms-vs-ai-grading-software — LMS vs AI Grading Software: Why Your LMS Cannot Replace a Dedicated AI Evaluation Platform
+
+### Wave 6 — Product-Led Depth
+- https://dasesai.com/blog/dases-quickstart-guide — DASES Quickstart Guide: Set Up Your First AI-Graded Exam in 15 Minutes
+- https://dasesai.com/blog/dases-pdf-reports-student-view — DASES Student PDF Reports: What Students See After Their Exam Is Graded
+- https://dasesai.com/blog/quickpass-paper-quality-analysis — QuickPass™: How DASES Checks Exam Paper Quality Before Students Sit It
+- https://dasesai.com/blog/dases-student-portal — The DASES Student Portal: Results, Feedback, and Progress Tracking
+- https://dasesai.com/blog/setting-up-dases-first-exam — Setting Up Your First Exam on DASES: A Step-by-Step Faculty Guide

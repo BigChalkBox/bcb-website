@@ -42,6 +42,34 @@ export default async function BlogArticlePage({ params }) {
         notFound()
     }
 
+    // Speakable — tells AI crawlers, voice assistants, and answer engines
+    // exactly which CSS regions contain the highest-value, citable content.
+    // h1 = article title; .hero-answer-text = the direct factual answer.
+    const speakableSpec = {
+        '@type': 'SpeakableSpecification',
+        cssSelector: ['h1', '.hero-answer-text'],
+    }
+
+    // HowTo schema — generated automatically for Tutorial-category articles.
+    // Each section maps to a HowToStep, enabling rich results in Google,
+    // Siri, Google Assistant, and AI answer engines for procedural queries.
+    const howToSchema =
+        article.category === 'Tutorial' && article.sections && article.sections.length > 0
+            ? {
+                  '@type': 'HowTo',
+                  name: article.title,
+                  description: article.description,
+                  totalTime: article.readTime ? `PT${parseInt(article.readTime)}M` : undefined,
+                  step: article.sections.map((section, index) => ({
+                      '@type': 'HowToStep',
+                      position: index + 1,
+                      name: section.heading,
+                      text: section.content,
+                      url: `https://dasesai.com/blog/${article.slug}#step-${index + 1}`,
+                  })),
+              }
+            : null
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@graph': [
@@ -52,6 +80,10 @@ export default async function BlogArticlePage({ params }) {
                 datePublished: article.publishedAt,
                 dateModified: article.updatedAt,
                 url: `https://dasesai.com/blog/${article.slug}`,
+                // speakable — points AI engines at .hero-answer-text for citation
+                speakable: speakableSpec,
+                // abstract maps heroAnswer — the direct, AI-citable factual summary
+                abstract: article.heroAnswer,
                 author: {
                     '@type': 'Organization',
                     name: 'eSun Smart Solutions Pvt. Ltd.',
@@ -96,7 +128,7 @@ export default async function BlogArticlePage({ params }) {
                     },
                 ],
             },
-            // Inline FAQ schema for each article's FAQ section
+            // FAQPage — inline Q&A for rich result eligibility and AI answer extraction
             ...(article.faqItems && article.faqItems.length > 0
                 ? [
                       {
@@ -112,6 +144,8 @@ export default async function BlogArticlePage({ params }) {
                       },
                   ]
                 : []),
+            // HowTo — conditional on Tutorial category
+            ...(howToSchema ? [howToSchema] : []),
         ],
     }
 
