@@ -1,0 +1,73 @@
+{
+  "submission": {
+    "student_name": "Ananya Sharma",
+    "enrollment_no": "CS21B045",
+    "email": "ananya.sharma@example.edu",
+    "paper_name": "Data Structures & Algorithms — Mid-Semester Exam",
+    "submitted_at": "2026-03-14T09:32:00.000Z"
+  },
+  "paperData": {
+    "questions": [
+      { "qid": "q1", "isOr": false, "marks": 5 },
+      { "qid": "q2a", "isOr": true, "marks": 10 },
+      { "qid": "q2b", "isOr": true, "marks": 10 },
+      { "qid": "q3", "isOr": false, "marks": 2 }
+    ]
+  },
+  "detectionResult": { "pages": [] },
+  "report": {
+    "evaluatedAt": "2026-03-14T11:05:00.000Z",
+    "results": [
+      {
+        "qid": "q1",
+        "qNumber": 1,
+        "marks": 5,
+        "question": "Explain the difference between a stack and a queue, and give one real-world example of each.",
+        "studentImages": ["/samples/answer-images/page-1.png"],
+        "evaluation": {
+          "suggestedScore": 4,
+          "criteria": [
+            { "criterion": "Correctly defines stack (LIFO)", "obtained_marks": 1.5, "max_marks": 1.5, "feedback": "Clear and accurate definition." },
+            { "criterion": "Correctly defines queue (FIFO)", "obtained_marks": 1.5, "max_marks": 1.5, "feedback": "Correct, well explained." },
+            { "criterion": "Real-world example for each", "obtained_marks": 1, "max_marks": 2, "feedback": "Stack example (undo history) is good; queue example (printer queue) is mentioned but not elaborated." }
+          ],
+          "feedback": "Strong conceptual understanding. Elaborate the queue example a bit more for full marks next time."
+        }
+      },
+      {
+        "qid": "q2a",
+        "qNumber": "2a",
+        "marks": 10,
+        "question": "Derive the time complexity of binary search on a sorted array of size $n$.",
+        "studentImages": ["/samples/answer-images/page-2.png"],
+        "evaluation": {
+          "suggestedScore": 8,
+          "criteria": [
+            { "criterion": "Sets up recurrence relation $T(n) = T(n/2) + O(1)$", "obtained_marks": 4, "max_marks": 4, "feedback": "Recurrence correctly stated." },
+            { "criterion": "Solves recurrence to reach $O(\\log n)$", "obtained_marks": 3, "max_marks": 4, "feedback": "Correct final answer; one intermediate step skipped." },
+            { "criterion": "Explains why array must be sorted", "obtained_marks": 1, "max_marks": 2, "feedback": "Mentioned briefly, could be more thorough." }
+          ],
+          "feedback": "Solid derivation overall, minor gaps in intermediate steps."
+        }
+      },
+      {
+        "qid": "q2b",
+        "qNumber": "2b",
+        "marks": 10,
+        "question": "Derive the time complexity of linear search on an unsorted array of size $n$.",
+        "studentImages": [],
+        "evaluation": { "suggestedScore": 0, "criteria": [], "feedback": "" }
+      },
+      {
+        "qid": "q3",
+        "qNumber": 3,
+        "marks": 2,
+        "question": "Which data structure uses FIFO ordering?",
+        "studentAnswer": "Queue",
+        "correctAnswer": "Queue",
+        "studentImages": [],
+        "evaluation": { "suggestedScore": 2, "criteria": [], "feedback": "Correct." }
+      }
+    ]
+  }
+}
