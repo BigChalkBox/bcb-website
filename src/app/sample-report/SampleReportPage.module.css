@@ -96,6 +96,11 @@
 }
 
 
+.reportWrapper {
+  width: 100%;
+}
+
+
 /* ===== CTA SECTION ===== */
 .ctaSection {
   padding: clamp(2rem, 4vw, var(--spacing-lg)) var(--spacing-lg);
