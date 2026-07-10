@@ -1,553 +1,725 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import SiteHeader from '../shared/SiteHeader'
 import SiteFooter from '../shared/SiteFooter'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import confetti from 'canvas-confetti'
-import TestimonialStack from '../TestimonialStack'
-import BackedBy from '../shared/BackedBy'
+import { motion, useInView } from 'framer-motion'
+import './LandingPage.css'
+import BookDemoForm from '../BookDemoForm'
 
+/* ─── Animation Utilities ─── */
 const FadeIn = ({ children, delay = 0, className = "" }) => (
     <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
-        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, margin: "-80px" }}
         className={className}
     >
         {children}
     </motion.div>
 )
-import './LandingPage.css'
+
+/* ─── Counter Animation ─── */
+function AnimatedCounter({ target, suffix = '', duration = 2000 }) {
+    const [count, setCount] = useState(0)
+    const ref = useRef(null)
+    const inView = useInView(ref, { once: true })
+
+    useEffect(() => {
+        if (!inView) return
+        let start = 0
+        const increment = target / (duration / 16)
+        const timer = setInterval(() => {
+            start += increment
+            if (start >= target) { setCount(target); clearInterval(timer) }
+            else setCount(Math.floor(start))
+        }, 16)
+        return () => clearInterval(timer)
+    }, [inView, target, duration])
+
+    return <span ref={ref}>{count.toLocaleString('en-IN')}{suffix}</span>
+}
+
+/* ─── How It Works Tabs ─── */
+const HOW_IT_WORKS = [
+    {
+        id: 'dases', label: 'DASES', live: true,
+        steps: [
+            { icon: 'upload_file', title: 'Upload Answer Sheets', desc: 'Drag & drop up to 500 handwritten scripts. PDFs, phone photos, scans — all accepted.' },
+            { icon: 'rule', title: 'Attach Your Rubric', desc: 'Upload your marking scheme or build one in our editor. Set marks, keywords, partial credit rules.' },
+            { icon: 'grade', title: 'Receive Grades + Feedback', desc: 'Get per-question scores, aggregate grades, and AI-written feedback for every student in minutes.' },
+        ],
+        highlight: '500 sheets in 15 minutes'
+    },
+    {
+        id: 'qpmod', label: 'QP Moderation', live: true,
+        steps: [
+            { icon: 'upload_file', title: 'Upload Question Paper', desc: 'Submit your question paper PDF or image. Our OCR engine handles any scan quality.' },
+            { icon: 'account_tree', title: 'AI Runs 10-Point Audit', desc: 'Bloom\'s Taxonomy check, ambiguity detection, OR-choice parity, syllabus coverage — all at once.' },
+            { icon: 'summarize', title: 'Download Full Report', desc: 'Get a comprehensive moderation report as PDF, Word, or PowerPoint in one click.' },
+        ],
+        highlight: '3-day review → 4 hours'
+    },
+    {
+        id: 'qpgen', label: 'QP Generation', live: false,
+        steps: [
+            { icon: 'library_books', title: 'Input Course Outline', desc: 'Upload your syllabus and set difficulty, marks, and Bloom\'s level targets.' },
+            { icon: 'psychology', title: 'AI Generates Questions', desc: 'Get a balanced, unique question bank tailored to your course outcomes and exam format.' },
+            { icon: 'edit_document', title: 'Edit & Export', desc: 'Review questions in our editor, make tweaks, and export in your institution\'s format.' },
+        ],
+        highlight: 'Coming Soon'
+    },
+]
+
+const FAQS = [
+    {
+        q: 'What is AI-powered answer sheet evaluation?',
+        a: 'AI-powered answer sheet evaluation uses computer vision and large language models to read handwritten descriptive answers and compare them against a teacher\'s rubric. DASES by BigChalkBox processes handwritten scripts using multimodal AI — it understands the semantic meaning of each answer, not just keyword matching. This enables it to assign accurate, objective grades with per-question feedback in seconds per sheet.'
+    },
+    {
+        q: 'How does BigChalkBox ensure question paper quality?',
+        a: 'BigChalkBox\'s QP Moderation module runs a 10-point AI audit on every question paper. It checks for Bloom\'s Taxonomy balance, ambiguous phrasing, OR-choice difficulty parity, syllabus coverage gaps, out-of-syllabus questions, marks-vs-effort alignment, duplicate questions, and more. Each flagged issue comes with an AI-suggested rewrite, making resolution fast and clear.'
+    },
+    {
+        q: 'Is BigChalkBox compliant with university examination norms?',
+        a: 'Yes. BigChalkBox is built for the Indian university ecosystem, including NAAC, IQAC, and NBA compliance frameworks. The QP Moderation module\'s Bloom\'s Taxonomy mapping directly supports Learning Outcome Based Education (LOBE) requirements. All data is processed with role-based access controls, and student data is never shared with third-party AI providers.'
+    },
+    {
+        q: 'Which types of institutions can use BigChalkBox?',
+        a: 'BigChalkBox serves autonomous universities, deemed-to-be universities, affiliated colleges, engineering and technical institutions, B-Schools, and state boards across India. The platform is institution-agnostic and supports custom configurations for any examination format, syllabus structure, or grading scheme.'
+    },
+    {
+        q: 'How much does it cost to implement AI examination software?',
+        a: 'BigChalkBox offers flexible institutional pricing based on the modules selected and the scale of deployment (number of students, exams per year). We start with a free pilot program for qualifying institutions so you can see real results before any commitment. Contact us for a custom quote tailored to your institution\'s needs.'
+    },
+    {
+        q: 'Can BigChalkBox integrate with existing University ERP systems?',
+        a: 'BigChalkBox is designed as a standalone web platform with open export capabilities (Excel, PDF, CSV). We support data exchange via structured exports that are compatible with most Indian university ERP and SIS systems. Full API integration is available on our Enterprise plan.'
+    },
+]
+
+const MODULES = [
+    {
+        id: 'dases', span: 8, live: true,
+        icon: 'grading', label: 'DASES',
+        title: 'Answer Sheet Evaluation System',
+        desc: 'Our flagship product. AI-powered handwritten answer sheet checking. Grade 500 descriptive sheets with 98% rubric accuracy. Delivers detailed per-question feedback in 15 seconds per sheet.',
+        href: '/products/dases',
+        linkText: 'Explore DASES',
+        ghost: 'description',
+        stat: '500+ Sheets/hr',
+        accent: true,
+    },
+    {
+        id: 'qpmod', span: 4, live: true,
+        icon: 'fact_check', label: 'QP Moderation',
+        title: 'Question Paper Quality Audit',
+        desc: 'Detect ambiguities, Bloom\'s imbalances, and out-of-syllabus questions automatically — before the paper reaches your students.',
+        href: '/products/qp-moderation',
+        linkText: 'Learn More',
+        ghost: 'checklist',
+    },
+    {
+        id: 'qpgen', span: 4, live: false,
+        icon: 'auto_fix_high', label: 'QP Generation',
+        title: 'Smart Question Creation',
+        desc: 'AI-generated question banks dynamically tailored to your course outcomes, difficulty constraints, and past exam history.',
+        href: null,
+        ghost: 'edit_note',
+    },
+    {
+        id: 'teacher', span: 4, live: false,
+        icon: 'cast_for_education', label: 'Teacher Notes',
+        title: 'Lecture Notes & PPTs',
+        desc: 'Automated generation of highly structured PPTs, lesson plans, and lecture notes from raw curriculum documents.',
+        href: null,
+        ghost: 'slideshow',
+    },
+    {
+        id: 'exam', span: 4, live: false,
+        icon: 'school', label: 'Exam Prep',
+        title: 'Student Study Material',
+        desc: 'Personalized revision guides and practice tests designed specifically for your institution\'s syllabus and student level.',
+        href: null,
+        ghost: 'menu_book',
+    },
+]
+
+const STATS = [
+    { value: 12000, suffix: '+', label: 'Answer Sheets Evaluated' },
+    { value: 98, suffix: '.2%', label: 'Grading Accuracy' },
+    { value: 50, suffix: '+', label: 'Institutions Onboarded' },
+    { value: 5, suffix: '', label: 'AI Modules in One Suite' },
+]
 
 export default function LandingPage() {
-    const [formStatus, setFormStatus] = useState(null)
-    const [submitting, setSubmitting] = useState(false)
-    const [openFaq, setOpenFaq] = useState(1)
-    const [activeStep, setActiveStep] = useState(2)
+    const [activeTab, setActiveTab] = useState('dases')
+    const [openFaq, setOpenFaq] = useState(null)
+    const [showMobileCta, setShowMobileCta] = useState(false)
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveStep(prev => prev >= 3 ? 1 : prev + 1)
-        }, 2000)
-        return () => clearInterval(interval)
+        const handleScroll = () => setShowMobileCta(window.scrollY > window.innerHeight * 0.4)
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
-    useEffect(() => {
-        const initPlayer = () => {
-            if (window.YT && window.YT.Player) {
-                new window.YT.Player('dases-workflow-video', {
-                    videoId: 'tR1Oq9q4fZY',
-                    playerVars: {
-                        autoplay: 0,
-                        controls: 1,
-                        loop: 0,
-                        playlist: 'tR1Oq9q4fZY',
-                        playsinline: 1,
-                        rel: 0,
-                        disablekb: 0,
-                        fs: 1
-                    },
-                    events: {
-                        onReady: (event) => {
-                            event.target.setVolume(15);
-                            event.target.getIframe().setAttribute('title', 'DASES AI Grading Workflow Demonstration');
-                        }
-                    }
-                });
-            }
-        };
-
-        if (!window.YT) {
-            const tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            const firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            window.onYouTubeIframeAPIReady = initPlayer;
-        } else {
-            initPlayer();
-        }
-    }, []);
-
-    const workflowSteps = [
-        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs from a document scanner or phone camera." },
-        { title: "AI Evaluation", desc: "Our engine reads handwriting, maps answers to questions, and scores against your rubric." },
-        { title: "Review & Publish", desc: "Verify scores, download branded PDF reports, and share results with students." }
-    ]
-
-    const faqData = [
-        {
-            question: "How accurate is DASES compared to human grading?",
-            answer: "DASES achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers, matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
-        },
-        {
-            question: "How many answer sheets can DASES process at once?",
-            answer: "DASES processes up to <span class='hl'>500 sheets in parallel</span>, with each sheet scored in approximately 15 seconds. An entire batch that would take a faculty member days can be completed in minutes."
-        },
-        {
-            question: "How do I get started with DASES?",
-            answer: "It takes less than 10 minutes. Upload your question paper, add model answers, and DASES generates rubrics automatically. From there, just upload student answer sheets and let the AI handle the rest."
-        },
-        {
-            question: "Can I customize how DASES grades?",
-            answer: "Absolutely. You define the rubric: your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
-        },
-        {
-            question: "Is student data secure?",
-            answer: "Yes. All data is <span class='hl'>encrypted at rest and in transit</span>. Role-based access control ensures students only see their own results, and faculty only access their own papers and submissions. Complete audit trails are maintained."
-        }
-    ]
-
-    function fireConfetti() {
-        const end = Date.now() + 2000
-            ; (function frame() {
-                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } })
-                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } })
-                if (Date.now() < end) requestAnimationFrame(frame)
-            })()
-    }
-
-    async function handleSubmit(e) {
-        e.preventDefault()
-        setSubmitting(true)
-        const fd = new FormData(e.target)
-        const data = {
-            full_name: fd.get('fullName'),
-            institution_name: fd.get('institution'),
-            designation: fd.get('role'),
-            email: fd.get('email'),
-            created_at: new Date().toLocaleString('en-IN'),
-        }
-        try {
-            const res = await fetch('https://sheetdb.io/api/v1/vksbsahrgkwky', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [data] }),
-            })
-            if (res.ok) {
-                setFormStatus({ success: true, message: 'Request submitted successfully! We will contact you soon.' })
-                fireConfetti()
-                e.target.reset()
-            } else {
-                setFormStatus({ success: false, message: 'Something went wrong. Please try again.' })
-            }
-        } catch {
-            setFormStatus({ success: false, message: 'Network error. Please try again later.' })
-        }
-        setSubmitting(false)
-    }
+    const activeHIT = HOW_IT_WORKS.find(h => h.id === activeTab)
 
     return (
-        <>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+        <div className="bcb-landing">
+            <SiteHeader />
 
-            <div className="landing-page">
-                <SiteHeader />
-
-                <main>
-                    {/* ==================== HERO ==================== */}
-                    <section className="lp-hero lp-hero-gradient">
-                        <div className="lp-container" style={{ textAlign: 'center' }}>
-                            <div className="lp-badge">
-                                <span className="lp-ping-dot">
-                                    <span className="ping"></span>
-                                    <span className="dot"></span>
-                                </span>
-                                Now Processing: 500 Sheets in Parallel
+            <main>
+                {/* ════════════════════════════════════
+                    SECTION 1 — HERO
+                ════════════════════════════════════ */}
+                <section className="bcb-hero" aria-label="Hero">
+                    <div className="bcb-hero-bg" aria-hidden="true">
+                        <div className="bcb-hero-glow" />
+                        <div className="bcb-dot-grid" />
+                    </div>
+                    <div className="bcb-container bcb-hero-content">
+                        <FadeIn>
+                            <div className="bcb-badge">
+                                <span className="material-symbols-outlined" style={{ fontSize: '1rem', color: 'var(--bcb-gold)' }}>auto_awesome</span>
+                                Introducing BigChalkBox Innovations LLP
                             </div>
-                            <h1 className="lp-hero-title">
-                                Grade Handwritten Exams <br />
-                                <span className="lp-gradient-text">in Minutes, Not Days.</span>
+                        </FadeIn>
+                        <FadeIn delay={0.08}>
+                            <h1 className="bcb-hero-title">
+                                The Academic Operations Suite<br />
+                                <span className="bcb-gradient-text">Your Institute Deserves</span>
                             </h1>
-                            <p className="lp-hero-sub">
-                                AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback at 98% accuracy.
+                        </FadeIn>
+                        <FadeIn delay={0.16}>
+                            <p className="bcb-hero-subtitle">
+                                From question paper generation to answer sheet evaluation — BigChalkBox automates the entire examination cycle with AI that actually understands Indian curriculum standards.
                             </p>
-                            <FadeIn delay={0.1} className="lp-cta-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', position: 'relative', zIndex: 10 }}>
-                                <Link href="https://www.youtube.com/watch?v=tR1Oq9q4fZY" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                                    <button className="lp-btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.875rem 1.5rem', background: 'white' }}>
-                                        <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>play_circle</span>
-                                        Watch a quick demo video
-                                    </button>
+                        </FadeIn>
+                        <FadeIn delay={0.24}>
+                            <div className="bcb-hero-ctas">
+                                <a href="#book-demo" className="bcb-btn-gold">
+                                    <span className="material-symbols-outlined">event_available</span>
+                                    Book a Free Demo
+                                </a>
+                                <a href="#modules" className="bcb-btn-outline">
+                                    <span className="material-symbols-outlined">explore</span>
+                                    Explore Our Suite
+                                </a>
+                            </div>
+                        </FadeIn>
+
+                        {/* ─── Animated Stat Bar ─── */}
+                        <FadeIn delay={0.36}>
+                            <div className="bcb-hero-stats" role="list" aria-label="Key metrics">
+                                {STATS.map((s, i) => (
+                                    <div key={i} className="bcb-hero-stat" role="listitem">
+                                        <div className="bcb-hero-stat-num">
+                                            <AnimatedCounter target={s.value} suffix={s.suffix} />
+                                        </div>
+                                        <div className="bcb-hero-stat-label">{s.label}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </FadeIn>
+                    </div>
+                </section>
+
+                {/* ════════════════════════════════════
+                    SECTION 2 — PROBLEM STATEMENT
+                ════════════════════════════════════ */}
+                <section className="bcb-problem" aria-label="The problem with traditional evaluation">
+                    <div className="bcb-container">
+                        <FadeIn>
+                            <div className="bcb-problem-eyebrow">The Reality of Academic Operations Today</div>
+                            <div className="bcb-problem-lines">
+                                {[
+                                    "Checking 300 answer sheets by hand takes a faculty member an entire week.",
+                                    "A question paper can pass 4 rounds of moderation and still reach students with a typo.",
+                                    "Two evaluators grading the same answer will give different scores — every time.",
+                                    "None of this should still be happening in 2025.",
+                                ].map((line, i) => (
+                                    <motion.p
+                                        key={i}
+                                        className={`bcb-problem-line ${i === 3 ? 'bcb-problem-line--accent' : ''}`}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                                        viewport={{ once: true, margin: "-60px" }}
+                                    >
+                                        {i < 3 && <span className="bcb-problem-bullet" aria-hidden="true" />}
+                                        {line}
+                                    </motion.p>
+                                ))}
+                            </div>
+                        </FadeIn>
+                    </div>
+                </section>
+
+                {/* ════════════════════════════════════
+                    SECTION 3 — MODULES BENTO GRID
+                ════════════════════════════════════ */}
+                <section className="bcb-modules" id="modules" aria-label="BigChalkBox product modules">
+                    <div className="bcb-container">
+                        <FadeIn className="bcb-section-header">
+                            <div className="bcb-section-tag">Our Suite</div>
+                            <h2 className="bcb-section-title">Five Modules. One Platform.</h2>
+                            <p className="bcb-section-desc">We build tools that save thousands of faculty hours while delivering unparalleled academic insights — all under one institution login.</p>
+                        </FadeIn>
+
+                        <div className="bcb-bento-grid">
+                            {MODULES.map((mod, i) => (
+                                <FadeIn key={mod.id} delay={i * 0.07} className={`bcb-bento-card bcb-${mod.id} ${mod.accent ? 'bcb-bento-accent' : ''}`}>
+                                    <div className="bcb-bento-inner">
+                                        <div className="bcb-card-top">
+                                            <div className="bcb-card-icon" aria-hidden="true">
+                                                <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>{mod.icon}</span>
+                                            </div>
+                                            <div className="bcb-card-badges">
+                                                {mod.live
+                                                    ? <span className="bcb-badge-live"><span className="bcb-badge-live-dot" />LIVE</span>
+                                                    : <span className="bcb-badge-soon">Coming Soon</span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div className="bcb-card-label">{mod.label}</div>
+                                        <h3 className="bcb-card-title">{mod.title}</h3>
+                                        <p className="bcb-card-desc">{mod.desc}</p>
+                                        {mod.href
+                                            ? <Link href={mod.href} className="bcb-card-link" aria-label={`${mod.linkText} — ${mod.title}`}>
+                                                {mod.linkText} <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                            </Link>
+                                            : <div className="bcb-card-link bcb-card-link--muted" aria-label="Coming soon">
+                                                Notify Me <span className="material-symbols-outlined" aria-hidden="true">notifications</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <span className="bcb-card-ghost material-symbols-outlined" aria-hidden="true">{mod.ghost}</span>
+                                </FadeIn>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ════════════════════════════════════
+                    SECTION 4 — HOW IT WORKS (TABBED)
+                ════════════════════════════════════ */}
+                <section className="bcb-how" aria-label="How BigChalkBox works">
+                    <div className="bcb-container">
+                        <FadeIn className="bcb-section-header">
+                            <div className="bcb-section-tag">How It Works</div>
+                            <h2 className="bcb-section-title">Up and Running in One Afternoon</h2>
+                            <p className="bcb-section-desc">No lengthy onboarding. No IT department required. See it in action with your own exam paper.</p>
+                        </FadeIn>
+
+                        <div className="bcb-tabs" role="tablist" aria-label="Product walkthroughs">
+                            {HOW_IT_WORKS.map(h => (
+                                <button
+                                    key={h.id}
+                                    role="tab"
+                                    aria-selected={activeTab === h.id}
+                                    aria-controls={`tabpanel-${h.id}`}
+                                    id={`tab-${h.id}`}
+                                    className={`bcb-tab ${activeTab === h.id ? 'bcb-tab--active' : ''} ${!h.live ? 'bcb-tab--soon' : ''}`}
+                                    onClick={() => setActiveTab(h.id)}
+                                >
+                                    {h.label}
+                                    {!h.live && <span className="bcb-tab-soon-pill">Soon</span>}
+                                </button>
+                            ))}
+                        </div>
+
+                        <motion.div
+                            key={activeTab}
+                            className="bcb-how-panel"
+                            id={`tabpanel-${activeTab}`}
+                            role="tabpanel"
+                            aria-labelledby={`tab-${activeTab}`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                            <div className="bcb-how-steps">
+                                {activeHIT.steps.map((step, i) => (
+                                    <div key={i} className="bcb-how-step">
+                                        <div className="bcb-how-step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+                                        <div className="bcb-how-step-icon" aria-hidden="true">
+                                            <span className="material-symbols-outlined">{step.icon}</span>
+                                        </div>
+                                        <div>
+                                            <h3 className="bcb-how-step-title">{step.title}</h3>
+                                            <p className="bcb-how-step-desc">{step.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="bcb-how-visual" aria-hidden="true">
+                                <div className="bcb-how-mockup">
+                                    <div className="bcb-mockup-bar">
+                                        <span /><span /><span />
+                                    </div>
+                                    <div className="bcb-mockup-body">
+                                        <div className="bcb-mockup-row bcb-mockup-row--wide bcb-shimmer" />
+                                        <div className="bcb-mockup-row bcb-shimmer" />
+                                        <div className="bcb-mockup-row bcb-mockup-row--short bcb-shimmer" />
+                                        <div className="bcb-mockup-divider" />
+                                        <div className="bcb-mockup-cards">
+                                            {[82, 91, 76, 95].map((score, i) => (
+                                                <div key={i} className="bcb-mockup-score-card">
+                                                    <div className="bcb-mockup-score-label">Q{i + 1}</div>
+                                                    <div className="bcb-mockup-score-val" style={{ color: score > 85 ? 'var(--bcb-green)' : 'var(--bcb-gold)' }}>
+                                                        {score}%
+                                                    </div>
+                                                    <div className="bcb-mockup-score-bar">
+                                                        <div className="bcb-mockup-score-fill" style={{ width: `${score}%`, background: score > 85 ? 'var(--bcb-green)' : 'var(--bcb-gold)' }} />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="bcb-mockup-total">
+                                            <span>Overall Grade</span>
+                                            <span className="bcb-mockup-total-val">A+ · 86%</span>
+                                        </div>
+                                    </div>
+                                    <div className="bcb-how-highlight-pill">
+                                        <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>bolt</span>
+                                        {activeHIT.highlight}
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* ════════════════════════════════════
+                    SECTION 5 — STATS / NUMBERS
+                ════════════════════════════════════ */}
+                <section className="bcb-numbers" aria-label="BigChalkBox impact metrics">
+                    <div className="bcb-numbers-bg" aria-hidden="true" />
+                    <div className="bcb-container">
+                        <div className="bcb-numbers-grid">
+                            {STATS.map((s, i) => (
+                                <FadeIn key={i} delay={i * 0.08} className="bcb-number-item">
+                                    <div className="bcb-number-val">
+                                        <AnimatedCounter target={s.value} suffix={s.suffix} />
+                                    </div>
+                                    <div className="bcb-number-label">{s.label}</div>
+                                </FadeIn>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ════════════════════════════════════
+                    SECTION 6 — FEATURE DEEP DIVE: DASES
+                ════════════════════════════════════ */}
+                <section className="bcb-feature-section" aria-labelledby="feature-dases-heading">
+                    <div className="bcb-container">
+                        <div className="bcb-feature-row">
+                            <FadeIn className="bcb-feature-text">
+                                <div className="bcb-section-tag">DASES · Answer Sheet Evaluation</div>
+                                <h2 id="feature-dases-heading" className="bcb-feature-title">
+                                    The most sophisticated evaluator built for Indian exam formats
+                                </h2>
+                                <p className="bcb-feature-desc">
+                                    Stop treating descriptive answer checking as a burden. DASES turns your marking scheme into an AI evaluator that works at scale, with the consistency you've always wanted.
+                                </p>
+                                <ul className="bcb-feature-list" role="list">
+                                    {[
+                                        'Recognizes handwriting from any script quality',
+                                        'Parallel processing — all sheets simultaneously',
+                                        'Custom rubric builder with partial marks support',
+                                        'Student-level AI feedback generation per evaluation',
+                                        'Performance heatmaps across the entire class',
+                                        'Export: Excel, PDF, CSV for any university system',
+                                    ].map((item, i) => (
+                                        <li key={i} role="listitem">
+                                            <span className="material-symbols-outlined bcb-check-icon" aria-hidden="true">check_circle</span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <Link href="/products/dases" className="bcb-feature-cta">
+                                    See Full DASES Feature Set
+                                    <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
                                 </Link>
                             </FadeIn>
-                            <FadeIn className="lp-dash-wrap" delay={0.2}>
-                                <div className="lp-dash-outer">
-                                    <img alt="DASES Evaluation Dashboard Preview" src="/images/landing/dashboard_preview.png" />
-                                    <div className="lp-float-badge lp-float-left">
-                                        <div className="icon-box" style={{ background: 'rgba(198,211,193,0.2)', color: 'var(--primary)' }}>
-                                            <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>edit_note</span>
+                            <FadeIn delay={0.15} className="bcb-feature-visual">
+                                <div className="bcb-feature-card bcb-feature-card--dases">
+                                    <div className="bcb-feature-card-header">
+                                        <div className="bcb-feature-card-icon" aria-hidden="true">
+                                            <span className="material-symbols-outlined">grading</span>
                                         </div>
                                         <div>
-                                            <span className="label-small">No Manual Checking</span>
-                                            <span className="label-main">Reads Any Handwriting</span>
+                                            <div className="bcb-feature-card-title">DASES Evaluation</div>
+                                            <div className="bcb-feature-card-sub">Batch: CS-401 · 42 Sheets</div>
+                                        </div>
+                                        <div className="bcb-processing-badge" aria-label="Processing complete">
+                                            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>check</span>
+                                            Done
                                         </div>
                                     </div>
-                                    <div className="lp-float-badge lp-float-right">
-                                        <div className="icon-box" style={{ background: '#dcfce7', color: 'var(--accent)' }}>
-                                            <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>check_circle</span>
-                                        </div>
-                                        <div>
-                                            <span className="label-small">Per Question</span>
-                                            <span className="label-main">Detailed Remarks</span>
-                                        </div>
+                                    <div className="bcb-score-breakdown">
+                                        {[
+                                            { q: 'Q1 — Data Structures', score: 18, max: 20, level: 'Apply' },
+                                            { q: 'Q2 — Algorithm Analysis', score: 14, max: 20, level: 'Analyse' },
+                                            { q: 'Q3 — Graph Theory', score: 22, max: 25, level: 'Evaluate' },
+                                            { q: 'Q4 — Sorting Algorithms', score: 28, max: 35, level: 'Remember' },
+                                        ].map((row, i) => (
+                                            <div key={i} className="bcb-score-row">
+                                                <div className="bcb-score-meta">
+                                                    <span className="bcb-score-q">{row.q}</span>
+                                                    <span className="bcb-score-bloom">{row.level}</span>
+                                                </div>
+                                                <div className="bcb-score-bar-wrap">
+                                                    <div className="bcb-score-bar-track">
+                                                        <motion.div
+                                                            className="bcb-score-bar-fill"
+                                                            initial={{ width: 0 }}
+                                                            whileInView={{ width: `${(row.score / row.max) * 100}%` }}
+                                                            transition={{ duration: 1, delay: i * 0.15, ease: 'easeOut' }}
+                                                            viewport={{ once: true }}
+                                                        />
+                                                    </div>
+                                                    <span className="bcb-score-frac">{row.score}/{row.max}</span>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-
-                                    <div className="lp-float-badge lp-float-top-right">
-                                        <div className="icon-box" style={{ background: 'rgba(255, 253, 245, 1)', color: '#eab308' }}>
-                                            <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>verified</span>
+                                    <div className="bcb-feature-card-footer">
+                                        <div className="bcb-grade-display">
+                                            <div className="bcb-grade-label">Final Grade</div>
+                                            <div className="bcb-grade-val">82<span>/100</span></div>
                                         </div>
-                                        <div>
-                                            <span className="label-small">Only on DASES</span>
-                                            <span className="label-main">QuickPass™</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="lp-float-badge lp-float-bottom-left">
-                                        <div className="icon-box" style={{ background: 'rgba(239, 246, 255, 1)', color: '#3b82f6' }}>
-                                            <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>bolt</span>
-                                        </div>
-                                        <div>
-                                            <span className="label-small">500 Sheets at Once</span>
-                                            <span className="label-main">15 sec / sheet</span>
+                                        <div className="bcb-grade-ai-note">
+                                            <span className="material-symbols-outlined" style={{ fontSize: '1rem', color: 'var(--bcb-green)' }}>smart_toy</span>
+                                            AI Feedback Generated
                                         </div>
                                     </div>
                                 </div>
-                                <p style={{
-                                    fontSize: '0.65rem',
-                                    color: 'var(--slate-content)',
-                                    opacity: 0.55,
-                                    marginTop: '0.6rem',
-                                    textAlign: 'right',
-                                    fontWeight: 500,
-                                    letterSpacing: '0.01em',
-                                    paddingRight: '0.25rem',
-                                }}>
-                                    * For illustration purposes only. No real student data is shown. DASES secures all data with end-to-end encryption.
-                                </p>
                             </FadeIn>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                    {/* ==================== PROBLEM ==================== */}
-                    <section className="lp-problem">
-                        <div className="lp-container">
-                            <FadeIn>
-                                <h2>
-                                    Grading descriptive answers takes days of valuable teaching time. <br />
-                                    <span className="highlight">DASES brings that down to minutes</span> empowering you to focus on teaching.
+                {/* ════════════════════════════════════
+                    SECTION 7 — FEATURE DEEP DIVE: QP MOD
+                ════════════════════════════════════ */}
+                <section className="bcb-feature-section bcb-feature-section--alt" aria-labelledby="feature-qpmod-heading">
+                    <div className="bcb-container">
+                        <div className="bcb-feature-row bcb-feature-row--reverse">
+                            <FadeIn className="bcb-feature-visual" delay={0.08}>
+                                <div className="bcb-feature-card bcb-feature-card--qpmod">
+                                    <div className="bcb-audit-header">
+                                        <span className="material-symbols-outlined" style={{ color: 'var(--bcb-green)', fontSize: '1.5rem' }}>fact_check</span>
+                                        <div>
+                                            <div className="bcb-feature-card-title">Moderation Report</div>
+                                            <div className="bcb-feature-card-sub">CS-401 Final Exam · 2025</div>
+                                        </div>
+                                    </div>
+                                    <div className="bcb-audit-items">
+                                        {[
+                                            { icon: 'check_circle', color: '#22c55e', label: 'Bloom\'s Distribution', status: 'Balanced (HOT: 60%)' },
+                                            { icon: 'warning', color: '#f59e0b', label: 'Ambiguity Detected', status: '2 questions flagged' },
+                                            { icon: 'check_circle', color: '#22c55e', label: 'Syllabus Coverage', status: '94% topics covered' },
+                                            { icon: 'check_circle', color: '#22c55e', label: 'OR-Choice Parity', status: 'Difficulty balanced' },
+                                            { icon: 'error', color: '#ef4444', label: 'Out-of-Syllabus', status: 'Q7 flagged — see fix' },
+                                        ].map((item, i) => (
+                                            <div key={i} className="bcb-audit-row">
+                                                <span className="material-symbols-outlined" style={{ color: item.color, fontSize: '1.25rem' }} aria-hidden="true">{item.icon}</span>
+                                                <div className="bcb-audit-text">
+                                                    <div className="bcb-audit-label">{item.label}</div>
+                                                    <div className="bcb-audit-status" style={{ color: item.color }}>{item.status}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="bcb-audit-verdict">
+                                        <span className="material-symbols-outlined" style={{ color: '#f59e0b', fontSize: '1rem' }}>pending</span>
+                                        Needs Minor Revisions — 2 Issues
+                                    </div>
+                                </div>
+                            </FadeIn>
+                            <FadeIn className="bcb-feature-text" delay={0.15}>
+                                <div className="bcb-section-tag">QP Moderation · Quality Assurance</div>
+                                <h2 id="feature-qpmod-heading" className="bcb-feature-title">
+                                    Never let an unfair question paper reach your students again
                                 </h2>
+                                <p className="bcb-feature-desc">
+                                    Our 10-point AI audit catches what committee reviews miss — in a fraction of the time.
+                                </p>
+                                <ul className="bcb-feature-list" role="list">
+                                    {[
+                                        'Bloom\'s Taxonomy auto-classification for every question',
+                                        'Ambiguity detection with AI-suggested rewrites',
+                                        'OR-choice difficulty parity check (unique to BigChalkBox)',
+                                        'Syllabus coverage heatmap — overtested & undertested topics',
+                                        'Out-of-syllabus detection with instant flag',
+                                        'Export as PDF, Word, or PowerPoint for Academic Committee',
+                                    ].map((item, i) => (
+                                        <li key={i} role="listitem">
+                                            <span className="material-symbols-outlined bcb-check-icon" aria-hidden="true">check_circle</span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <Link href="/products/qp-moderation" className="bcb-feature-cta">
+                                    Explore QP Moderation
+                                    <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                                </Link>
                             </FadeIn>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                    <BackedBy />
-
-                    {/* ==================== FEATURES ==================== */}
-                    <section className="lp-features" id="features">
-                        <div className="lp-container">
-                            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                                <span className="lp-section-tag">Core Capabilities</span>
-                                <h2 className="lp-section-title">Built for Descriptive Exams</h2>
+                {/* ════════════════════════════════════
+                    SECTION 8 — COMPARISON TABLE
+                ════════════════════════════════════ */}
+                <section className="bcb-compare" aria-label="BigChalkBox vs traditional methods comparison">
+                    <div className="bcb-container">
+                        <FadeIn className="bcb-section-header">
+                            <div className="bcb-section-tag">Why BigChalkBox</div>
+                            <h2 className="bcb-section-title">The Numbers Don't Lie</h2>
+                            <p className="bcb-section-desc">A direct look at what changes when institutions adopt BigChalkBox.</p>
+                        </FadeIn>
+                        <FadeIn delay={0.1}>
+                            <div className="bcb-compare-table-wrap" role="region" aria-label="Comparison table">
+                                <table className="bcb-compare-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Dimension</th>
+                                            <th scope="col" className="bcb-col-old">Traditional / Manual</th>
+                                            <th scope="col" className="bcb-col-new">BigChalkBox</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {[
+                                            ['Grading 500 answer sheets', '5–7 days per faculty', '15 minutes'],
+                                            ['Grading consistency', 'Varies by evaluator mood & fatigue', '98.2% rubric adherence'],
+                                            ['Student feedback', 'Marks only — no comments', 'Per-question AI feedback for every student'],
+                                            ['QP moderation', '3–5 day committee review', '4 hours with full written report'],
+                                            ['Audit trail', 'None (or manual records)', 'Complete, time-stamped digital record'],
+                                            ['Scalability', 'Limited by faculty count & time', 'Unlimited — scales instantly'],
+                                            ['NAAC/IQAC reporting', 'Manual data collection', 'Auto-generated, exportable'],
+                                        ].map(([dim, old, nw], i) => (
+                                            <tr key={i}>
+                                                <td className="bcb-compare-dim">{dim}</td>
+                                                <td className="bcb-col-old-val">
+                                                    <span className="material-symbols-outlined bcb-x-icon" aria-hidden="true">close</span>
+                                                    {old}
+                                                </td>
+                                                <td className="bcb-col-new-val">
+                                                    <span className="material-symbols-outlined bcb-check-icon" aria-hidden="true">check</span>
+                                                    {nw}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
-                            <FadeIn className="lp-features-grid" delay={0.2}>
-                                {/* Handwriting Intelligence Card */}
-                                <div className="lp-card">
-                                    <div className="lp-card-icon" style={{ background: 'rgba(198,211,193,0.3)', color: 'var(--primary)' }}>
-                                        <span className="material-symbols-outlined" style={{ fontSize: '2rem', fontWeight: 'bold' }}>rate_review</span>
-                                    </div>
-                                    <h3>Per-Question Feedback</h3>
-                                    <p>Go beyond a simple grade. Deliver detailed scores and actionable written feedback for every answer so students gain clear, personalized insights. Bonus: they can download their complete performance report as a PDF.</p>
-                                    <div className="lp-blockquote">
-                                        <span className="hl">Q3:</span> &quot;Bubble sort compares adjacent elements and swaps them if they are in wrong order...&quot;<br />
-                                        <span style={{ color: 'var(--accent)', fontWeight: 700 }}>✓ Concept: 4/4</span> · <span style={{ color: '#eab308', fontWeight: 700 }}>⚠ Complexity: 1/2</span> · <span style={{ fontWeight: 600 }}>Score: 8/10</span>
-                                    </div>
-                                </div>
+                        </FadeIn>
+                    </div>
+                </section>
 
-                                {/* Speed Card */}
-                                <div className="lp-card lp-card-green">
-                                    <div className="lp-card-icon">
-                                        <span className="material-symbols-outlined" style={{ fontSize: '2rem', fontWeight: 'bold' }}>speed</span>
+                {/* ════════════════════════════════════
+                    SECTION 9 — SEO FAQ (GEO-OPTIMISED)
+                ════════════════════════════════════ */}
+                <section className="bcb-faq" aria-labelledby="faq-heading">
+                    <div className="bcb-container">
+                        <FadeIn className="bcb-section-header">
+                            <div className="bcb-section-tag">Common Questions</div>
+                            <h2 id="faq-heading" className="bcb-section-title">Everything You Need to Know</h2>
+                            <p className="bcb-section-desc">Straightforward answers to the questions decision-makers always ask.</p>
+                        </FadeIn>
+                        <div className="bcb-faq-list" role="list">
+                            {FAQS.map((faq, i) => (
+                                <FadeIn key={i} delay={i * 0.05}>
+                                    <div
+                                        className={`bcb-faq-item ${openFaq === i ? 'bcb-faq-item--open' : ''}`}
+                                        role="listitem"
+                                    >
+                                        <button
+                                            className="bcb-faq-q"
+                                            onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                                            aria-expanded={openFaq === i}
+                                            aria-controls={`faq-answer-${i}`}
+                                            id={`faq-question-${i}`}
+                                        >
+                                            <span>{faq.q}</span>
+                                            <span className="material-symbols-outlined bcb-faq-chevron" aria-hidden="true">
+                                                {openFaq === i ? 'remove' : 'add'}
+                                            </span>
+                                        </button>
+                                        <motion.div
+                                            id={`faq-answer-${i}`}
+                                            role="region"
+                                            aria-labelledby={`faq-question-${i}`}
+                                            className="bcb-faq-a"
+                                            initial={false}
+                                            animate={{ height: openFaq === i ? 'auto' : 0, opacity: openFaq === i ? 1 : 0 }}
+                                            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                            style={{ overflow: 'hidden' }}
+                                        >
+                                            <p>{faq.a}</p>
+                                        </motion.div>
                                     </div>
-                                    <h3>500 Sheets at Once</h3>
-                                    <p>Process an entire batch in parallel. Each sheet evaluated in ~15 seconds.</p>
-                                    <div style={{ marginTop: '1.5rem' }}>
-                                        <div className="lp-stat-big">15s</div>
-                                        <p className="lp-stat-label">Per Sheet Processing</p>
-                                    </div>
-                                </div>
-
-                                {/* Custom Rubric Mapping Card */}
-                                <div className="lp-card">
-                                    <div className="lp-card-icon" style={{ background: '#dcfce7', color: 'var(--accent)' }}>
-                                        <span className="material-symbols-outlined" style={{ fontSize: '2rem', fontWeight: 'bold' }}>fact_check</span>
-                                    </div>
-                                    <h3>Standardised Rubrics</h3>
-                                    <p>Instantly turn your sample answers into comprehensive rubrics. You retain absolute control to adjust, refine, and perfect every single criterion before the grading process even begins.</p>
-                                    <ul className="lp-checklist" style={{ marginTop: '1rem' }}>
-                                        <li><span className="material-symbols-outlined">check_circle</span> Criterion-Based Scoring</li>
-                                        <li><span className="material-symbols-outlined">check_circle</span> Partial Credit Logic</li>
-                                        <li><span className="material-symbols-outlined">check_circle</span> Multiple Answer Variants</li>
-                                    </ul>
-                                </div>
-
-                                {/* QuickPass Card */}
-                                <div className="lp-card" style={{ padding: 0, overflow: 'hidden', position: 'relative', minHeight: '300px' }}>
-                                    <video
-                                        autoPlay
-                                        loop
-                                        muted
-                                        playsInline
-                                        aria-label="QuickPass Paper Analysis tool preview showing mismatch highlighting"
-                                        src="/videos/final.mp4"
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                            filter: 'brightness(120%)',
-                                        }}
-                                    />
-                                    <div style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        background: '#95d8a6',
-                                        mixBlendMode: 'hue',
-                                        pointerEvents: 'none'
-                                    }}></div>
-                                    <div style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        background: '#95d8a6',
-                                        mixBlendMode: 'color',
-                                        opacity: 0.5,
-                                        pointerEvents: 'none'
-                                    }}></div>
-
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        padding: '2rem',
-                                        background: 'linear-gradient(to top, rgba(11, 38, 19, 0.9), transparent)',
-                                        color: 'white',
-                                        zIndex: 10
-                                    }}>
-                                        <h3 style={{ color: 'white', marginBottom: '0.5rem' }}>QuickPass™ Paper Analysis</h3>
-                                        <p style={{ color: '#f0fdf4', fontSize: '0.9rem' }}>
-                                            Catch ambiguous questions and marks-difficulty mismatches before the exam.
-                                        </p>
-                                    </div>
-                                </div>
-                            </FadeIn>
+                                </FadeIn>
+                            ))}
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                    {/* ==================== WORKFLOW ==================== */}
-                    <section className="lp-workflow" id="workflow">
-                        <div className="lp-workflow-bg"></div>
-                        <div className="lp-container">
-                            <div className="lp-workflow-inner">
-                                <FadeIn className="lp-workflow-text">
-                                    <span className="lp-section-tag">How It Works</span>
-                                    <h2 className="lp-workflow-title">
-                                        From Scanned Paper to <br />
-                                        <span className="wavy">Detailed Feedback</span> <br />
-                                        in Three Steps.
-                                    </h2>
-                                    <p className="lp-workflow-desc">
-                                        Upload your students' answer sheets. DASES reads the handwriting, scores each answer against your rubric, and generates personalized feedback, ready for faculty review and student delivery.
+                {/* ════════════════════════════════════
+                    SECTION 10 — GEO PROSE BLOCK
+                ════════════════════════════════════ */}
+                <section className="bcb-geo-prose" aria-label="About BigChalkBox">
+                    <div className="bcb-container">
+                        <FadeIn>
+                            <div className="bcb-geo-card">
+                                <div className="bcb-geo-icon" aria-hidden="true">
+                                    <span className="material-symbols-outlined">school</span>
+                                </div>
+                                <div className="bcb-geo-text">
+                                    <h2 className="bcb-geo-title">About BigChalkBox</h2>
+                                    <p>
+                                        <strong>BigChalkBox Innovations LLP</strong> develops AI software for Indian educational institutions.
+                                        Their product suite includes: <strong>DASES</strong> (automated answer sheet evaluation), <strong>QP Moderation</strong> (question paper quality auditing),{' '}
+                                        <strong>QP Generation</strong> (AI-assisted question creation), <strong>Teacher Notes</strong> (automated PPT and lecture note generation), and <strong>Exam Prep</strong> (personalized student study material).
                                     </p>
-                                    <div className="lp-steps">
-                                        {workflowSteps.map((step, idx) => {
-                                            const isActive = activeStep === (idx + 1)
-                                            return (
-                                                <div
-                                                    key={idx}
-                                                    className={`lp-step ${isActive ? 'active' : ''}`}
-                                                    onClick={() => setActiveStep(idx + 1)}
-                                                >
-                                                    <div className={`lp-step-num ${isActive ? 'filled' : 'outline'} ${isActive ? 'active' : ''}`}>
-                                                        {idx + 1}
-                                                    </div>
-                                                    <div>
-                                                        <h4>{step.title}</h4>
-                                                        <p>{step.desc}</p>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                    <Link className="lp-link-arrow" href="/solutions">
-                                        See all capabilities <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>
-                                    </Link>
-                                </FadeIn>
-                                <FadeIn className="lp-tablet-wrap" delay={0.2}>
-                                    <div className="lp-tablet">
-                                        <div className="lp-tablet-screen" style={{ overflow: 'hidden', position: 'relative' }}>
-                                            <div id="dases-workflow-video" style={{ width: '100%', height: '100%' }}></div>
-                                        </div>
-                                    </div>
-                                </FadeIn>
-                            </div >
-                        </div >
-                    </section >
-
-                    {/* ==================== CTA ==================== */}
-                    < section className="lp-cta" >
-                        <FadeIn className="lp-container">
-                            <h2>
-                                Ready to stop grading <br />
-                                <span className="lp-gradient-text">and start evaluating?</span>
-                            </h2>
-                            <p>
-                                Join 20+ educators already using DASES to deliver faster, fairer, and more meaningful assessment feedback.
-                            </p>
-                            <div className="lp-cta-buttons">
-                                <Link href="/#contact"><button className="lp-btn-primary">Book a Free Demo</button></Link>
-                                <Link href="/solutions"><button className="lp-btn-secondary">Explore Solutions</button></Link>
+                                    <p>
+                                        DASES uses multimodal AI to read handwritten descriptive answers and evaluate them against teacher-defined rubrics.
+                                        QP Moderation uses Bloom's Taxonomy classification to audit exam papers for cognitive balance and syllabus coverage.
+                                        BigChalkBox operates in India and serves universities, deemed-to-be universities, engineering colleges, and examination boards.
+                                    </p>
+                                </div>
                             </div>
                         </FadeIn>
-                    </section >
+                    </div>
+                </section>
 
-                    {/* ==================== FAQ ==================== */}
-                    < section className="lp-faq" id="faq" >
-                        <div className="lp-faq-blob"></div>
-                        <FadeIn className="lp-container" style={{ position: 'relative', zIndex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <div className="lp-faq-icon-wrap">
-                                <svg style={{ width: '2.5rem', height: '2.5rem', fill: 'none', stroke: '#22C55E', strokeWidth: 3.5 }} viewBox="0 0 40 40">
-                                    <path className="lp-logo-d-path" d="M12 8C12 8 28 8 28 20C28 32 12 32 12 32V8Z" />
-                                    <path d="M15 20L20 25L32 12" stroke="#1B5E20" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
-                                </svg>
-                            </div>
-                            <h2 className="lp-faq-title" style={{ textAlign: 'center' }}>Frequently Asked Questions</h2>
-                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about DASES: from accuracy to data security.</p>
+                {/* ════════════════════════════════════
+                    SECTION 11 — BOOK DEMO FORM
+                ════════════════════════════════════ */}
+                <BookDemoForm />
+            </main>
 
-                            <div className="lp-faq-list" style={{ textAlign: 'left', width: '100%' }}>
-                                {faqData.map((faq, idx) => {
-                                    const isOpen = openFaq === idx
-                                    return isOpen ? (
-                                        <div key={idx} className="lp-faq-open">
-                                            <div className="q-row" onClick={() => setOpenFaq(null)} style={{ cursor: 'pointer' }}>
-                                                <span>{faq.question}</span>
-                                                <button className="lp-faq-close-btn">
-                                                    <span className="material-symbols-outlined" style={{ fontSize: '1rem', color: 'white' }}>close</span>
-                                                </button>
-                                            </div>
-                                            <p dangerouslySetInnerHTML={{ __html: faq.answer }}></p>
-                                        </div>
-                                    ) : (
-                                        <div key={idx} className="lp-faq-item" onClick={() => setOpenFaq(idx)}>
-                                            <span>{faq.question}</span>
-                                            <span className="material-symbols-outlined">add</span>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </FadeIn>
-                    </section >
+            <SiteFooter />
 
-                    {/* ==================== TESTIMONIALS ==================== */}
-                    <FadeIn>
-                        <TestimonialStack />
-                    </FadeIn>
-
-                    {/* ==================== CONTACT / PILOT FORM ==================== */}
-                    <section className="lp-contact" id="contact">
-                        <div className="lp-container">
-                            <FadeIn className="lp-contact-card">
-                                <div className="lp-form-side">
-                                    <span className="lp-form-tag">Get Started</span>
-                                    <h2 className="lp-form-title">Book Your Free Demo</h2>
-                                    <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric live. Fill out the form and we&apos;ll set it up.</p>
-
-                                    {formStatus ? (
-                                        <div className="lp-success">
-                                            <span className="material-symbols-outlined">check_circle</span>
-                                            <p>{formStatus.message}</p>
-                                        </div>
-                                    ) : (
-                                        <form onSubmit={handleSubmit} className="lp-form">
-                                            <div>
-                                                <label>Full Name</label>
-                                                <input name="fullName" required placeholder="e.g. Dr. Sharma" type="text" />
-                                            </div>
-                                            <div className="lp-form-grid">
-                                                <div>
-                                                    <label>Institution</label>
-                                                    <input name="institution" required placeholder="e.g. Delhi University" type="text" />
-                                                </div>
-                                                <div>
-                                                    <label>Role</label>
-                                                    <div className="lp-select-wrap">
-                                                        <select name="role">
-                                                            <option>Select Role</option>
-                                                            <option>Faculty</option>
-                                                            <option>HOD / Dean</option>
-                                                            <option>Administrator</option>
-                                                            <option>IT Support</option>
-                                                        </select>
-                                                        <div className="chevron">
-                                                            <span className="material-symbols-outlined">expand_more</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label>Email</label>
-                                                <input name="email" required placeholder="name@institution.edu" type="email" />
-                                            </div>
-                                            <button type="submit" className="lp-btn-submit" disabled={submitting}>
-                                                {submitting ? 'Submitting...' : 'Book Demo'}
-                                            </button>
-                                        </form>
-                                    )}
-                                </div>
-                                <div className="lp-contact-dark">
-                                    <div className="bg-map">
-                                        <img alt="World Map background" src="/images/landing/world_map.png" />
-                                    </div>
-                                    <div style={{ position: 'relative', zIndex: 1 }}>
-                                        <h3>Have questions? Reach out directly.</h3>
-                                        <div className="lp-contact-info">
-                                            <div className="lp-contact-row">
-                                                <div className="icon-box">
-                                                    <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>mail</span>
-                                                </div>
-                                                <div>
-                                                    <div className="sub-label">Email</div>
-                                                    <div className="value">admin.dasesai@gmail.com</div>
-                                                </div>
-                                            </div>
-                                            <div className="lp-contact-row">
-                                                <div className="icon-box">
-                                                    <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>call</span>
-                                                </div>
-                                                <div>
-                                                    <div className="sub-label">Phone</div>
-                                                    <div className="value">+91 7529836117</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="lp-contact-footer">
-                                        <div className="social">
-                                            <span className="material-symbols-outlined">public</span>
-                                            <span className="material-symbols-outlined">share</span>
-                                        </div>
-                                        <div className="copy">© 2026 DASES by Big Chalk Box Pvt. Ltd.</div>
-                                    </div>
-                                </div>
-                            </FadeIn>
-                        </div>
-                    </section >
-                </main >
-
-                <SiteFooter />
-            </div >
-        </>
+            {/* ─── Sticky Mobile CTA ─── */}
+            <motion.div
+                className="bcb-mobile-cta"
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: showMobileCta ? 0 : 100, opacity: showMobileCta ? 1 : 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                aria-hidden={!showMobileCta}
+            >
+                <span className="bcb-mobile-cta-text">Ready to see it live?</span>
+                <a href="#book-demo" className="bcb-btn-gold bcb-btn-gold--sm">
+                    Book Demo
+                </a>
+            </motion.div>
+        </div>
     )
 }

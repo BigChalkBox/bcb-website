@@ -7,7 +7,7 @@ export const metadata = {
     openGraph: {
         type: 'website',
         locale: 'en_IN',
-        url: 'https://dasesai.com/about',
+        url: 'https://bigchalkbox.com/about',
         title: 'About DASES | Built by Big Chalk Box Pvt. Ltd.',
         description:
             'A team of engineers and educators transforming descriptive grading. Learn how DASES achieves 98% accuracy on handwritten exams.',
@@ -20,12 +20,12 @@ export const metadata = {
             '400+ sheets evaluated • 98% accuracy • 20+ educators. Built by Big Chalk Box Pvt. Ltd. in India.',
     },
     alternates: {
-        canonical: 'https://dasesai.com/about',
+        canonical: 'https://bigchalkbox.com/about',
     },
     authors: [
         {
             name: 'Big Chalk Box Pvt. Ltd.',
-            url: 'https://dasesai.com',
+            url: 'https://bigchalkbox.com',
             email: 'admin.dasesai@gmail.com',
         },
     ],
@@ -39,7 +39,7 @@ const jsonLd = {
         {
             '@type': 'Organization',
             name: 'Big Chalk Box Pvt. Ltd.',
-            url: 'https://dasesai.com',
+            url: 'https://bigchalkbox.com',
             email: 'admin.dasesai@gmail.com',
             telephone: '+917529836117',
             description:
@@ -74,13 +74,13 @@ const jsonLd = {
                     '@type': 'ListItem',
                     position: 1,
                     name: 'Home',
-                    item: 'https://dasesai.com',
+                    item: 'https://bigchalkbox.com',
                 },
                 {
                     '@type': 'ListItem',
                     position: 2,
                     name: 'About',
-                    item: 'https://dasesai.com/about',
+                    item: 'https://bigchalkbox.com/about',
                 },
             ],
         },

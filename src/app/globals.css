@@ -8,32 +8,34 @@
 /* ===== ROOT VARIABLES ===== */
 :root {
   /* Primary green colors */
-  --primary-color: #16A34A;
-  --primary-dark: #15803D;
-  --secondary-color: #16A34A;
-  --accent-color: #4ADE80;
-  --success-color: #16A34A;
-
+  --primary-color: #1C5F20;
+  --primary-hover: #3B8A40;
+  --primary-dark: #0B2613; /* Assuming a darker shade based on previous changes */
+  
+  /* Accent colors */
+  --accent-color: #BF9B30;
+  --accent-hover: #D4B34D;
+  
   /* Text colors */
-  --text-primary: #15803D;
-  --text-secondary: #16A34A;
-  --text-light: #4ADE80;
+  --text-primary: #1A2421;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
 
   /* Background colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #F5EFE6;
-  --bg-tertiary: #E6DCC8;
+  --bg-primary: #FCFCF7;
+  --bg-card: #FFFFFF;
+  --bg-secondary: #F8FAF8;
 
   /* Border and shadows */
-  --border-color: #E6DCC8;
-  --shadow-sm: 0 1px 2px 0 rgba(22, 163, 74, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(22, 163, 74, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(22, 163, 74, 0.1);
+  --border-color: #E2E8F0;
+  --shadow-sm: 0 1px 2px 0 rgba(28, 95, 32, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(28, 95, 32, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(28, 95, 32, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(28, 95, 32, 0.1);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
-  --gradient-bg: linear-gradient(180deg, #F5EFE6 0%, #E6DCC8 100%);
+  --gradient-primary: linear-gradient(135deg, #1C5F20 0%, #3B8A40 100%);
+  --gradient-bg: linear-gradient(180deg, #FCFCF7 0%, #F8FAF8 100%);
 
   /* Border radius - unchanged */
   --border-radius-sm: 8px;
@@ -77,10 +79,10 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   line-height: 1.6;
-  color: #15803D;
-  background-color: #F5EFE6;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   overflow-x: hidden;
 }
 
@@ -105,4 +107,16 @@ body {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+/* Button Styles */
+.btn-accent {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(191, 155, 48, 0.2);
 }

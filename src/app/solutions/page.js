@@ -5,13 +5,13 @@ export const metadata = {
     description:
         'Automate your entire exam workflow: question paper creation, AI rubric generation, handwritten answer evaluation at 98% accuracy, and detailed student feedback reports. Grade 500 sheets in parallel.',
     alternates: {
-        canonical: 'https://dasesai.com/solutions',
+        canonical: 'https://bigchalkbox.com/solutions',
     },
     openGraph: {
         title: 'DASES Solutions | End-to-End AI Exam Automation',
         description:
             'From paper creation to evaluation reports: automate every step of the exam lifecycle with AI. 98% rubric accuracy on handwritten answers.',
-        url: 'https://dasesai.com/solutions',
+        url: 'https://bigchalkbox.com/solutions',
         type: 'website',
     },
     twitter: {
@@ -29,7 +29,7 @@ const jsonLd = {
             name: 'DASES AI Exam Solutions',
             description:
                 'Complete suite of AI-powered exam automation solutions for universities and schools.',
-            url: 'https://dasesai.com/solutions',
+            url: 'https://bigchalkbox.com/solutions',
             numberOfItems: 6,
             itemListElement: [
                 {
@@ -83,13 +83,13 @@ const jsonLd = {
                     '@type': 'ListItem',
                     position: 1,
                     name: 'Home',
-                    item: 'https://dasesai.com',
+                    item: 'https://bigchalkbox.com',
                 },
                 {
                     '@type': 'ListItem',
                     position: 2,
                     name: 'Solutions',
-                    item: 'https://dasesai.com/solutions',
+                    item: 'https://bigchalkbox.com/solutions',
                 },
             ],
         },

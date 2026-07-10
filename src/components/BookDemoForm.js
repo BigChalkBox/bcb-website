@@ -1,156 +1,140 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./BookDemoForm.module.css";
 import confetti from "canvas-confetti";
+import "./BookDemoForm.css";
 
 export default function BookDemoForm() {
-  const [formData, setFormData] = useState({});
-  const [status, setStatus] = useState("");
+    const [formStatus, setFormStatus] = useState(null)
+    const [submitting, setSubmitting] = useState(false)
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const fireConfetti = () => {
-    const duration = 2 * 1000; // 2 seconds
-    const end = Date.now() + duration;
-
-    (function frame() {
-      // Burst from random positions
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    })();
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("Submitting...");
-
-    try {
-      const response = await fetch("https://sheetdb.io/api/v1/vksbsahrgkwky", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          data: [
-            {
-              ...formData,
-              created_at: new Date().toLocaleString("en-IN"),
-            },
-          ],
-        }),
-      });
-
-      if (response.ok) {
-        setStatus("✅ Request submitted successfully. We are excited contact you soon!");
-        fireConfetti();
-        setFormData({});
-        e.target.reset();
-      } else {
-        setStatus("❌ Something went wrong. Please try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      setStatus("⚠️ Network error. Please try again later.");
+    function fireConfetti() {
+        const end = Date.now() + 2000
+            ; (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } })
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } })
+                if (Date.now() < end) requestAnimationFrame(frame)
+            })()
     }
-  };
 
-return (
-  <section id="bookDemo" className={styles.section}>
-    <div className={styles.wrapper}>
+    async function handleSubmit(e) {
+        e.preventDefault()
+        setSubmitting(true)
+        const fd = new FormData(e.target)
+        const data = {
+            full_name: fd.get('fullName'),
+            institution_name: fd.get('institution'),
+            designation: fd.get('role'),
+            email: fd.get('email'),
+            created_at: new Date().toLocaleString('en-IN'),
+        }
+        try {
+            const res = await fetch('https://sheetdb.io/api/v1/vksbsahrgkwky', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: [data] }),
+            })
+            if (res.ok) {
+                setFormStatus({ success: true, message: 'Request submitted successfully! We will contact you soon.' })
+                fireConfetti()
+                e.target.reset()
+            } else {
+                setFormStatus({ success: false, message: 'Something went wrong. Please try again.' })
+            }
+        } catch {
+            setFormStatus({ success: false, message: 'Network error. Please try again later.' })
+        }
+        setSubmitting(false)
+    }
 
-      {/* Left Side — Form */}
-      <div className={styles.left}>
-        <h2 className={styles.heading}>Get In Touch</h2>
-        <p className={styles.sub}>
-          Drop your details & we’ll reach out quickly.
-        </p>
+    return (
+        <section className="lp-contact" id="book-demo">
+            <div className="lp-container">
+                <div className="lp-contact-card">
+                    <div className="lp-form-side">
+                        <span className="lp-form-tag">Get Started</span>
+                        <h2 className="lp-form-title">Book Your Free Demo</h2>
+                        <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric live. Fill out the form and we'll set it up.</p>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.row}>
-            <input type="text"  className={styles.input} name="full_name" placeholder="Full Name" onChange={handleChange} required />
-            <input type="text"  className={styles.input} name="designation" placeholder="Designation / Role" onChange={handleChange} required />
-          </div>
-
-          <div className={styles.row}>
-            <input type="text" className={styles.input}  name="institution_name" placeholder="Institution Name" onChange={handleChange} required />
-            <input type="text" className={styles.input}  name="department" placeholder="Department / Course" onChange={handleChange} required />
-          </div>
-
-          <div className={styles.row}>
-            <input type="email" className={styles.input}  name="email" placeholder="Official Email" onChange={handleChange} required />
-            <input type="tel" className={styles.input}  name="phone" placeholder="Phone Number" onChange={handleChange} required />
-          </div>
-
-          <div className={styles.row}>
-            <select name="demo_mode" className={styles.select} onChange={handleChange} required>
-              <option value="">Select Demo Mode</option>
-              <option value="Online">Online (Google Meet)</option>
-              <option value="Offline">Offline (In-Person)</option>
-            </select>
-
-            <input type="date" className={styles.input}  name="preferred_date" onChange={handleChange} required />
-            <input type="time" className={styles.input}  name="preferred_time" onChange={handleChange} required />
-          </div>
-
-          <textarea name="comments" className={styles.textarea}  placeholder="Message / Notes?" onChange={handleChange}></textarea>
-
-          <button type="submit" className={styles.submitButton}>Submit</button>
-
-          {status && <p className={styles.status}>{status}</p>}
-        </form>
-      </div>
-
-      {/* Right Side — Newsletter Card */}
-      <div className={styles.newsCard}>
-        <h3>Our Newsletters</h3>
-        <p>Get updates, success stories & more.</p>
-
-        <input type="email" placeholder="Email" className={styles.newsInput} />
-        <button className={styles.newsBtn}>Subscribe</button>
-      </div>
-    </div>
-
-    {/* Contact info boxes */}
-    <div className={styles.bottomCards}>
-      <div className={styles.infoCard}>
-        <div className={styles.iconBox}>📞</div>
-        <h4>+91 94118 08080</h4>
-        <p>Reach us anytime on call</p>
-      </div>
-
-      <div className={styles.infoCard}>
-        <div className={styles.iconBox}>📧</div>
-        <h4>pkonalupes@gmail.com</h4>
-        <p>We reply super fast</p>
-      </div>
-
-      <div className={styles.infoCard}>
-        <div className={styles.iconBox}>📍</div>
-        <h4>UPES Bidholi Campus</h4>
-        <p>Dehradun, India</p>
-      </div>
-    </div>
-  </section>
-);
-
+                        {formStatus ? (
+                            <div className="lp-success">
+                                <span className="material-symbols-outlined">check_circle</span>
+                                <p>{formStatus.message}</p>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="lp-form">
+                                <div>
+                                    <label>Full Name</label>
+                                    <input name="fullName" required placeholder="e.g. Dr. Sharma" type="text" />
+                                </div>
+                                <div className="lp-form-grid">
+                                    <div>
+                                        <label>Institution</label>
+                                        <input name="institution" required placeholder="e.g. Delhi University" type="text" />
+                                    </div>
+                                    <div>
+                                        <label>Role</label>
+                                        <div className="lp-select-wrap">
+                                            <select name="role">
+                                                <option>Select Role</option>
+                                                <option>Faculty</option>
+                                                <option>HOD / Dean</option>
+                                                <option>Administrator</option>
+                                                <option>IT Support</option>
+                                            </select>
+                                            <div className="chevron">
+                                                <span className="material-symbols-outlined">expand_more</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>Email</label>
+                                    <input name="email" required placeholder="name@institution.edu" type="email" />
+                                </div>
+                                <button type="submit" className="lp-btn-submit" disabled={submitting}>
+                                    {submitting ? 'Submitting...' : 'Book Demo'}
+                                </button>
+                            </form>
+                        )}
+                    </div>
+                    <div className="lp-contact-dark">
+                        <div className="bg-map">
+                            <img alt="World Map background" src="/images/landing/world_map.png" />
+                        </div>
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            <h3>Have questions? Reach out directly.</h3>
+                            <div className="lp-contact-info">
+                                <div className="lp-contact-row">
+                                    <div className="icon-box">
+                                        <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>mail</span>
+                                    </div>
+                                    <div>
+                                        <div className="sub-label">Email</div>
+                                        <div className="value">admin.dasesai@gmail.com</div>
+                                    </div>
+                                </div>
+                                <div className="lp-contact-row">
+                                    <div className="icon-box">
+                                        <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>call</span>
+                                    </div>
+                                    <div>
+                                        <div className="sub-label">Phone</div>
+                                        <div className="value">+91 7529836117</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="lp-contact-footer">
+                            <div className="social">
+                                <span className="material-symbols-outlined">public</span>
+                                <span className="material-symbols-outlined">share</span>
+                            </div>
+                            <div className="copy">© 2026 DASES by Big Chalk Box Pvt. Ltd.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
 }

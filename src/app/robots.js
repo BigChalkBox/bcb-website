@@ -43,6 +43,6 @@ export default function robots() {
                 disallow: ['/SignIn', '/unauthorized', '/api/', '/teacher/', '/admin/', '/student/'],
             },
         ],
-        sitemap: 'https://dasesai.com/sitemap.xml',
+        sitemap: 'https://bigchalkbox.com/sitemap.xml',
     }
 }

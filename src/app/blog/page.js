@@ -6,13 +6,13 @@ export const metadata = {
     description:
         'Expert insights on AI-powered exam grading, handwriting recognition, rubric-based evaluation, and automated descriptive answer checking. By the team building DASES.',
     alternates: {
-        canonical: 'https://dasesai.com/blog',
+        canonical: 'https://bigchalkbox.com/blog',
     },
     openGraph: {
         title: 'DASES Blog | AI Grading Insights & Guides',
         description:
             'Expert insights on AI exam grading, handwriting recognition, and rubric-based evaluation from the team building DASES.',
-        url: 'https://dasesai.com/blog',
+        url: 'https://bigchalkbox.com/blog',
         type: 'website',
     },
     twitter: {
@@ -30,11 +30,11 @@ const jsonLd = {
             name: 'DASES Blog',
             description:
                 'Expert insights on AI-powered exam grading, handwriting recognition, rubric-based evaluation, and automated descriptive answer checking.',
-            url: 'https://dasesai.com/blog',
+            url: 'https://bigchalkbox.com/blog',
             isPartOf: {
                 '@type': 'WebSite',
                 name: 'DASES',
-                url: 'https://dasesai.com',
+                url: 'https://bigchalkbox.com',
             },
             about: {
                 '@type': 'Thing',
@@ -48,13 +48,13 @@ const jsonLd = {
                     '@type': 'ListItem',
                     position: 1,
                     name: 'Home',
-                    item: 'https://dasesai.com',
+                    item: 'https://bigchalkbox.com',
                 },
                 {
                     '@type': 'ListItem',
                     position: 2,
                     name: 'Blog',
-                    item: 'https://dasesai.com/blog',
+                    item: 'https://bigchalkbox.com/blog',
                 },
             ],
         },

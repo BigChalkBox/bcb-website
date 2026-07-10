@@ -1,0 +1,192 @@
+/* QP Moderation Product Page - Premium Academic Aesthetic */
+
+.qpm-page {
+  background-color: var(--bg-primary); /* Warm cream canvas */
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-family: 'Lexend', sans-serif;
+  overflow-x: hidden;
+}
+
+.qpm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Hero Section */
+.qpm-hero {
+  padding: 10rem 0 6rem;
+  background: linear-gradient(180deg, rgba(28, 95, 32, 0.05) 0%, rgba(252, 252, 247, 0) 100%);
+  text-align: center;
+}
+
+.qpm-tag {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: rgba(28, 95, 32, 0.08);
+  color: var(--primary-color);
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.qpm-title {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.qpm-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+/* Core Features */
+.qpm-features {
+  padding: 6rem 0;
+  background: var(--bg-card);
+}
+
+.qpm-section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4rem;
+}
+
+.qpm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.qpm-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.qpm-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.qpm-card-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--primary-color);
+  color: var(--bg-card);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.qpm-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.qpm-card-text {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* 10-Point Audit List */
+.qpm-audit {
+  padding: 6rem 0;
+}
+
+.qpm-audit-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.qpm-audit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+}
+
+.qpm-audit-icon {
+  color: var(--accent-color);
+  margin-top: 0.25rem;
+}
+
+.qpm-audit-content h4 {
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.qpm-audit-content p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Tech Edge Section */
+.qpm-tech {
+  background: var(--primary-dark);
+  color: var(--bg-card);
+  padding: 6rem 0;
+}
+
+.qpm-tech-title {
+  color: var(--bg-card);
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 4rem;
+}
+
+.qpm-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.qpm-tech-card {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+}
+
+.qpm-tech-card h4 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.qpm-tech-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .qpm-title { font-size: 2.5rem; }
+  .qpm-audit-list { grid-template-columns: 1fr; }
+}

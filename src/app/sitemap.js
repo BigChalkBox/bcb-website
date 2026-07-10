@@ -1,7 +1,7 @@
 import { getAllSlugs } from './blog/articles'
 
 export default function sitemap() {
-    const baseUrl = 'https://dasesai.com'
+    const baseUrl = 'https://bigchalkbox.com'
     const blogSlugs = getAllSlugs()
 
     return [

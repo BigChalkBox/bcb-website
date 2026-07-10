@@ -15,12 +15,12 @@ export async function generateMetadata({ params }) {
         title: article.title,
         description: article.description,
         alternates: {
-            canonical: `https://dasesai.com/blog/${article.slug}`,
+            canonical: `https://bigchalkbox.com/blog/${article.slug}`,
         },
         openGraph: {
             title: article.title,
             description: article.description,
-            url: `https://dasesai.com/blog/${article.slug}`,
+            url: `https://bigchalkbox.com/blog/${article.slug}`,
             type: 'article',
             publishedTime: article.publishedAt,
             modifiedTime: article.updatedAt,
@@ -65,7 +65,7 @@ export default async function BlogArticlePage({ params }) {
                       position: index + 1,
                       name: section.heading,
                       text: section.content,
-                      url: `https://dasesai.com/blog/${article.slug}#step-${index + 1}`,
+                      url: `https://bigchalkbox.com/blog/${article.slug}#step-${index + 1}`,
                   })),
               }
             : null
@@ -79,7 +79,7 @@ export default async function BlogArticlePage({ params }) {
                 description: article.description,
                 datePublished: article.publishedAt,
                 dateModified: article.updatedAt,
-                url: `https://dasesai.com/blog/${article.slug}`,
+                url: `https://bigchalkbox.com/blog/${article.slug}`,
                 // speakable — points AI engines at .hero-answer-text for citation
                 speakable: speakableSpec,
                 // abstract maps heroAnswer — the direct, AI-citable factual summary
@@ -87,20 +87,20 @@ export default async function BlogArticlePage({ params }) {
                 author: {
                     '@type': 'Organization',
                     name: 'Big Chalk Box Pvt. Ltd.',
-                    url: 'https://dasesai.com',
+                    url: 'https://bigchalkbox.com',
                 },
                 publisher: {
                     '@type': 'Organization',
                     name: 'DASES',
-                    url: 'https://dasesai.com',
+                    url: 'https://bigchalkbox.com',
                     logo: {
                         '@type': 'ImageObject',
-                        url: 'https://dasesai.com/logo/logo.png',
+                        url: 'https://bigchalkbox.com/logo/logo.png',
                     },
                 },
                 mainEntityOfPage: {
                     '@type': 'WebPage',
-                    '@id': `https://dasesai.com/blog/${article.slug}`,
+                    '@id': `https://bigchalkbox.com/blog/${article.slug}`,
                 },
                 keywords: article.tags.join(', '),
                 articleSection: article.category,
@@ -112,19 +112,19 @@ export default async function BlogArticlePage({ params }) {
                         '@type': 'ListItem',
                         position: 1,
                         name: 'Home',
-                        item: 'https://dasesai.com',
+                        item: 'https://bigchalkbox.com',
                     },
                     {
                         '@type': 'ListItem',
                         position: 2,
                         name: 'Blog',
-                        item: 'https://dasesai.com/blog',
+                        item: 'https://bigchalkbox.com/blog',
                     },
                     {
                         '@type': 'ListItem',
                         position: 3,
                         name: article.title,
-                        item: `https://dasesai.com/blog/${article.slug}`,
+                        item: `https://bigchalkbox.com/blog/${article.slug}`,
                     },
                 ],
             },

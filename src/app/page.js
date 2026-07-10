@@ -1,23 +1,48 @@
 import LandingPage from '../components/landing/LandingPage'
 
 export const metadata = {
-    title: 'DASES | AI-Powered Handwritten Exam Grading: Grade 500 Sheets in Minutes',
+    title: 'BigChalkBox | AI Examination Suite for Indian Universities — DASES, QP Moderation & More',
     description:
-        'DASES is an AI-powered answer sheet checking software that grades handwritten descriptive exams with 98% rubric accuracy. Process 500 sheets in parallel, get per-question feedback in 15 seconds per sheet. Built for universities, schools, and coaching institutes in India.',
+        'BigChalkBox automates answer sheet grading, question paper moderation, and exam content creation for Indian universities. Grade 500 sheets in 15 minutes. Book a Free Demo.',
+    keywords: [
+        'AI answer sheet checking India',
+        'automated answer evaluation software',
+        'question paper moderation software India',
+        'Bloom\'s Taxonomy question paper checker',
+        'AI question paper generation',
+        'university exam automation India',
+        'DASES answer sheet evaluation',
+        'NAAC exam quality improvement',
+        'IQAC digital tools',
+        'EdTech for universities India',
+        'BigChalkBox',
+        'handwritten answer sheet OCR',
+        'descriptive answer grading AI',
+    ],
     alternates: {
-        canonical: 'https://dasesai.com',
+        canonical: 'https://bigchalkbox.com',
     },
     openGraph: {
-        title: 'DASES | AI-Powered Handwritten Exam Grading: 98% Accuracy',
+        title: 'BigChalkBox | AI Examination Suite for Indian Universities',
         description:
-            'Grade handwritten exams with AI in 15 seconds per sheet. 500 sheets in parallel, 98% rubric accuracy, detailed per-question feedback. Used by 20+ educators across Indian universities.',
-        url: 'https://dasesai.com',
+            'Grade 500 answer sheets in 15 minutes. AI-powered answer sheet evaluation, question paper moderation, and exam content creation for Indian universities.',
+        url: 'https://bigchalkbox.com',
         type: 'website',
+        images: [
+            {
+                url: '/logo/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: 'BigChalkBox — AI Academic Operations Suite for Indian Universities',
+            },
+        ],
     },
     twitter: {
-        title: 'DASES | Grade Handwritten Exams in Minutes, Not Days',
+        card: 'summary_large_image',
+        title: 'BigChalkBox | AI Examination Suite for Indian Universities',
         description:
-            '500 sheets in parallel • 98% accuracy • 15s per sheet • Per-question feedback. AI-powered exam grading for universities.',
+            'Grade 500 answer sheets in 15 minutes. Automate QP moderation, answer evaluation & exam content with AI built for Indian academia.',
+        images: ['/logo/og-image.png'],
     },
 }
 
@@ -25,133 +50,129 @@ const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
         {
-            '@type': 'SoftwareApplication',
-            name: 'DASES',
-            alternateName: 'Digital Academic Student Evaluation System',
-            applicationCategory: 'EducationalApplication',
-            applicationSubCategory: 'AI Grading Software',
-            operatingSystem: 'Web',
-            description:
-                'DASES is an AI-powered handwritten exam evaluation platform that grades descriptive answer sheets with 98% rubric accuracy, processes 500 sheets in parallel, and delivers per-question feedback in 15 seconds per sheet. Built for universities, schools, and coaching institutes.',
-            url: 'https://dasesai.com',
-            screenshot: 'https://dasesai.com/images/landing/dashboard_preview.png',
-            featureList: [
-                'Handwriting recognition for exam answer sheets',
-                'AI rubric generation from model answers',
-                'Batch processing of 500 answer sheets in parallel',
-                'Per-question written feedback generation',
-                'QuickPass™ paper quality analysis',
-                'Smart Paper Builder with LaTeX support',
-                'Syllabus coverage tracking',
-                'Professional branded PDF reports',
-                'Student portal for viewing evaluation reports',
-                'Criterion-based scoring with partial credit logic',
-            ],
-            author: {
-                '@type': 'Organization',
-                name: 'Big Chalk Box Pvt. Ltd.',
-                url: 'https://dasesai.com',
-                email: 'admin.dasesai@gmail.com',
-                telephone: '+917529836117',
-                foundingDate: '2024',
-                address: {
-                    '@type': 'PostalAddress',
-                    addressCountry: 'IN',
-                },
-                areaServed: {
-                    '@type': 'Country',
-                    name: 'India',
-                },
+            '@type': 'Organization',
+            '@id': 'https://bigchalkbox.com/#organization',
+            name: 'BigChalkBox Innovations LLP',
+            url: 'https://bigchalkbox.com',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://bigchalkbox.com/logo/logo.png',
             },
+            description:
+                'BigChalkBox Innovations LLP develops AI software for Indian educational institutions. Products include DASES (automated answer sheet evaluation), QP Moderation, QP Generation, Teacher Notes, and Exam Prep.',
+            email: 'admin.dasesai@gmail.com',
+            telephone: '+917529836117',
+            foundingDate: '2024',
+            address: {
+                '@type': 'PostalAddress',
+                addressCountry: 'IN',
+            },
+            areaServed: {
+                '@type': 'Country',
+                name: 'India',
+            },
+            sameAs: [
+                'https://linkedin.com/company/bigchalkbox',
+            ],
+        },
+        {
+            '@type': 'WebSite',
+            '@id': 'https://bigchalkbox.com/#website',
+            name: 'BigChalkBox',
+            url: 'https://bigchalkbox.com',
+            publisher: { '@id': 'https://bigchalkbox.com/#organization' },
+            description: 'AI-powered academic examination suite for Indian universities and colleges.',
+        },
+        {
+            '@type': 'SoftwareApplication',
+            '@id': 'https://bigchalkbox.com/#software',
+            name: 'BigChalkBox Academic Suite',
+            applicationCategory: 'EducationalApplication',
+            operatingSystem: 'Web Browser',
+            url: 'https://bigchalkbox.com',
             offers: {
                 '@type': 'Offer',
                 price: '0',
                 priceCurrency: 'INR',
-                description: 'Free pilot available for institutions',
+                description: 'Free institutional demo available. Contact for custom institutional pricing.',
             },
-        },
-        {
-            '@type': 'WebSite',
-            name: 'DASES',
-            alternateName: 'Digital Academic Student Evaluation System',
-            url: 'https://dasesai.com',
-            description: 'AI-powered handwritten exam evaluation platform for universities and schools.',
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '4.9',
+                reviewCount: '47',
+                bestRating: '5',
+                worstRating: '1',
+            },
+            featureList: [
+                'AI-powered handwritten answer sheet evaluation',
+                'Question paper quality moderation with Bloom\'s Taxonomy analysis',
+                'Automated question paper generation',
+                'Teacher notes and PPT generation',
+                'Student exam preparation content',
+                'NAAC and IQAC compliance reporting',
+            ],
         },
         {
             '@type': 'FAQPage',
             mainEntity: [
                 {
                     '@type': 'Question',
-                    name: 'How accurate is DASES compared to human grading?',
+                    name: 'What is AI-powered answer sheet evaluation?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'DASES achieves 98% rubric accuracy on handwritten descriptive answers, matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders.',
+                        text: 'AI-powered answer sheet evaluation uses computer vision and large language models to read handwritten descriptive answers and compare them against a teacher\'s rubric. DASES by BigChalkBox processes handwritten scripts using multimodal AI — it understands the semantic meaning of each answer, not just keyword matching. This enables accurate, objective grades with per-question feedback in seconds per sheet.',
                     },
                 },
                 {
                     '@type': 'Question',
-                    name: 'How many answer sheets can DASES process at once?',
+                    name: 'How does BigChalkBox ensure question paper quality?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'DASES processes up to 500 sheets in parallel, with each sheet scored in approximately 15 seconds. An entire batch that would take a faculty member days can be completed in minutes.',
+                        text: 'BigChalkBox\'s QP Moderation module runs a 10-point AI audit on every question paper. It checks for Bloom\'s Taxonomy balance, ambiguous phrasing, OR-choice difficulty parity, syllabus coverage gaps, out-of-syllabus questions, marks-vs-effort alignment, duplicate questions, and more. Each flagged issue comes with an AI-suggested rewrite.',
                     },
                 },
                 {
                     '@type': 'Question',
-                    name: 'How do I get started with DASES?',
+                    name: 'Is BigChalkBox compliant with NAAC and IQAC requirements?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'It takes less than 10 minutes. Upload your question paper, add model answers, and DASES generates rubrics automatically. From there, just upload student answer sheets and let the AI handle the rest.',
+                        text: 'Yes. BigChalkBox is built for the Indian university ecosystem, including NAAC, IQAC, and NBA compliance frameworks. The QP Moderation module\'s Bloom\'s Taxonomy mapping directly supports Learning Outcome Based Education (LOBE) requirements. All data is processed with role-based access controls, and student data is never shared with third-party AI providers.',
                     },
                 },
                 {
                     '@type': 'Question',
-                    name: 'Can I customize how DASES grades?',
+                    name: 'Which types of institutions can use BigChalkBox?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'Absolutely. You define the rubric — your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question.',
+                        text: 'BigChalkBox serves autonomous universities, deemed-to-be universities, affiliated colleges, engineering and technical institutions, B-Schools, and state boards across India. The platform supports custom configurations for any examination format, syllabus structure, or grading scheme.',
                     },
                 },
                 {
                     '@type': 'Question',
-                    name: 'Is student data secure on DASES?',
+                    name: 'How much does it cost to implement AI examination software?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'Yes. All data is encrypted at rest and in transit. Role-based access control ensures students only see their own results, and faculty only access their own papers and submissions. Complete audit trails are maintained.',
+                        text: 'BigChalkBox offers flexible institutional pricing based on modules selected and scale of deployment. We start with a free pilot program for qualifying institutions so you can see real results before any commitment. Contact us at admin.dasesai@gmail.com for a custom quote.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'Can BigChalkBox integrate with existing University ERP systems?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'BigChalkBox supports data exchange via structured exports (Excel, PDF, CSV) compatible with most Indian university ERP and SIS systems. Full API integration is available on the Enterprise plan.',
                     },
                 },
             ],
         },
         {
-            '@type': 'HowTo',
-            name: 'How to Grade Handwritten Exams with AI Using DASES',
-            description: 'Grade handwritten descriptive answer sheets using AI in three simple steps with DASES.',
-            totalTime: 'PT10M',
-            tool: {
-                '@type': 'HowToTool',
-                name: 'DASES AI Evaluation Platform',
-            },
-            step: [
+            '@type': 'BreadcrumbList',
+            itemListElement: [
                 {
-                    '@type': 'HowToStep',
+                    '@type': 'ListItem',
                     position: 1,
-                    name: 'Upload & Scan',
-                    text: 'Bulk upload scanned answer sheet PDFs from a document scanner or phone camera. DASES accepts standard PDF format.',
-                    url: 'https://dasesai.com/#workflow',
-                },
-                {
-                    '@type': 'HowToStep',
-                    position: 2,
-                    name: 'AI Evaluation',
-                    text: 'The DASES AI engine reads handwriting, maps answers to questions, and scores each answer against your faculty-defined rubric with 98% accuracy. Up to 500 sheets processed in parallel.',
-                    url: 'https://dasesai.com/#workflow',
-                },
-                {
-                    '@type': 'HowToStep',
-                    position: 3,
-                    name: 'Review & Publish',
-                    text: 'Faculty verify AI-generated scores, download branded PDF reports with per-question feedback, and share detailed results with students through the student portal.',
-                    url: 'https://dasesai.com/#workflow',
+                    name: 'BigChalkBox',
+                    item: 'https://bigchalkbox.com',
                 },
             ],
         },
