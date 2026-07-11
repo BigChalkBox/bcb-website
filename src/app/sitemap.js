@@ -1,3 +1,5 @@
+export const dynamic = 'force-static';
+
 import { getAllSlugs } from './blog/articles'
 
 export default function sitemap() {

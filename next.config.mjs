@@ -1,16 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'crqheuuvsgtzejaestyj.supabase.co',
-        pathname: '/storage/v1/object/public/**',
-      },
-    ],
+    unoptimized: true,
   },
-  // External packages that need native binaries
-  serverExternalPackages: ['sharp', 'canvas', 'pdfjs-dist', '@napi-rs/canvas'],
 };
 
 export default nextConfig;
