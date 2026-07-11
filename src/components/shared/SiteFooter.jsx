@@ -37,7 +37,6 @@ export default function SiteFooter() {
                         <h5>Get Started</h5>
                         <ul>
                             <li><Link href="/#contact">Book a Demo</Link></li>
-                            <li><Link href="/SignIn">Log In</Link></li>
                             <li><Link href="/pricing">Pricing</Link></li>
                         </ul>
                     </div>

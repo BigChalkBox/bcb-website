@@ -56,7 +56,6 @@ export default function Header() {
 
       <nav className={`${styles.nav} ${isOpen ? styles.open : ""}`}>
         <Link href="/" onClick={() => setIsOpen(false)}>Home</Link>
-        <Link href="/SignIn" onClick={() => setIsOpen(false)}>SignIn</Link>
         <Link href="#bookDemo" onClick={() => setIsOpen(false)}>Contact</Link>
       </nav>
 

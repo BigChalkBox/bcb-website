@@ -38,7 +38,6 @@ export default function SiteHeader() {
                     <Link href="/blog" className={pathname.startsWith('/blog') ? 'active' : ''}>Blog</Link>
                 </nav>
                 <div className="site-header-actions">
-                    <Link className="btn-accent" href="/SignIn" style={{ padding: '0.5rem 1.25rem', borderRadius: '0.5rem', fontWeight: '800', textDecoration: 'none', transition: 'all 0.2s', display: 'inline-block' }}>Sign In</Link>
                     <Link href="/#contact" className="site-btn-demo">
                         Book Demo <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>
                     </Link>
@@ -67,7 +66,6 @@ export default function SiteHeader() {
                         <Link href="/about" onClick={() => setMobileMenuOpen(false)} className={pathname === '/about' ? 'active' : ''}>About Us</Link>
                         <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className={pathname === '/pricing' ? 'active' : ''}>Pricing</Link>
                         <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className={pathname.startsWith('/blog') ? 'active' : ''}>Blog</Link>
-                        <Link className="mobile-login-link" href="/SignIn" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
                         <Link href="/#contact" onClick={() => setMobileMenuOpen(false)} className="mobile-btn-demo">
                             Book Demo <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>
                         </Link>
