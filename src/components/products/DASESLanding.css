@@ -160,7 +160,7 @@
    ============================================ */
 .lp-hero {
     position: relative;
-    padding: 3rem 0 5rem;
+    padding: 6rem 0 5rem;
     overflow: hidden;
 }
 
@@ -1498,7 +1498,7 @@
     }
 
     .lp-hero {
-        padding: 3rem 0 4rem;
+        padding: 6rem 0 4rem;
     }
 
     .lp-hero-title {
@@ -1601,7 +1601,7 @@
     }
 
     .lp-hero {
-        padding: 4rem 0 6rem;
+        padding: 8rem 0 6rem;
     }
 
     .lp-hero-title {

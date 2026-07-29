@@ -16,7 +16,6 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     border: 3px solid rgba(198, 211, 193, 0.2);
     overflow: hidden;
-    min-height: 85vh;
 }
 
 .lp-form-side {
@@ -27,7 +26,7 @@
 }
 
 .lp-form-tag {
-    color: var(--primary-color, #1C5F20);
+    color: #144F36;
     font-weight: 900;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -69,11 +68,12 @@
 }
 
 .lp-form input,
-.lp-form select {
+.lp-form select,
+.lp-form textarea {
     width: 100%;
-    border: 2px solid var(--pale-olive, #C6D3C1);
+    border: 2px solid rgba(26, 36, 33, 0.15);
     border-radius: 0.75rem;
-    background: rgba(245, 245, 220, 0.1);
+    background: transparent;
     padding: 0.6rem 1rem;
     font-weight: 900;
     color: var(--text-primary, #1A2421);
@@ -84,14 +84,17 @@
 }
 
 .lp-form input:focus,
-.lp-form select:focus {
+.lp-form select:focus,
+.lp-form textarea:focus {
     outline: none;
-    border-color: var(--primary-color, #1C5F20);
-    box-shadow: 0 0 0 4px rgba(28, 95, 32, 0.1);
+    border-color: #144F36;
+    box-shadow: 0 0 0 4px rgba(20, 79, 54, 0.1);
 }
 
-.lp-form input::placeholder {
+.lp-form input::placeholder,
+.lp-form textarea::placeholder {
     color: #94a3b8;
+    font-weight: 500;
 }
 
 .lp-form-grid {
@@ -120,7 +123,7 @@
 }
 
 .lp-btn-submit {
-    background: var(--accent, #BF9B30);
+    background: #144F36;
     color: white;
     width: 100%;
     padding: 0.7rem;
@@ -129,7 +132,7 @@
     font-size: 0.95rem;
     border: none;
     cursor: pointer;
-    box-shadow: 0 25px 50px -12px rgba(191, 155, 48, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(20, 79, 54, 0.25);
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -138,13 +141,13 @@
 }
 
 .lp-btn-submit:hover {
-    background: var(--primary-color, #1C5F20);
+    background: #1a2421;
     transform: scale(1.02);
 }
 
 /* Dark contact side */
 .lp-contact-dark {
-    background: var(--primary-color, #1C5F20);
+    background: #144F36;
     padding: 1.5rem;
     color: white;
     display: flex;
@@ -198,14 +201,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent, #BF9B30);
+    color: #10b981;
     transition: all 0.2s;
     flex-shrink: 0;
 }
 
 .lp-contact-row:hover .icon-box {
-    background: var(--accent, #BF9B30);
-    color: var(--primary-color, #1C5F20);
+    background: #10b981;
+    color: #144F36;
 }
 
 .lp-contact-row .sub-label {
@@ -281,7 +284,6 @@
 @media (min-width: 1024px) {
     .lp-contact-card {
         flex-direction: row;
-        min-height: 60vh;
     }
     
     .lp-form-side {

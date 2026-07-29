@@ -1,23 +1,23 @@
 import PricingPage from '../../components/pricing/PricingPage'
 
 export const metadata = {
-    title: 'Pricing | Starter, Growth & Institution Packages',
+    title: 'Pricing | BigChalkBox Assessment Suite',
     description:
-        'Pick the DASES package that fits: Starter (200 sheets/mo), Growth (2,000 sheets/mo), or Institution (unlimited). AI rubric engine, QuickPass™ analysis, student portal, and more.',
+        'Transparent pricing for Question Paper Generation, Moderation, and AI Evaluation. Start generating papers at ₹400 + GST.',
     alternates: {
         canonical: 'https://bigchalkbox.com/pricing',
     },
     openGraph: {
-        title: 'DASES Pricing | AI Evaluation Packages for Every Institution',
+        title: 'BigChalkBox Pricing | AI Evaluation Packages for Every Institution',
         description:
-            'Three packages, each with a clear set of AI evaluation solutions. Start with a free pilot, scale as you grow.',
+            'Modular pricing for question paper generation, moderation, and automated evaluation.',
         url: 'https://bigchalkbox.com/pricing',
         type: 'website',
     },
     twitter: {
-        title: 'DASES Pricing | Starter • Growth • Institution',
+        title: 'BigChalkBox Pricing | AI Assessment Suite',
         description:
-            'Modular AI evaluation from 200 to unlimited sheets/month. Paper builder, rubric engine, evaluation, reports, analytics.',
+            'Transparent pricing for question paper generation, moderation, and AI evaluation.',
     },
 }
 
@@ -26,38 +26,40 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'Product',
-            name: 'DASES AI Evaluation Platform',
+            name: 'BigChalkBox AI Assessment Suite',
             description:
-                'AI-powered handwritten exam evaluation platform with modular pricing for institutions of all sizes.',
+                'AI-powered handwritten exam evaluation platform and question paper generation suite.',
             brand: {
                 '@type': 'Brand',
-                name: 'DASES',
+                name: 'BigChalkBox',
             },
             url: 'https://bigchalkbox.com/pricing',
             offers: [
                 {
                     '@type': 'Offer',
-                    name: 'Starter Package',
+                    name: 'Question Paper Moderation',
                     description:
-                        'Up to 200 sheets per month. Includes Smart Paper Builder, AI Rubric Engine, AI Evaluation, and PDF Reports.',
+                        'Automated quality audits for your question papers before sign-off.',
                     priceCurrency: 'INR',
+                    price: '400',
                     availability: 'https://schema.org/InStock',
                     url: 'https://bigchalkbox.com/pricing',
                 },
                 {
                     '@type': 'Offer',
-                    name: 'Growth Package',
+                    name: 'Question Paper Generation',
                     description:
-                        'Up to 2,000 sheets per month. Includes everything in Starter plus QuickPass™ Paper Analysis, Student Portal, and Analytics Dashboard.',
+                        'Instantly create curriculum-aligned question papers.',
                     priceCurrency: 'INR',
+                    price: '400',
                     availability: 'https://schema.org/InStock',
                     url: 'https://bigchalkbox.com/pricing',
                 },
                 {
                     '@type': 'Offer',
-                    name: 'Institution Package',
+                    name: 'Evaluation Module',
                     description:
-                        'Unlimited sheets. Includes everything in Growth plus multi-department management, priority support, and custom integrations.',
+                        'Automated AI evaluation for handwritten assessments.',
                     priceCurrency: 'INR',
                     availability: 'https://schema.org/InStock',
                     url: 'https://bigchalkbox.com/pricing',

@@ -1,23 +1,23 @@
 import AboutPage from '../../components/about/AboutPage'
 
 export const metadata = {
-    title: 'About | AI-Powered Exam Evaluation by Big Chalk Box Pvt. Ltd.',
+    title: 'About | Big Chalk Box Pvt. Ltd.',
     description:
-        'DASES is built by Big Chalk Box Pvt. Ltd., solving the hardest problems in academic assessment. 98% rubric accuracy on handwritten answers, 400+ sheets evaluated, 20+ educators onboard.',
+        'Big Chalk Box Pvt. Ltd. is an EdTech engineering company solving the hardest, most tedious problems in education so teachers can get back to teaching.',
     openGraph: {
         type: 'website',
         locale: 'en_IN',
         url: 'https://bigchalkbox.com/about',
-        title: 'About DASES | Built by Big Chalk Box Pvt. Ltd.',
+        title: 'About | Big Chalk Box Pvt. Ltd.',
         description:
-            'A team of engineers and educators transforming descriptive grading. Learn how DASES achieves 98% accuracy on handwritten exams.',
-        siteName: 'DASES',
+            'An EdTech engineering company building deep-tech solutions for educators. Makers of DASES.',
+        siteName: 'Big Chalk Box',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'About DASES | Big Chalk Box Pvt. Ltd.',
+        title: 'About | Big Chalk Box Pvt. Ltd.',
         description:
-            '400+ sheets evaluated • 98% accuracy • 20+ educators. Built by Big Chalk Box Pvt. Ltd. in India.',
+            'Solving the hardest problems in education. Makers of DASES.',
     },
     alternates: {
         canonical: 'https://bigchalkbox.com/about',
@@ -30,7 +30,7 @@ export const metadata = {
         },
     ],
     summary:
-        'Big Chalk Box Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy.',
+        'Big Chalk Box Pvt. Ltd. is an EdTech engineering company building deep-tech solutions to automate the most grueling parts of an educator\'s job.',
 }
 
 const jsonLd = {
@@ -43,7 +43,7 @@ const jsonLd = {
             email: 'admin.dasesai@gmail.com',
             telephone: '+917529836117',
             description:
-                'Big Chalk Box Pvt. Ltd. builds DASES, an AI-powered platform for evaluating handwritten descriptive answer sheets with 98% rubric accuracy. Based in India, the team of engineers and educators is solving the hardest problems in academic assessment.',
+                'Big Chalk Box Pvt. Ltd. is an EdTech engineering company building deep-tech solutions to automate the most grueling parts of an educator\'s job. Based in India, our flagship product is DASES.',
             address: {
                 '@type': 'PostalAddress',
                 addressCountry: 'IN',

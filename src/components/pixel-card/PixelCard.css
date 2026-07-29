@@ -1,0 +1,23 @@
+.pixel-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pixel-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  user-select: none;
+}
+
+
+
+.pixel-card > *:not(.pixel-canvas) {
+  position: relative;
+  z-index: 1;
+}

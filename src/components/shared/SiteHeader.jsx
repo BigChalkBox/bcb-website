@@ -2,76 +2,85 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { useState } from 'react'
-import './SiteHeader.css'
-import './SiteHeader.css'
+import StaggeredMenu from '../staggered-menu/StaggeredMenu'
+import '../landing/LandingPage.css' // Import styles for sticky-nav
 
 export default function SiteHeader() {
     const pathname = usePathname()
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [dropdownOpen, setDropdownOpen] = useState(false)
+    const isLandingPage = pathname === '/'
+    
+    const { scrollY } = useScroll()
+    const [showNav, setShowNav] = useState(!isLandingPage)
+
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        if (!isLandingPage) return // On other pages, it is always visible
+
+        if (latest > (typeof window !== 'undefined' ? window.innerHeight * 0.8 : 800)) {
+            setShowNav(true)
+        } else {
+            setShowNav(false)
+        }
+    })
+
+    const menuItems = [
+        { label: 'Solutions', ariaLabel: 'Explore our product suite', link: '/solutions' },
+        { label: 'Contact', ariaLabel: 'Get in touch', link: '/#contact' },
+        { label: 'About', ariaLabel: 'About Big Chalk Box', link: '/about' },
+        { label: 'Pricing', ariaLabel: 'View pricing', link: '/pricing' },
+        { label: 'Blog', ariaLabel: 'Engineering journal', link: '/blog' },
+    ];
+
+    const socialItems = [
+        { label: 'YouTube', link: 'https://youtube.com/@dases_ai' },
+    ];
 
     return (
-        <header className="site-header site-glass">
-            <div className="site-header-inner">
-                <Link href="/" className="site-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-                    <img src="/logo_new/logo.png" alt="BigChalkBox Logo" style={{ height: '2.5rem', width: 'auto', objectFit: 'contain' }} />
-                    <span className="site-logo-text" style={{ fontSize: '1.5rem', fontWeight: '800', letterSpacing: '-0.5px' }}>Big<span style={{ color: 'var(--primary-color)' }}>Chalk</span>Box</span>
-                </Link>
-                <nav className="site-nav">
-                    <div className="nav-dropdown" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
-                        <button className={`nav-dropdown-btn ${pathname.startsWith('/products') ? 'active-hint' : ''}`}>
-                            Products <span className="material-symbols-outlined">expand_more</span>
-                        </button>
-                        {dropdownOpen && (
-                            <div className="nav-dropdown-content">
-                                <Link href="/products/dases" onClick={() => setDropdownOpen(false)}>DASES (Evaluation)</Link>
-                                <Link href="/products/qp-moderation" onClick={() => setDropdownOpen(false)}>QP Moderation</Link>
-                                <div className="nav-dropdown-item muted">QP Generation (Soon)</div>
-                                <div className="nav-dropdown-item muted">Teacher Notes (Soon)</div>
-                                <div className="nav-dropdown-item muted">Exam Prep (Soon)</div>
-                            </div>
-                        )}
-                    </div>
-                    <Link href="/about" className={pathname === '/about' ? 'active' : ''}>About Us</Link>
-                    <Link href="/pricing" className={pathname === '/pricing' ? 'active' : ''}>Pricing</Link>
-                    <Link href="/blog" className={pathname.startsWith('/blog') ? 'active' : ''}>Blog</Link>
-                </nav>
-                <div className="site-header-actions">
-                    <Link href="/#contact" className="site-btn-demo">
-                        Book Demo <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>
-                    </Link>
-                    <button
-                        className="mobile-menu-btn"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        aria-label="Toggle Navigation Menu"
+        <>
+            <AnimatePresence>
+                {showNav && (
+                    <motion.nav 
+                        className="sticky-nav"
+                        initial={{ y: '-100%' }}
+                        animate={{ y: 0 }}
+                        exit={{ y: '-100%' }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <span className="material-symbols-outlined">
-                            {mobileMenuOpen ? 'close' : 'menu'}
-                        </span>
-                    </button>
-                </div>
-            </div>
-
-            {/* Mobile Navigation Drawer */}
-            {mobileMenuOpen && (
-                <div className="mobile-nav-drawer">
-                    <nav className="mobile-nav">
-                        <Link href="/#products" onClick={() => setMobileMenuOpen(false)} className={pathname === '/' ? 'active-hint' : ''}>Products</Link>
-                        <Link href="/products/dases" onClick={() => setMobileMenuOpen(false)} className={pathname === '/products/dases' ? 'active' : ''}>DASES</Link>
-                        <Link href="/products/qp-moderation" onClick={() => setMobileMenuOpen(false)} className={pathname === '/products/qp-moderation' ? 'active' : ''}>QP Moderation</Link>
-                        <div className="mobile-nav-item muted" style={{ color: 'var(--slate-muted)', fontSize: '0.8rem', padding: '0.5rem 1rem', textAlign: 'center' }}>QP Generation (Soon)</div>
-                        <div className="mobile-nav-item muted" style={{ color: 'var(--slate-muted)', fontSize: '0.8rem', padding: '0.5rem 1rem', textAlign: 'center' }}>Teacher Notes (Soon)</div>
-                        <div className="mobile-nav-item muted" style={{ color: 'var(--slate-muted)', fontSize: '0.8rem', padding: '0.5rem 1rem', textAlign: 'center' }}>Exam Prep (Soon)</div>
-                        <Link href="/about" onClick={() => setMobileMenuOpen(false)} className={pathname === '/about' ? 'active' : ''}>About Us</Link>
-                        <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className={pathname === '/pricing' ? 'active' : ''}>Pricing</Link>
-                        <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className={pathname.startsWith('/blog') ? 'active' : ''}>Blog</Link>
-                        <Link href="/#contact" onClick={() => setMobileMenuOpen(false)} className="mobile-btn-demo">
-                            Book Demo <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_forward</span>
+                        <Link href="/" className="sticky-nav-left" style={{ textDecoration: 'none' }}>
+                            <img src="/logo_new/logo.png" alt="Icon" className="nav-icon" />
+                            <span className="nav-logo-text-solid"><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
                         </Link>
-                    </nav>
-                </div>
-            )}
-        </header>
+                        <div className="sticky-nav-right">
+                            <div className="pill-wrapper hide-mobile">
+                                <Link href="/solutions" className="pill-button outline sticky-nav-btn">
+                                    Explore Products
+                                </Link>
+                            </div>
+                            <div className="pill-wrapper">
+                                <Link href="/#contact" className="pill-button dark sticky-nav-btn">
+                                    Book a Free Demo
+                                </Link>
+                            </div>
+                            <div className="menu-spacer"></div>
+                        </div>
+                    </motion.nav>
+                )}
+            </AnimatePresence>
+            <StaggeredMenu
+                position="right"
+                items={menuItems}
+                socialItems={socialItems}
+                displaySocials={true}
+                displayItemNumbering={false}
+                menuButtonColor={showNav ? "#0a0f12" : "#ffffff"}
+                openMenuButtonColor="#f5f0e8"
+                changeMenuColorOnOpen={true}
+                colors={['#0d1117', '#0a0f12']}
+                logoUrl=""
+                accentColor="#c8a84b"
+                isFixed={true}
+            />
+        </>
     )
 }

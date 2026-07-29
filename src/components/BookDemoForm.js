@@ -26,6 +26,8 @@ export default function BookDemoForm() {
             institution_name: fd.get('institution'),
             designation: fd.get('role'),
             email: fd.get('email'),
+            phone: fd.get('phone'),
+            comments: fd.get('comments'),
             created_at: new Date().toLocaleString('en-IN'),
         }
         try {
@@ -54,7 +56,7 @@ export default function BookDemoForm() {
                     <div className="lp-form-side">
                         <span className="lp-form-tag">Get Started</span>
                         <h2 className="lp-form-title">Book Your Free Demo</h2>
-                        <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric live. Fill out the form and we'll set it up.</p>
+                        <p className="lp-form-desc">See BigChalkBox evaluate a real answer sheet against your rubric live. Fill out the form and we'll set it up.</p>
 
                         {formStatus ? (
                             <div className="lp-success">
@@ -88,9 +90,19 @@ export default function BookDemoForm() {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="lp-form-grid">
+                                    <div>
+                                        <label>Email</label>
+                                        <input name="email" required placeholder="name@institution.edu" type="email" />
+                                    </div>
+                                    <div>
+                                        <label>Phone Number</label>
+                                        <input name="phone" required placeholder="+91 98765 43210" type="tel" />
+                                    </div>
+                                </div>
                                 <div>
-                                    <label>Email</label>
-                                    <input name="email" required placeholder="name@institution.edu" type="email" />
+                                    <label>Comments</label>
+                                    <textarea name="comments" rows={3} placeholder="Any specific requirements or questions?" style={{ resize: 'none' }} />
                                 </div>
                                 <button type="submit" className="lp-btn-submit" disabled={submitting}>
                                     {submitting ? 'Submitting...' : 'Book Demo'}
@@ -110,8 +122,8 @@ export default function BookDemoForm() {
                                         <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>mail</span>
                                     </div>
                                     <div>
-                                        <div className="sub-label">Email</div>
-                                        <div className="value">admin.dasesai@gmail.com</div>
+                                        <div className="sub-label">BigChalkBox AI</div>
+                                        <div className="value">admin@bigchalkbox.com</div>
                                     </div>
                                 </div>
                                 <div className="lp-contact-row">
@@ -130,7 +142,7 @@ export default function BookDemoForm() {
                                 <span className="material-symbols-outlined">public</span>
                                 <span className="material-symbols-outlined">share</span>
                             </div>
-                            <div className="copy">© 2026 DASES by Big Chalk Box Pvt. Ltd.</div>
+                            <div className="copy">© {new Date().getFullYear()} BCBX INNOVATIONS PRIVATE LIMITED.</div>
                         </div>
                     </div>
                 </div>

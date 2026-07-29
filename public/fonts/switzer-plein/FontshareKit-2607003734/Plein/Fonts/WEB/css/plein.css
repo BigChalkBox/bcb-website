@@ -1,0 +1,22 @@
+/**
+* @license
+*
+* Font Family: Plein
+* Designed by: Inga Plönnigs
+* URL: https://www.fontshare.com/fonts/plein
+* © 2026 Indian Type Foundry
+*
+* Plein Bold 
+
+*
+*/
+@font-face {
+  font-family: 'Plein-Bold';
+  src: url('../fonts/Plein-Bold.woff2') format('woff2'),
+       url('../fonts/Plein-Bold.woff') format('woff'),
+       url('../fonts/Plein-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+

@@ -1,122 +1,95 @@
-/* ===== CSS RESET & BASE STYLES ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&family=Roboto:wght@400;500;700;900&display=swap');
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer/Switzer-Regular.woff2') format('woff2'),
+       url('/fonts/switzer/Switzer-Regular.woff') format('woff'),
+       url('/fonts/switzer/Switzer-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
 }
 
-/* ===== ROOT VARIABLES ===== */
-:root {
-  /* Primary green colors */
-  --primary-color: #1C5F20;
-  --primary-hover: #3B8A40;
-  --primary-dark: #0B2613; /* Assuming a darker shade based on previous changes */
-  
-  /* Accent colors */
-  --accent-color: #BF9B30;
-  --accent-hover: #D4B34D;
-  
-  /* Text colors */
-  --text-primary: #1A2421;
-  --text-muted: #64748B;
-  --text-light: #94A3B8;
-
-  /* Background colors */
-  --bg-primary: #FCFCF7;
-  --bg-card: #FFFFFF;
-  --bg-secondary: #F8FAF8;
-
-  /* Border and shadows */
-  --border-color: #E2E8F0;
-  --shadow-sm: 0 1px 2px 0 rgba(28, 95, 32, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(28, 95, 32, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(28, 95, 32, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(28, 95, 32, 0.1);
-
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #1C5F20 0%, #3B8A40 100%);
-  --gradient-bg: linear-gradient(180deg, #FCFCF7 0%, #F8FAF8 100%);
-
-  /* Border radius - unchanged */
-  --border-radius-sm: 8px;
-  --border-radius-md: 12px;
-  --border-radius-lg: 16px;
-  --border-radius-xl: 20px;
-
-  /* Spacing - unchanged */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-  --spacing-2xl: 4rem;
-  --spacing-3xl: 6rem;
-
-  /* Legacy colors - kept for DASESLanding compatibility */
-  --space-cadet: #25344F;
-  --slate-gray: #617891;
-  --tan: #D5B893;
-  --coffee: #6F4D38;
-  --caput-mortuum: #632024;
-
+@font-face {
+  font-family: 'Plein';
+  src: url('/fonts/plein/Plein-Bold.woff2') format('woff2'),
+       url('/fonts/plein/Plein-Bold.woff') format('woff'),
+       url('/fonts/plein/Plein-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@theme {
+  /* ── Brand palette (Modern Minimalist & WOW) ── */
+  --color-green-deep:   #000000; /* Reassigned to Pitch Black for sleekness */
+  --color-green-mid:    #171717; /* Reassigned to deep charcoal */
+  --color-green-pale:   #f4f4f5; /* Zinc 100 */
+  --color-gold:         #145a38; /* Chalkboard Green to match logo */
+  --color-gold-light:   #1c7a4d; /* Lighter Chalkboard Green */
+  --color-cream:        #ffffff; /* Pure White background */
+  --color-cream-dark:   #f4f4f5; /* Off-white for surface contrast */
+  --color-ink:          #09090b; /* Near black for sharp typography */
+  --color-ink-soft:     #52525b; /* Zinc 600 for secondary text */
+  --color-slate:        #71717a; /* Zinc 500 */
+  --color-border:       #e4e4e7; /* Zinc 200 */
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  /* ── Typography (Using Switzer & Plein) ── */
+  --font-sans:    "Plein", sans-serif;
+  --font-serif:   "Plein", sans-serif;
+  --font-display: "Plein", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Base font size for normal screens (16px) */
+    font-size: 16px;
+  }
+
+  /* Scale everything proportionally on screens wider than 1440px */
+  @media (min-width: 1441px) {
+    html {
+      font-size: calc(100vw / 90);
+    }
+  }
+
+  html, body {
+    font-family: var(--font-sans);
+    background: var(--color-cream);
+    color: var(--color-ink);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
   }
 }
 
-
-
-html {
-  scroll-behavior: smooth;
-}
-
+/* ── Scrollbar ── */
+::-webkit-scrollbar { display: none; }
 body {
-  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.6;
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
-  overflow-x: hidden;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
-.slick-dots li button:before {
-  color: #fff;
-}
-
-.slick-dots li.slick-active button:before {
-  color: #000;
-}
-
-/* Lucide icon spinner animation */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Button Styles */
-.btn-accent {
-  background-color: var(--accent-color);
-  color: white;
-}
-
-.btn-accent:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(191, 155, 48, 0.2);
+/* ── Material Symbols ── */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
 }

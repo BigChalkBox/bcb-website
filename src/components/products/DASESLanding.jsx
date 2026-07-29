@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import TestimonialStack from '../TestimonialStack'
-import BackedBy from '../shared/BackedBy'
+
 
 const FadeIn = ({ children, delay = 0, className = "" }) => (
     <motion.div
@@ -22,7 +22,7 @@ const FadeIn = ({ children, delay = 0, className = "" }) => (
 )
 import './DASESLanding.css'
 
-export default function LandingPage() {
+export default function DASESLanding() {
     const [formStatus, setFormStatus] = useState(null)
     const [submitting, setSubmitting] = useState(false)
     const [openFaq, setOpenFaq] = useState(1)
@@ -39,12 +39,12 @@ export default function LandingPage() {
         const initPlayer = () => {
             if (window.YT && window.YT.Player) {
                 new window.YT.Player('dases-workflow-video', {
-                    videoId: 'tR1Oq9q4fZY',
+                    videoId: 'k13pAnWj0Tc',
                     playerVars: {
                         autoplay: 0,
                         controls: 1,
                         loop: 0,
-                        playlist: 'tR1Oq9q4fZY',
+                        playlist: 'k13pAnWj0Tc',
                         playsinline: 1,
                         rel: 0,
                         disablekb: 0,
@@ -72,7 +72,7 @@ export default function LandingPage() {
     }, []);
 
     const workflowSteps = [
-        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs from a document scanner or phone camera." },
+        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs — from a document scanner or phone camera." },
         { title: "AI Evaluation", desc: "Our engine reads handwriting, maps answers to questions, and scores against your rubric." },
         { title: "Review & Publish", desc: "Verify scores, download branded PDF reports, and share results with students." }
     ]
@@ -80,7 +80,7 @@ export default function LandingPage() {
     const faqData = [
         {
             question: "How accurate is DASES compared to human grading?",
-            answer: "DASES achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers, matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
+            answer: "DASES achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers — matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
         },
         {
             question: "How many answer sheets can DASES process at once?",
@@ -92,7 +92,7 @@ export default function LandingPage() {
         },
         {
             question: "Can I customize how DASES grades?",
-            answer: "Absolutely. You define the rubric: your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
+            answer: "Absolutely. You define the rubric — your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
         },
         {
             question: "Is student data secure?",
@@ -164,10 +164,10 @@ export default function LandingPage() {
                                 <span className="lp-gradient-text">in Minutes, Not Days.</span>
                             </h1>
                             <p className="lp-hero-sub">
-                                AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback at 98% accuracy.
+                                AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback — at 98% accuracy.
                             </p>
                             <FadeIn delay={0.1} className="lp-cta-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', position: 'relative', zIndex: 10 }}>
-                                <Link href="https://www.youtube.com/watch?v=tR1Oq9q4fZY" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                <Link href="https://www.youtube.com/watch?v=k13pAnWj0Tc&list=TLGGtZTxRZOBne8yMjAyMjAyNg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                     <button className="lp-btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.875rem 1.5rem', background: 'white' }}>
                                         <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>play_circle</span>
                                         Watch a quick demo video
@@ -244,7 +244,7 @@ export default function LandingPage() {
                         </div>
                     </section>
 
-                    <BackedBy />
+
 
                     {/* ==================== FEATURES ==================== */}
                     <section className="lp-features" id="features">
@@ -359,7 +359,7 @@ export default function LandingPage() {
                                         in Three Steps.
                                     </h2>
                                     <p className="lp-workflow-desc">
-                                        Upload your students' answer sheets. DASES reads the handwriting, scores each answer against your rubric, and generates personalized feedback, ready for faculty review and student delivery.
+                                        Upload your students&apos; answer sheets. DASES reads the handwriting, scores each answer against your rubric, and generates personalized feedback — ready for faculty review and student delivery.
                                     </p>
                                     <div className="lp-steps">
                                         {workflowSteps.map((step, idx) => {
@@ -417,14 +417,9 @@ export default function LandingPage() {
                     < section className="lp-faq" id="faq" >
                         <div className="lp-faq-blob"></div>
                         <FadeIn className="lp-container" style={{ position: 'relative', zIndex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <div className="lp-faq-icon-wrap">
-                                <svg style={{ width: '2.5rem', height: '2.5rem', fill: 'none', stroke: '#22C55E', strokeWidth: 3.5 }} viewBox="0 0 40 40">
-                                    <path className="lp-logo-d-path" d="M12 8C12 8 28 8 28 20C28 32 12 32 12 32V8Z" />
-                                    <path d="M15 20L20 25L32 12" stroke="#1B5E20" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
-                                </svg>
-                            </div>
+
                             <h2 className="lp-faq-title" style={{ textAlign: 'center' }}>Frequently Asked Questions</h2>
-                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about DASES: from accuracy to data security.</p>
+                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about DASES — from accuracy to data security.</p>
 
                             <div className="lp-faq-list" style={{ textAlign: 'left', width: '100%' }}>
                                 {faqData.map((faq, idx) => {
@@ -462,7 +457,7 @@ export default function LandingPage() {
                                 <div className="lp-form-side">
                                     <span className="lp-form-tag">Get Started</span>
                                     <h2 className="lp-form-title">Book Your Free Demo</h2>
-                                    <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric live. Fill out the form and we&apos;ll set it up.</p>
+                                    <p className="lp-form-desc">See DASES evaluate a real answer sheet against your rubric — live. Fill out the form and we&apos;ll set it up.</p>
 
                                     {formStatus ? (
                                         <div className="lp-success">
@@ -519,7 +514,7 @@ export default function LandingPage() {
                                                 </div>
                                                 <div>
                                                     <div className="sub-label">Email</div>
-                                                    <div className="value">admin.dasesai@gmail.com</div>
+                                                    <div className="value">support@esun.solutions</div>
                                                 </div>
                                             </div>
                                             <div className="lp-contact-row">
@@ -538,7 +533,7 @@ export default function LandingPage() {
                                             <span className="material-symbols-outlined">public</span>
                                             <span className="material-symbols-outlined">share</span>
                                         </div>
-                                        <div className="copy">© 2026 DASES by Big Chalk Box Pvt. Ltd.</div>
+                                        <div className="copy">© 2026 DASES by eSun Smart Solutions Pvt. Ltd.</div>
                                     </div>
                                 </div>
                             </FadeIn>

@@ -6,19 +6,19 @@ export default function FAQSection() {
 
 const faqs = [
   {
-    question: "What types of answers can DASES evaluate?",
-    answer: "DASES is designed for long-form, descriptive answers. It processes handwritten sheets using OCR and evaluates them using structured, rubric-aligned LLM scoring."
+    question: "What types of answers can BigChalkBox evaluate?",
+    answer: "BigChalkBox is designed for long-form, descriptive answers. It processes handwritten sheets using OCR and evaluates them using structured, rubric-aligned LLM scoring."
   },
   {
     question: "Can educators review and adjust scores?",
     answer: "Yes. Every evaluation includes a human-in-the-loop workflow. Educators can review, calibrate, override, and finalize scores to ensure academic reliability."
   },
   {
-    question: "How does DASES ensure fairness and consistency?",
-    answer: "DASES uses standardized rubrics, transparent evaluation criteria, and bias-aware scoring to minimize subjectivity and maintain consistent assessment across cohorts."
+    question: "How does BigChalkBox ensure fairness and consistency?",
+    answer: "BigChalkBox uses standardized rubrics, transparent evaluation criteria, and bias-aware scoring to minimize subjectivity and maintain consistent assessment across cohorts."
   },
   {
-    question: "Is DASES suitable for large student cohorts?",
+    question: "Is BigChalkBox suitable for large student cohorts?",
     answer: "Absolutely. The platform is built for high-volume exam periods and institutional-level scale, ensuring fast processing without performance drop-offs."
   },
   {
@@ -75,7 +75,7 @@ const faqs = [
               <span className={styles.titleAccent}>got answers</span>
             </h1>
             <p className={styles.description}>
-              Find quick and clear answers to the most common questions about DASES
+              Find quick and clear answers to the most common questions about BigChalkBox
               <br />
               all in one place.
             </p>

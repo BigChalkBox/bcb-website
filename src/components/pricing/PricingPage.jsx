@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import SiteHeader from '../shared/SiteHeader'
 import SiteFooter from '../shared/SiteFooter'
-import BackedBy from '../shared/BackedBy'
 import './PricingPage.css'
 
 const FadeIn = ({ children, delay = 0, className = "" }) => (
@@ -22,61 +21,51 @@ const FadeIn = ({ children, delay = 0, className = "" }) => (
 
 const packages = [
     {
-        name: 'Starter',
-        desc: 'For individual faculty getting started with AI evaluation.',
-        volume: 'Up to 200',
-        volumeLabel: 'sheets / month',
-        cta: 'Start Free Pilot',
+        name: 'Question Paper Moderation',
+        desc: 'Automated quality audits for your question papers before sign-off.',
+        volume: '₹400',
+        volumeLabel: '+ GST / paper',
+        cta: 'Book a Demo',
         ctaStyle: 'default',
-        label: 'Includes',
+        label: 'Features',
         features: [
-            { name: 'Smart Paper Builder', included: true },
-            { name: 'AI Rubric Generation', included: true },
-            { name: 'AI Evaluation Engine', included: true },
-            { name: 'Basic Reports (Web)', included: true },
-            { name: 'QuickPass™ Analysis', included: false },
-            { name: 'Syllabus Coverage', included: false },
-            { name: 'Student Portal', included: false },
-            { name: 'Advanced Analytics', included: false },
+            { name: 'AI-assisted review for syllabus coverage', included: true },
+            { name: "Difficulty balance & Bloom's verification", included: true },
+            { name: 'Flags gaps, overlaps, and structural issues', included: true },
+            { name: 'Sample Answers (releasing Sept 2026)', included: true },
+            { name: 'Marking Rubrics (releasing Sept 2026)', included: true },
         ],
     },
     {
-        name: 'Growth',
-        desc: 'For departments scaling across multiple faculty and courses.',
-        volume: 'Up to 2,000',
-        volumeLabel: 'sheets / month',
+        name: 'Question Paper Generation',
+        desc: 'Instantly create curriculum-aligned question papers.',
+        volume: '₹400',
+        volumeLabel: '+ GST / paper',
         cta: 'Book a Demo',
         ctaStyle: 'primary',
         featured: true,
-        label: 'Everything in Starter, plus',
+        label: 'Features',
         features: [
-            { name: 'Smart Paper Builder', included: true },
-            { name: 'AI Rubric Generation', included: true },
-            { name: 'AI Evaluation Engine', included: true },
-            { name: 'Professional PDF Reports', included: true },
-            { name: 'QuickPass™ Analysis', included: true },
-            { name: 'Syllabus Coverage', included: true },
-            { name: 'Student Portal', included: false },
-            { name: 'Advanced Analytics', included: false },
+            { name: 'End-to-end AI generation aligned to syllabus', included: true },
+            { name: "Configurable by section, difficulty, & Bloom's", included: true },
+            { name: 'Sample Answers for every question', included: true },
+            { name: 'Marking Rubrics with criterion descriptors', included: true },
+            { name: 'Print-ready output in institutional format', included: true },
         ],
     },
     {
-        name: 'Institution',
-        desc: 'Full platform access for universities and large organizations.',
-        volume: 'Unlimited',
-        volumeLabel: 'sheets',
+        name: 'Evaluation Module',
+        desc: 'Automated AI evaluation for handwritten assessments.',
+        volume: 'Custom',
+        volumeLabel: 'pricing',
         cta: 'Contact Us',
         ctaStyle: 'default',
-        label: 'Full Platform Access',
+        label: 'Features',
         features: [
-            { name: 'Smart Paper Builder', included: true },
-            { name: 'AI Rubric Generation', included: true },
-            { name: 'AI Evaluation Engine', included: true },
-            { name: 'Professional PDF Reports', included: true },
-            { name: 'QuickPass™ Analysis', included: true },
-            { name: 'Syllabus Coverage', included: true },
-            { name: 'Student Portal', included: true },
-            { name: 'Advanced Analytics', included: true },
+            { name: 'QP, sample answers, & rubrics flow in directly', included: true },
+            { name: 'Faculty upload student scripts for AI evaluation', included: true },
+            { name: 'Per-sheet, per-question scores with feedback', included: true },
+            { name: 'Seamlessly connected to QP Generation', included: true },
         ],
     },
 ]
@@ -113,55 +102,54 @@ export default function PricingPage() {
                     <section className="pp-hero">
                         <div className="pp-container">
                             <FadeIn>
-                                <span className="pp-badge">Simple Pricing</span>
+                                <span className="pp-badge">AI Assessment Suite</span>
                                 <h1 className="pp-hero-title">
-                                    Pick the Package That <span className="accent">Fits You.</span>
+                                    Simple, modular <span className="accent">pricing.</span>
                                 </h1>
                                 <p className="pp-hero-sub">
-                                    Three packages, each with a clear set of solutions. Start small and scale as you grow.
+                                    Only pay for the products you need. No complicated tiers.
                                 </p>
                             </FadeIn>
                         </div>
                     </section>
 
-                    {/* ==================== PRICING CARDS ==================== */}
+                    {/* ==================== PRICING PRODUCTS (MINIMALIST) ==================== */}
                     <section className="pp-container">
-                        <FadeIn>
-                            <div className="pp-cards">
-                                {packages.map((pkg, idx) => (
-                                    <div className={`pp-card ${pkg.featured ? 'featured' : ''}`} key={idx}>
-                                        {pkg.featured && <div className="pp-card-popular">Most Popular</div>}
-                                        <div className="pp-card-header">
-                                            <h3>{pkg.name}</h3>
-                                            <p className="desc">{pkg.desc}</p>
-                                            <div className="pp-price">
+                        <div className="pp-products-wrapper">
+                            {packages.map((pkg, idx) => (
+                                <FadeIn key={idx} delay={idx * 0.1}>
+                                    <div className="pp-product-section">
+                                        <div className="pp-product-left">
+                                            <h3 className="pp-product-name">{pkg.name}</h3>
+                                            <p className="pp-product-desc">{pkg.desc}</p>
+                                            <Link href="/#contact">
+                                                <button className={`pp-product-cta ${pkg.ctaStyle}`}>
+                                                    {pkg.cta} <span className="material-symbols-outlined">arrow_forward</span>
+                                                </button>
+                                            </Link>
+                                        </div>
+                                        
+                                        <div className="pp-product-right">
+                                            <div className="pp-product-price">
                                                 <span className="amount">{pkg.volume}</span>
                                                 <span className="period">{pkg.volumeLabel}</span>
                                             </div>
-                                        </div>
-                                        <Link href="/#contact">
-                                            <button className={`pp-card-cta ${pkg.ctaStyle}`}>{pkg.cta}</button>
-                                        </Link>
-                                        <div style={{ marginTop: 'auto' }}>
-                                            <p className="pp-card-features-label">{pkg.label}</p>
-                                            <ul className="pp-feature-list">
+                                            
+                                            <ul className="pp-product-features">
                                                 {pkg.features.map((feature, i) => (
-                                                    <li key={i} className={feature.included ? '' : 'disabled'}>
-                                                        <span className="material-symbols-outlined">
-                                                            {feature.included ? 'check_circle' : 'cancel'}
-                                                        </span>
+                                                    <li key={i}>
+                                                        <span className="material-symbols-outlined check">check</span>
                                                         {feature.name}
                                                     </li>
                                                 ))}
                                             </ul>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </FadeIn>
+                                </FadeIn>
+                            ))}
+                        </div>
                     </section>
 
-                    <BackedBy />
 
                     {/* ==================== FAQ ==================== */}
                     <section className="pp-faq">

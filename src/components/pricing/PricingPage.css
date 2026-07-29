@@ -1,26 +1,28 @@
 /* ============================================
-   DASES Pricing Page - Package Cards
+   DASES Pricing Page - Minimalist Light
    ============================================ */
 
 .pricing-page {
     font-family: 'Outfit', sans-serif;
-    background: var(--bg-light);
-    color: var(--slate-deep);
+    background: #f8fafc; /* Beautiful soft slate background */
+    color: #0b2613;
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
+    --deep-forest: #0b2613;
+    --primary: #22c55e;
+    --slate-content: #475569;
 }
 
 /* ============================================
    HERO
    ============================================ */
 .pp-hero {
-    padding: 5rem 0 3rem;
+    padding: 8rem 0 4rem;
     text-align: center;
-    background: radial-gradient(circle at top center, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
 }
 
 .pp-container {
-    max-width: 80rem;
+    max-width: 68rem;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
@@ -31,316 +33,284 @@
     gap: 0.75rem;
     padding: 0.5rem 1.25rem;
     border-radius: 9999px;
-    background: rgba(198, 211, 193, 0.3);
-    color: var(--primary);
-    font-size: 0.7rem;
-    font-weight: 900;
-    letter-spacing: 0.15em;
+    background: white;
+    color: #0b2613;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(198, 211, 193, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
 .pp-hero-title {
-    font-size: 2.5rem;
+    font-size: 3.75rem;
     font-weight: 900;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
     margin-bottom: 1.25rem;
     line-height: 1.1;
-    color: var(--deep-forest);
-    max-width: 48rem;
-    margin-left: auto;
-    margin-right: auto;
+    color: #0b2613;
 }
 
 .pp-hero-title .accent {
-    color: var(--accent);
+    color: #22c55e;
 }
 
 .pp-hero-sub {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--slate-content);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #64748b;
     max-width: 36rem;
     margin: 0 auto;
     line-height: 1.75;
 }
 
 /* ============================================
-   PRICING CARDS
+   PRICING PRODUCTS (MINIMALIST)
    ============================================ */
-.pp-cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-bottom: 3rem;
-    align-items: stretch;
-}
-
-.pp-card {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 1.5rem;
-    border: 2px solid rgba(198, 211, 193, 0.2);
+.pp-products-wrapper {
     display: flex;
     flex-direction: column;
-    transition: all 0.3s;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 6rem;
+    gap: 2rem;
 }
 
-.pp-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+.pp-product-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 3rem;
+    border-radius: 2rem;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.pp-card.featured {
-    border: 3px solid var(--accent);
-    box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.15);
-    position: relative;
+.pp-product-section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.06);
 }
 
-.pp-card-popular {
-    position: absolute;
-    top: -0.875rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent);
-    color: white;
-    font-size: 0.625rem;
+@media (min-width: 768px) {
+    .pp-product-section {
+        flex-direction: row;
+        align-items: center;
+        gap: 0; /* Handled by padding-left on right side */
+        padding: 4rem 5rem;
+    }
+}
+
+.pp-product-left {
+    flex: 1;
+}
+
+@media (min-width: 768px) {
+    .pp-product-left {
+        padding-right: 4rem;
+    }
+}
+
+.pp-product-name {
+    font-size: 2.25rem;
     font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    padding: 0.5rem 1.5rem;
-    border-radius: 9999px;
-    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
-    white-space: nowrap;
+    color: #0b2613;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 
-.pp-card-header {
-    margin-bottom: 1.75rem;
-}
-
-.pp-card.featured .pp-card-header {
-    padding-top: 0.5rem;
-}
-
-.pp-card-header h3 {
-    font-size: 1.75rem;
-    font-weight: 900;
-    color: var(--deep-forest);
-    margin-bottom: 0.5rem;
-}
-
-.pp-card-header .desc {
-    color: var(--slate-content);
-    font-weight: 600;
-    font-size: 0.938rem;
+.pp-product-desc {
+    color: #64748b;
+    font-size: 1.125rem;
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
+    max-width: 28rem;
+    font-weight: 400;
 }
 
-.pp-price {
+.pp-product-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.25rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+}
+
+.pp-product-cta .material-symbols-outlined {
+    font-size: 1.25rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pp-product-cta:hover .material-symbols-outlined {
+    transform: translateX(4px);
+}
+
+.pp-product-cta.default {
+    background: white;
+    color: #0b2613;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.pp-product-cta.default:hover {
+    background: #f8fafc;
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+.pp-product-cta.primary {
+    background: #0b2613;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(11, 38, 19, 0.15);
+}
+
+.pp-product-cta.primary:hover {
+    background: #1a3824;
+    box-shadow: 0 8px 25px rgba(11, 38, 19, 0.25);
+}
+
+/* Features Right Side */
+.pp-product-right {
+    flex: 1.2;
+    background: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+@media (min-width: 768px) {
+    .pp-product-right {
+        padding-left: 4rem;
+        border-left: 1px solid rgba(0, 0, 0, 0.06);
+    }
+}
+
+.pp-product-price {
     display: flex;
     align-items: baseline;
-    gap: 0.375rem;
-}
-
-.pp-price .amount {
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: var(--deep-forest);
-}
-
-.pp-card.featured .pp-price .amount {
-    color: var(--accent);
-}
-
-.pp-price .period {
-    font-size: 1rem;
-    font-weight: 700;
-    opacity: 0.4;
-}
-
-.pp-card-cta {
-    width: 100%;
-    padding: 0.875rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 900;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
+    gap: 0.5rem;
     margin-bottom: 2rem;
-    font-family: 'Outfit', sans-serif;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.pp-card-cta.default {
-    background: rgba(30, 41, 35, 0.05);
-    color: var(--deep-forest);
-    border: 2px solid transparent;
-}
-
-.pp-card-cta.default:hover {
-    background: rgba(30, 41, 35, 0.1);
-    border-color: rgba(30, 41, 35, 0.1);
-}
-
-.pp-card-cta.primary {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
-}
-
-.pp-card-cta.primary:hover {
-    background: #16a34a;
-    transform: scale(1.02);
-}
-
-.pp-card-features-label {
-    font-size: 0.688rem;
+.pp-product-price .amount {
+    font-size: 3.5rem;
     font-weight: 900;
+    color: #0b2613;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+
+.pp-product-price .period {
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 1.125rem;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    margin-bottom: 1.25rem;
-    opacity: 0.4;
-    color: var(--deep-forest);
+    letter-spacing: 0.05em;
 }
 
-.pp-card.featured .pp-card-features-label {
-    color: var(--accent);
-    opacity: 1;
-}
-
-.pp-feature-list {
+.pp-product-features {
     list-style: none;
     padding: 0;
     margin: 0;
-}
-
-.pp-feature-list li {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.938rem;
-    font-weight: 700;
-    color: var(--deep-forest);
-    margin-bottom: 1rem;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
-.pp-feature-list li .material-symbols-outlined {
+.pp-product-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.pp-product-features .material-symbols-outlined.check {
     font-size: 1.25rem;
-    flex-shrink: 0;
-    color: var(--accent);
-}
-
-.pp-feature-list li.disabled {
-    opacity: 0.3;
-}
-
-.pp-feature-list li.disabled .material-symbols-outlined {
-    color: var(--slate-content);
+    color: #22c55e;
+    margin-top: 0.1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 50%;
+    padding: 2px;
 }
 
 /* ============================================
    FAQ SECTION
    ============================================ */
 .pp-faq {
-    padding: 2rem 0 5rem;
+    padding: 6rem 0;
+    background: transparent;
 }
 
 .pp-faq-title {
-    font-size: 2.25rem;
-    font-weight: 900;
     text-align: center;
-    margin-bottom: 2.5rem;
-    color: var(--deep-forest);
-    letter-spacing: -0.025em;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #0b2613;
+    margin-bottom: 4rem;
+    letter-spacing: -0.02em;
 }
 
 .pp-faq-list {
-    max-width: 52rem;
+    max-width: 48rem;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
 }
 
 .pp-faq-item {
-    background: white;
-    padding: 1.75rem 2rem;
-    border-radius: 1.5rem;
-    border: 2px solid rgba(34, 197, 94, 0.05);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
     cursor: pointer;
-    transition: all 0.2s;
 }
 
-.pp-faq-item:hover {
-    border-color: rgba(34, 197, 94, 0.2);
+.pp-faq-item:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .pp-faq-item h4 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 1.5rem 0;
     font-size: 1.125rem;
-    font-weight: 900;
-    color: var(--deep-forest);
-    margin-bottom: 0;
-    cursor: pointer;
+    font-weight: 700;
+    color: #0b2613;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.pp-faq-item h4 .material-symbols-outlined {
-    color: var(--accent);
-    font-weight: 900;
+.pp-faq-item h4 span {
     transition: transform 0.3s;
+    color: #64748b;
 }
 
-.pp-faq-item.open h4 .material-symbols-outlined {
+.pp-faq-item.open h4 span {
     transform: rotate(180deg);
 }
 
 .pp-faq-answer {
-    overflow: hidden;
     max-height: 0;
-    transition: max-height 0.3s ease, margin 0.3s ease;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0;
 }
 
 .pp-faq-item.open .pp-faq-answer {
-    max-height: 200px;
-    margin-top: 1rem;
+    max-height: 300px;
+    padding: 0 0 1.5rem 0;
 }
 
 .pp-faq-answer p {
-    color: var(--slate-content);
-    font-size: 0.938rem;
-    font-weight: 700;
-    line-height: 1.7;
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (min-width: 768px) {
-    .pp-hero-title {
-        font-size: 3.5rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    .pp-cards {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .pp-card.featured {
-        transform: scale(1.03);
-    }
-
-    .pp-card.featured:hover {
-        transform: scale(1.03) translateY(-6px);
-    }
-
-    .pp-hero-title {
-        font-size: 4rem;
-    }
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.6;
 }

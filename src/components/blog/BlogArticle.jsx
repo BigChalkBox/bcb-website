@@ -5,14 +5,13 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SiteHeader from '../shared/SiteHeader'
 import SiteFooter from '../shared/SiteFooter'
-import './BlogPage.css'
 
-const FadeIn = ({ children, delay = 0, className = "" }) => (
+const Reveal = ({ children, delay = 0, className = "" }) => (
     <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
-        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, margin: "-60px" }}
         className={className}
     >
         {children}
@@ -27,182 +26,176 @@ export default function BlogArticle({ article, allArticles }) {
         .slice(0, 3)
 
     return (
-        <div className="blog-page">
+        <div style={{ background: 'var(--color-cream)', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', overflowX: 'hidden' }}>
             <SiteHeader />
 
             <main>
-                {/* ARTICLE HEADER */}
-                <section className="article-hero">
-                    <div className="article-hero-blur"></div>
-                    <div className="blog-container">
-                        <FadeIn>
-                            <nav className="article-breadcrumb">
-                                <Link href="/">Home</Link>
-                                <span className="material-symbols-outlined" style={{ fontSize: '0.875rem' }}>chevron_right</span>
-                                <Link href="/blog">Blog</Link>
-                                <span className="material-symbols-outlined" style={{ fontSize: '0.875rem' }}>chevron_right</span>
-                                <span className="current">{article.category}</span>
+                {/* ==================== ARTICLE HERO ==================== */}
+                <section style={{ paddingTop: '10rem', paddingBottom: '4rem', position: 'relative', overflow: 'hidden' }}>
+                    <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(20,90,56,0.06) 1.5px, transparent 1.5px)', backgroundSize: '36px 36px', maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%)' }} />
+                    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 2 }}>
+                        <Reveal>
+                            <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-ink-soft)', marginBottom: '3rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                <Link href="/" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
+                                <span style={{ opacity: 0.5 }}>/</span>
+                                <Link href="/blog" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}>Journal</Link>
+                                <span style={{ opacity: 0.5 }}>/</span>
+                                <span style={{ color: 'var(--color-gold)' }}>{article.category}</span>
                             </nav>
+                        </Reveal>
 
-                            <div className="article-meta-top">
-                                <span className="article-category">{article.category}</span>
-                                <span className="article-read-time">
-                                    <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>schedule</span>
-                                    {article.readTime}
-                                </span>
-                            </div>
+                        <Reveal delay={0.1}>
+                            <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
+                                {article.title}
+                            </h1>
+                        </Reveal>
 
-                            <h1 className="article-title">{article.title}</h1>
-                            <p className="article-subtitle">{article.description}</p>
-
-                            <div className="article-meta-bottom">
-                                <div className="article-author">
-                                    <div className="article-author-avatar">
-                                        <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', color: 'white' }}>smart_toy</span>
-                                    </div>
-                                    <div>
-                                        <div className="article-author-name">DASES Team</div>
-                                        <div className="article-author-org">Big Chalk Box Pvt. Ltd.</div>
-                                    </div>
-                                </div>
-                                <div className="article-date">
-                                    Published {new Date(article.publishedAt).toLocaleDateString('en-IN', {
-                                        day: 'numeric',
-                                        month: 'long',
-                                        year: 'numeric',
-                                    })}
+                        <Reveal delay={0.2}>
+                            <p style={{ fontSize: '1.25rem', color: 'var(--color-ink-soft)', fontWeight: 500, lineHeight: 1.7, margin: '0 0 3rem 0' }}>
+                                {article.description}
+                            </p>
+                            
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem 0', borderTop: '1px solid var(--color-border)' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>Big Chalk Box Engineering</span>
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-ink-soft)', fontWeight: 500 }}>
+                                        {new Date(article.publishedAt).toLocaleDateString('en-IN', {
+                                            day: 'numeric',
+                                            month: 'long',
+                                            year: 'numeric',
+                                        })}
+                                    </span>
                                 </div>
                             </div>
-                        </FadeIn>
+                        </Reveal>
                     </div>
                 </section>
 
-                {/* HERO ANSWER — The key GEO element */}
-                <section className="article-hero-answer">
-                    <div className="blog-container">
-                        <FadeIn>
-                            <div className="hero-answer-card">
-                                <div className="hero-answer-icon">
-                                    <span className="material-symbols-outlined" style={{ fontSize: '1.5rem' }}>lightbulb</span>
+                {/* ==================== HERO ANSWER ==================== */}
+                <section style={{ padding: '0 0 4rem 0' }}>
+                    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 1.5rem' }}>
+                        <Reveal>
+                            <div style={{ background: 'var(--color-ink)', color: 'var(--color-cream)', padding: '2rem', borderRadius: '1rem' }}>
+                                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>
+                                    The Short Answer
                                 </div>
-                                <div>
-                                    <div className="hero-answer-label">Quick Answer</div>
-                                    <p className="hero-answer-text">{article.heroAnswer}</p>
-                                </div>
+                                <p style={{ fontSize: '1.1rem', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                                    {article.heroAnswer}
+                                </p>
                             </div>
-                        </FadeIn>
+                        </Reveal>
                     </div>
                 </section>
 
-                {/* ARTICLE BODY */}
-                <section className="article-body">
-                    <div className="blog-container">
-                        <div className="article-layout">
-                            <div className="article-content">
-                                {article.sections.map((section, idx) => (
-                                    <FadeIn key={idx} delay={idx * 0.05}>
-                                        <div className="article-section">
-                                            <h2>{section.heading}</h2>
-                                            <p>{section.content}</p>
+                {/* ==================== ARTICLE BODY ==================== */}
+                <section style={{ padding: '0 0 6rem 0' }}>
+                    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 1.5rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+                            {article.sections.map((section, idx) => (
+                                <Reveal key={idx}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
+                                            {section.heading}
+                                        </h2>
+                                        <div style={{ fontSize: '1.1rem', color: 'var(--color-ink-soft)', lineHeight: 1.8, fontWeight: 400 }}>
+                                            <p style={{ margin: 0 }}>{section.content}</p>
                                         </div>
-                                    </FadeIn>
-                                ))}
+                                    </div>
+                                </Reveal>
+                            ))}
 
-                                {/* INLINE FAQ */}
-                                {article.faqItems && article.faqItems.length > 0 && (
-                                    <FadeIn>
-                                        <div className="article-faq">
-                                            <h2>Frequently Asked Questions</h2>
-                                            <div className="article-faq-list">
-                                                {article.faqItems.map((faq, idx) => (
-                                                    <div
-                                                        key={idx}
-                                                        className={`article-faq-item ${openFaq === idx ? 'open' : ''}`}
+                            {/* INLINE FAQ */}
+                            {article.faqItems && article.faqItems.length > 0 && (
+                                <Reveal>
+                                    <div style={{ marginTop: '3rem', paddingTop: '3rem', borderTop: '1px solid var(--color-border)' }}>
+                                        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '2rem' }}>
+                                            Frequently Asked Questions
+                                        </h2>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            {article.faqItems.map((faq, idx) => (
+                                                <div 
+                                                    key={idx} 
+                                                    style={{ background: 'var(--color-cream-dark)', borderRadius: '0.5rem', overflow: 'hidden', border: '1px solid var(--color-border)' }}
+                                                >
+                                                    <button 
                                                         onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                                                        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', fontSize: '1.1rem', fontWeight: 600 }}
                                                     >
-                                                        <div className="article-faq-q">
-                                                            <span>{faq.question}</span>
-                                                            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
-                                                                {openFaq === idx ? 'remove' : 'add'}
-                                                            </span>
+                                                        <span>{faq.question}</span>
+                                                        <span style={{ fontSize: '1.5rem', color: 'var(--color-gold)', transform: openFaq === idx ? 'rotate(45deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>
+                                                            +
+                                                        </span>
+                                                    </button>
+                                                    <motion.div
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: openFaq === idx ? 'auto' : 0, opacity: openFaq === idx ? 1 : 0 }}
+                                                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                    >
+                                                        <div style={{ padding: '0 1.5rem 1.5rem 1.5rem', color: 'var(--color-ink-soft)', lineHeight: 1.6, fontSize: '1.05rem' }}>
+                                                            {faq.answer}
                                                         </div>
-                                                        {openFaq === idx && (
-                                                            <motion.div
-                                                                className="article-faq-a"
-                                                                initial={{ opacity: 0, height: 0 }}
-                                                                animate={{ opacity: 1, height: 'auto' }}
-                                                                transition={{ duration: 0.3 }}
-                                                            >
-                                                                <p>{faq.answer}</p>
-                                                            </motion.div>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </FadeIn>
-                                )}
-
-                                {/* Tags */}
-                                <div className="article-tags">
-                                    {article.tags.map(tag => (
-                                        <span key={tag} className="blog-tag">{tag}</span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* SIDEBAR */}
-                            <aside className="article-sidebar">
-                                <div className="sidebar-sticky">
-                                    {/* TOC */}
-                                    <div className="sidebar-card">
-                                        <h4>In This Article</h4>
-                                        <ul className="sidebar-toc">
-                                            {article.sections.map((section, idx) => (
-                                                <li key={idx}>{section.heading}</li>
+                                                    </motion.div>
+                                                </div>
                                             ))}
-                                            {article.faqItems && article.faqItems.length > 0 && (
-                                                <li>Frequently Asked Questions</li>
-                                            )}
-                                        </ul>
+                                        </div>
                                     </div>
-
-                                    {/* CTA */}
-                                    <div className="sidebar-cta">
-                                        <h4>See DASES in Action</h4>
-                                        <p>Book a free demo and watch AI grade a real answer sheet live.</p>
-                                        <Link href="/#contact">
-                                            <button className="sidebar-cta-btn">
-                                                Book Demo <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>arrow_forward</span>
-                                            </button>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </aside>
+                                </Reveal>
+                            )}
                         </div>
                     </div>
                 </section>
 
-                {/* RELATED ARTICLES */}
-                <section className="article-related">
-                    <div className="blog-container">
-                        <FadeIn>
-                            <h3 className="related-title">Continue Reading</h3>
-                            <div className="related-grid">
-                                {relatedArticles.map(a => (
-                                    <Link href={`/blog/${a.slug}`} key={a.slug} className="related-card-link">
-                                        <div className="related-card">
-                                            <span className="related-category">{a.category}</span>
-                                            <h4>{a.title}</h4>
-                                            <p>{a.description}</p>
-                                            <span className="related-read-more">
-                                                Read article <span className="material-symbols-outlined" style={{ fontSize: '0.875rem' }}>arrow_forward</span>
-                                            </span>
-                                        </div>
-                                    </Link>
+                {/* ==================== RELATED ==================== */}
+                {relatedArticles.length > 0 && (
+                    <section style={{ padding: '6rem 0', background: 'var(--color-cream-dark)', borderTop: '1px solid var(--color-border)' }}>
+                        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 1.5rem' }}>
+                            <Reveal>
+                                <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '3rem', textAlign: 'center' }}>
+                                    Keep Reading
+                                </h3>
+                            </Reveal>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                                {relatedArticles.map((a, idx) => (
+                                    <Reveal key={a.slug} delay={idx * 0.1}>
+                                        <Link href={`/blog/${a.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+                                            <motion.article 
+                                                whileHover={{ y: -4, borderColor: `var(--color-gold)` }}
+                                                style={{ background: 'var(--color-cream)', border: '1px solid var(--color-border)', borderRadius: '1rem', padding: '2rem', transition: 'all 0.3s', height: '100%', display: 'flex', flexDirection: 'column' }}
+                                            >
+                                                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', display: 'block' }}>
+                                                    {a.category}
+                                                </span>
+                                                <h4 style={{ fontFamily: 'var(--font-sans)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '1rem', lineHeight: 1.2 }}>
+                                                    {a.title}
+                                                </h4>
+                                                <p style={{ color: 'var(--color-ink-soft)', fontSize: '1rem', lineHeight: 1.5, margin: '0 0 auto 0' }}>
+                                                    {a.description}
+                                                </p>
+                                            </motion.article>
+                                        </Link>
+                                    </Reveal>
                                 ))}
                             </div>
-                        </FadeIn>
+                        </div>
+                    </section>
+                )}
+                
+                {/* ==================== CTA ==================== */}
+                <section style={{ padding: '8rem 0', background: 'var(--color-ink)', color: 'white', textAlign: 'center' }}>
+                    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 1.5rem' }}>
+                        <Reveal>
+                            <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', fontWeight: 700, lineHeight: 0.95, letterSpacing: '-0.03em', textTransform: 'uppercase', marginBottom: '2rem' }}>
+                                Eliminate grading bottlenecks. <span style={{ color: 'var(--color-gold)' }}>Scale your institution.</span>
+                            </h2>
+                        </Reveal>
+                        <Reveal delay={0.2}>
+                            <Link href="/#contact" style={{ display: 'inline-flex', alignItems: 'center', padding: '1rem 2.5rem', background: 'var(--color-gold)', color: 'white', borderRadius: '9999px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', transition: 'all 0.25s' }}
+                                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                                onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                            >
+                                Book a Free Demo
+                            </Link>
+                        </Reveal>
                     </div>
                 </section>
             </main>
