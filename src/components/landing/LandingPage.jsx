@@ -104,7 +104,7 @@ export default function LandingPage() {
         const ctx = canvas.getContext('2d')
         let dpr = Math.min(window.devicePixelRatio || 1, 2)
         let cw = 0, ch = 0
-        let brushRadius = 143
+        let brushRadius = 45 // Reduced from 80
         let decay = 0.016
         let maxPoints = 60
 
@@ -456,9 +456,7 @@ export default function LandingPage() {
                             <div className="si-socials-wrapper">
                                 <span className="si-socials-label">Find us online</span>
                                 <div className="si-socials">
-                                    <a href="#" className="si-social-btn">X</a>
-                                    <a href="#" className="si-social-btn">in</a>
-                                    <a href="#" className="si-social-btn">ig</a>
+                                    <a href="https://www.youtube.com/@dases_ai" target="_blank" rel="noopener noreferrer" className="si-social-btn">YT</a>
                                 </div>
                             </div>
                             
