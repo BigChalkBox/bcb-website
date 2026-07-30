@@ -47,22 +47,24 @@ export default function SiteHeader() {
                         exit={{ y: '-100%' }}
                         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <Link href="/" className="sticky-nav-left" style={{ textDecoration: 'none' }}>
-                            <img src="/logo_new/logo.png" alt="Icon" className="nav-icon" />
-                            <span className="nav-logo-text-solid"><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
-                        </Link>
-                        <div className="sticky-nav-right">
-                            <div className="pill-wrapper hide-mobile">
-                                <Link href="/solutions" className="pill-button outline sticky-nav-btn">
-                                    Explore Products
-                                </Link>
+                        <div className="shell flex justify-between items-center w-full px-0">
+                            <Link href="/" className="sticky-nav-left" style={{ textDecoration: 'none' }}>
+                                <img src="/logo_new/logo.png" alt="Icon" className="nav-icon" />
+                                <span className="nav-logo-text-solid"><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
+                            </Link>
+                            <div className="sticky-nav-right">
+                                <div className="pill-wrapper hide-mobile">
+                                    <Link href="/solutions" className="pill-button outline sticky-nav-btn">
+                                        Explore Products
+                                    </Link>
+                                </div>
+                                <div className="pill-wrapper hide-mobile">
+                                    <Link href="/#book-demo" className="pill-button dark sticky-nav-btn">
+                                        Book a Free Demo
+                                    </Link>
+                                </div>
+                                <div className="menu-spacer"></div>
                             </div>
-                            <div className="pill-wrapper">
-                                <Link href="/#contact" className="pill-button dark sticky-nav-btn">
-                                    Book a Free Demo
-                                </Link>
-                            </div>
-                            <div className="menu-spacer"></div>
                         </div>
                     </motion.nav>
                 )}

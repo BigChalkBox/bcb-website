@@ -164,7 +164,7 @@ export default function DASESLanding() {
                                 <span className="lp-gradient-text">in Minutes, Not Days.</span>
                             </h1>
                             <p className="lp-hero-sub">
-                                AI-powered descriptive answer evaluation that reads handwriting, scores against your rubric, and delivers detailed per-question feedback — at 98% accuracy.
+                                <strong>DASES is an AI-powered descriptive answer evaluation system</strong> that reads handwriting, scores against your rubric, and delivers detailed per-question feedback for educational institutions — at 98% accuracy.
                             </p>
                             <FadeIn delay={0.1} className="lp-cta-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', position: 'relative', zIndex: 10 }}>
                                 <Link href="https://www.youtube.com/watch?v=k13pAnWj0Tc&list=TLGGtZTxRZOBne8yMjAyMjAyNg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>

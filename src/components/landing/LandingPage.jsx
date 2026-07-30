@@ -115,12 +115,24 @@ export default function LandingPage() {
         const afterImg = new Image()
         afterImg.crossOrigin = 'anonymous'
         let imgLoaded = false
-        
+        let activeImageSrc = ''
+
         afterImg.onload = () => { imgLoaded = true; resizeCanvas() }
-        afterImg.src = '/images/hero_chatgpt_2.png'
+
+        function loadResponsiveImage() {
+            const nextImageSrc = window.innerWidth <= 640
+                ? '/images/hero_mobile_2.png'
+                : '/images/hero_chatgpt_2.png'
+
+            if (nextImageSrc === activeImageSrc) return
+            activeImageSrc = nextImageSrc
+            imgLoaded = false
+            afterImg.src = nextImageSrc
+        }
 
         function resizeCanvas() {
             if(!imgLoaded) return
+            dpr = Math.min(window.devicePixelRatio || 1, 2)
             const rect = wrap.getBoundingClientRect()
             cw = rect.width * dpr
             ch = rect.height * dpr
@@ -140,8 +152,13 @@ export default function LandingPage() {
             brushCvs.width = r*2
             brushCvs.height = r*2
         }
-        
-        const resizeObserver = new ResizeObserver(resizeCanvas)
+
+        loadResponsiveImage()
+        const resizeObserver = new ResizeObserver(() => {
+            const previousImageSrc = activeImageSrc
+            loadResponsiveImage()
+            if (previousImageSrc === activeImageSrc) resizeCanvas()
+        })
         resizeObserver.observe(wrap)
 
         let points = []
@@ -226,6 +243,7 @@ export default function LandingPage() {
             resizeObserver.disconnect()
             window.removeEventListener('pointermove', pointerMoveHandler)
             cancelAnimationFrame(animationId)
+            afterImg.onload = null
         }
     }, [])
 
@@ -259,7 +277,10 @@ export default function LandingPage() {
             {/* HERO SECTION */}
             <section id="home">
                 <div className="hero-liquid" id="liquid-wrap">
-                    <img src="/images/hero_chatgpt_1.png" alt="Hero background" />
+                    <picture>
+                        <source srcSet="/images/hero_mobile_1.png" media="(max-width: 640px)" />
+                        <img src="/images/hero_chatgpt_1.png" alt="Hero background" />
+                    </picture>
                     <canvas id="liquid-canvas" aria-hidden="true"></canvas>
                 </div>
                 <div className="hero-vignette"></div>
@@ -344,10 +365,10 @@ export default function LandingPage() {
                                                 ))}
                                             </div>
                                             <div className="hc-v3-nav">
-                                                <button className="hc-v3-btn" onClick={(e) => { e.stopPropagation(); prevProduct(); }}>
+                                                <button aria-label="Show previous product" className="hc-v3-btn" onClick={(e) => { e.stopPropagation(); prevProduct(); }}>
                                                     <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} />
                                                 </button>
-                                                <button className="hc-v3-btn" onClick={(e) => { e.stopPropagation(); nextProduct(); }}>
+                                                <button aria-label="Show next product" className="hc-v3-btn" onClick={(e) => { e.stopPropagation(); nextProduct(); }}>
                                                     <ArrowRight size={16} />
                                                 </button>
                                             </div>
@@ -358,7 +379,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         <motion.div variants={fadeUp} className="cta-row">
-                            <Link href="/book-demo" className="pill-wrapper">
+                            <Link href="#book-demo" className="pill-wrapper">
                                 <div className="pill-button light has-arrow">
                                     Book a Demo
                                     <span className="arrow-badge right"><ArrowRight size={18} /></span>
@@ -622,7 +643,7 @@ export default function LandingPage() {
                         <p className="cta-banner__sub">Join forward-thinking institutions already using BigChalkBox to streamline exam generation, ensure quality moderation, and deliver faster, fairer evaluation.</p>
                     </div>
                     <div className="cta-banner__btns">
-                        <Link href="/book-demo" className="cta-banner__btn cta-banner__btn--primary">Book a Free Demo</Link>
+                        <Link href="#book-demo" className="cta-banner__btn cta-banner__btn--primary">Book a Free Demo</Link>
                         <Link href="#services" className="cta-banner__btn cta-banner__btn--ghost">Explore Solutions</Link>
                     </div>
                 </div>
@@ -634,7 +655,7 @@ export default function LandingPage() {
                 <PixelTransition />
 
                 {/* SERVICES / STAKEHOLDERS */}
-                <section id="services" className="flex flex-col items-center pt-12 pb-24 lg:pt-16 lg:pb-32 overflow-hidden relative">
+                <section id="services" className="flex flex-col items-center pt-24 pb-24 lg:pt-24 lg:pb-32 overflow-hidden relative">
                 
                 <div className="flex flex-col items-center mb-6 lg:mb-8 z-10 px-4 text-center">
                     <motion.div 
@@ -653,11 +674,11 @@ export default function LandingPage() {
                     </motion.h2>
                 </div>
 
-                <div className="shell sv-shell w-full -mt-4 lg:-mt-8 relative z-20">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 relative w-full max-w-6xl mx-auto h-[600px] lg:h-[380px]" ref={svGridRef}>
+                <div className="shell sv-shell w-full mt-6 lg:-mt-8 relative z-20">
+                    <div className="stakeholder-grid grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 relative w-full max-w-6xl mx-auto h-[750px] lg:h-[380px]" ref={svGridRef}>
                         
                         {/* LEFT: OptionWheel */}
-                        <div className="relative w-full max-w-md mx-auto h-[250px] lg:h-full group">
+                        <div className="stakeholder-wheel-panel relative w-full max-w-md mx-auto h-[250px] lg:h-full group">
                             
                             {/* Scroll Hint */}
                             <div className="absolute left-0 lg:-left-4 top-1/2 -translate-y-1/2 -translate-x-full hidden lg:flex flex-col items-center justify-center gap-4 text-white/20 transition-colors duration-500 group-hover:text-white/50">
@@ -666,11 +687,11 @@ export default function LandingPage() {
                             </div>
 
                             {/* Mobile Hint */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 lg:hidden flex items-center gap-2 text-white/40 text-[10px] font-medium uppercase tracking-[0.1em] bg-white/5 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 z-20">
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 lg:hidden flex items-center gap-2 text-white/60 text-[10px] font-medium uppercase tracking-[0.1em] bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-xl border border-white/20 z-20 shadow-xl">
                                 <Mouse size={12} /> Scroll or Drag
                             </div>
 
-                            <div className="relative h-full flex items-center justify-center lg:justify-start overflow-hidden w-full" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)'}}>
+                            <div className="stakeholder-wheel-mask relative h-full flex items-center justify-center lg:justify-start overflow-hidden w-full" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)'}}>
                                 <OptionWheel
                                     items={STAKEHOLDERS.map(s => s.title.replace('For ', ''))}
                                     defaultSelected={0}
@@ -688,13 +709,14 @@ export default function LandingPage() {
                                     inset={40}
                                     loop={true}
                                     draggable={true}
+                                    className="stakeholder-option-wheel"
                                     onChange={(idx) => setSelectedStakeholder(idx)}
                                 />
                             </div>
                         </div>
 
                         {/* RIGHT: Dynamic Card */}
-                        <div className="relative h-[320px] lg:h-full flex items-center justify-center lg:justify-end w-full max-w-md mx-auto">
+                        <div className="stakeholder-card-panel relative h-[460px] lg:h-full flex items-center justify-center lg:justify-end w-full max-w-md mx-auto">
                             <div className="relative w-full h-full">
                                 <AnimatePresence mode="wait">
                                     <motion.div
@@ -703,9 +725,9 @@ export default function LandingPage() {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: -20, scale: 0.95 }}
                                         transition={{ duration: 0.3, ease: "easeOut" }}
-                                        className="sv-bento-card absolute inset-0 w-full h-full flex flex-col justify-start overflow-hidden"
+                                        className="sv-bento-card stakeholder-card absolute inset-0 w-full h-full flex flex-col justify-start overflow-hidden"
                                     >
-                                        <div className="sv-card-inner !p-8 h-full flex flex-col justify-start">
+                                        <div className="sv-card-inner stakeholder-card-inner !p-8 h-full flex flex-col justify-start">
                                             <div className="sv-card-header !gap-4 !mb-6">
                                                 <div className="sv-icon-large !w-14 !h-14 !rounded-2xl">
                                                     {STAKEHOLDERS[selectedStakeholder].icon}
@@ -750,7 +772,7 @@ export default function LandingPage() {
                         <p className="cta-banner__sub">4,000+ sheets processed. 200+ question papers generated. Results that speak for themselves.</p>
                     </div>
                     <div className="cta-banner__btns">
-                        <Link href="/book-demo" className="cta-banner__btn cta-banner__btn--primary">Get Started Free</Link>
+                        <Link href="#book-demo" className="cta-banner__btn cta-banner__btn--primary">Get Started Free</Link>
                         <Link href="/pricing" className="cta-banner__btn cta-banner__btn--ghost">View Pricing</Link>
                     </div>
                 </div>

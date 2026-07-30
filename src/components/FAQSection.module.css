@@ -138,3 +138,25 @@
 .footerText { display: none; }
 .buttonWrapper { display: none; }
 .viewAllButton { display: none; }
+
+@media (max-width: 420px) {
+  .container {
+    padding: 4rem 1rem;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .faqButton {
+    gap: 1rem;
+  }
+
+  .faqQuestion {
+    font-size: 1rem;
+  }
+}

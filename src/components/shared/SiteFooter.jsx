@@ -122,7 +122,7 @@ export default function SiteFooter() {
                     <div className="ft-links-col">
                         <h4>Resources</h4>
                         <ul>
-                            <li><Link href="/book-demo">Book a Demo</Link></li>
+                            <li><Link href="/#book-demo">Book a Demo</Link></li>
                             <li><Link href="/pricing">Pricing</Link></li>
                             <li><Link href="/blog">Blog</Link></li>
                         </ul>

@@ -35,6 +35,7 @@
 .ft-brand-col {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .ft-brand-logo {
@@ -88,10 +89,13 @@
     display: flex;
     gap: 0.5rem;
     max-width: 22rem;
+    min-width: 0;
+    width: 100%;
 }
 
 .ft-newsletter-form input {
     flex: 1;
+    min-width: 0;
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 0.5rem;
@@ -223,4 +227,42 @@
 
 .ft-bottom-sep {
     color: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 420px) {
+    .ft-links-shell {
+        padding-inline: 1rem;
+    }
+
+    .ft-links-grid,
+    .ft-brand-col,
+    .ft-brand-logo,
+    .ft-brand-desc,
+    .ft-newsletter,
+    .ft-newsletter-form,
+    .ft-links-col {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .ft-links-grid {
+        gap: 2.5rem;
+    }
+
+    .ft-brand-logo img {
+        height: 3rem;
+    }
+
+    .ft-brand-logo span {
+        font-size: 1.2rem;
+    }
+
+    .ft-newsletter-form button {
+        padding-inline: 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .ft-bottom {
+        margin-top: 3rem;
+    }
 }

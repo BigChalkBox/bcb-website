@@ -6,6 +6,7 @@
 
 .lp-contact {
     padding: 3rem 0;
+    scroll-margin-top: 5rem;
 }
 
 .lp-contact-card {
@@ -223,6 +224,7 @@
 .lp-contact-row .value {
     font-weight: 900;
     font-size: 1.125rem;
+    overflow-wrap: anywhere;
 }
 
 .lp-contact-footer {
@@ -306,5 +308,55 @@
 
     .lp-form-desc {
         font-size: 1rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .lp-container {
+        padding-inline: 0.75rem;
+    }
+
+    .lp-contact-card {
+        border-width: 2px;
+        border-radius: 1.25rem;
+    }
+
+    .lp-form-side,
+    .lp-contact-dark {
+        min-width: 0;
+        padding: 1.25rem;
+    }
+
+    .lp-form-grid > div,
+    .lp-select-wrap,
+    .lp-contact-row > div:last-child {
+        min-width: 0;
+    }
+
+    .lp-form input,
+    .lp-form select,
+    .lp-form textarea {
+        min-width: 0;
+        padding-inline: 0.75rem;
+    }
+
+    .lp-contact-row {
+        gap: 0.75rem;
+    }
+
+    .lp-contact-row .icon-box {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.75rem;
+    }
+
+    .lp-contact-row .value {
+        font-size: 0.95rem;
+    }
+
+    .lp-contact-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1rem;
     }
 }

@@ -20,14 +20,20 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  height: 4.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2em;
   background: transparent;
   pointer-events: none;
   z-index: 20;
+}
+
+@media (max-width: 768px) {
+  .staggered-menu-header {
+    height: 4rem;
+  }
 }
 
 .staggered-menu-header > * {
@@ -353,5 +359,23 @@
 
   .staggered-menu-wrapper[data-open] .sm-logo-img {
     filter: invert(100%);
+  }
+
+  .staggered-menu-panel {
+    padding: 5rem 1.25rem 1.5rem;
+  }
+
+  .sm-panel-item {
+    font-size: clamp(2.4rem, 13vw, 3.5rem);
+  }
+}
+
+@media (max-width: 360px) {
+  .staggered-menu-header {
+    padding: 1.125rem;
+  }
+
+  .staggered-menu-panel {
+    padding-top: 4.5rem;
   }
 }

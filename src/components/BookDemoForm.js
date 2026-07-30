@@ -66,18 +66,18 @@ export default function BookDemoForm() {
                         ) : (
                             <form onSubmit={handleSubmit} className="lp-form">
                                 <div>
-                                    <label>Full Name</label>
-                                    <input name="fullName" required placeholder="e.g. Dr. Sharma" type="text" />
+                                    <label htmlFor="demo-full-name">Full Name</label>
+                                    <input id="demo-full-name" name="fullName" required placeholder="e.g. Dr. Sharma" type="text" />
                                 </div>
                                 <div className="lp-form-grid">
                                     <div>
-                                        <label>Institution</label>
-                                        <input name="institution" required placeholder="e.g. Delhi University" type="text" />
+                                        <label htmlFor="demo-institution">Institution</label>
+                                        <input id="demo-institution" name="institution" required placeholder="e.g. Delhi University" type="text" />
                                     </div>
                                     <div>
-                                        <label>Role</label>
+                                        <label htmlFor="demo-role">Role</label>
                                         <div className="lp-select-wrap">
-                                            <select name="role">
+                                            <select id="demo-role" name="role">
                                                 <option>Select Role</option>
                                                 <option>Faculty</option>
                                                 <option>HOD / Dean</option>
@@ -92,17 +92,17 @@ export default function BookDemoForm() {
                                 </div>
                                 <div className="lp-form-grid">
                                     <div>
-                                        <label>Email</label>
-                                        <input name="email" required placeholder="name@institution.edu" type="email" />
+                                        <label htmlFor="demo-email">Email</label>
+                                        <input id="demo-email" name="email" required placeholder="name@institution.edu" type="email" />
                                     </div>
                                     <div>
-                                        <label>Phone Number</label>
-                                        <input name="phone" required placeholder="+91 98765 43210" type="tel" />
+                                        <label htmlFor="demo-phone">Phone Number</label>
+                                        <input id="demo-phone" name="phone" required placeholder="+91 98765 43210" type="tel" />
                                     </div>
                                 </div>
                                 <div>
-                                    <label>Comments</label>
-                                    <textarea name="comments" rows={3} placeholder="Any specific requirements or questions?" style={{ resize: 'none' }} />
+                                    <label htmlFor="demo-comments">Comments</label>
+                                    <textarea id="demo-comments" name="comments" rows={3} placeholder="Any specific requirements or questions?" style={{ resize: 'none' }} />
                                 </div>
                                 <button type="submit" className="lp-btn-submit" disabled={submitting}>
                                     {submitting ? 'Submitting...' : 'Book Demo'}

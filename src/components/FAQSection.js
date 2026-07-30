@@ -32,8 +32,25 @@ const faqs = [
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }))
+  };
+
   return (
     <div className={styles.container} id='faqs'>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className={styles.contentWrapper}>
         {/* Decorative leaf - left */}
         <div className={styles.leafLeft}>

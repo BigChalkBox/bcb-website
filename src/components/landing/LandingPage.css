@@ -12,12 +12,19 @@
 
 /* ── Utilities ── */
 .shell {
-    max-width: 88rem;
-    margin-inline: auto;
-    padding-inline: 1.25rem;
+    max-width: 100rem; /* Increased from 88rem to 100rem for better large screen utilization */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.25rem;
 }
-@media (min-width: 640px) {
-    .shell { padding-inline: 2rem; }
+@media(min-width: 640px) {
+    .shell { padding: 0 2rem; }
+}
+@media(min-width: 1024px) {
+    .shell { padding: 0 4rem; }
+}
+@media(min-width: 1600px) {
+    .shell { padding: 0 5rem; }
 }
 
 /* ── Sticky Navbar ── */
@@ -29,11 +36,11 @@
     z-index: 45; /* Just under StaggeredMenu (z: 50) */
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 2rem;
+    justify-content: center;
     background: #ffffff;
     border-radius: 0 0 24px 24px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    height: 4.5rem;
 }
 
 .sticky-nav-left {
@@ -84,10 +91,11 @@
         display: none !important;
     }
     .sticky-nav {
-        padding: 1rem 1.25rem;
+        height: 4rem;
     }
-    .nav-icon { height: 24px; }
-    .nav-logo-text { height: 16px; }
+    .nav-icon { height: 28px; }
+    .nav-logo-text-solid { font-size: 1.1rem; }
+    .menu-spacer { width: 50px; }
 }
 
 /* ── Utilities ── */
@@ -273,8 +281,13 @@
         min-height: 98vh;
         grid-template-columns: repeat(12, 1fr);
         gap: 2.5rem;
-        padding: 6rem 2rem 3rem;
-        align-items: start;
+        padding: 8rem 4rem 4rem; /* Match shell horizontal padding and increase top */
+        align-items: center; /* Center vertically for better large screen presentation */
+    }
+}
+@media(min-width: 1600px) {
+    .hero-grid {
+        padding: 10rem 5rem 6rem; /* Match wider shell padding */
     }
 }
 .hero-left {
@@ -287,11 +300,16 @@
 }
 .hero-left h1 {
     font-family: 'Plein', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.02em;
     color: var(--color-cream);
+}
+@media (max-width: 640px) {
+    .hero-left h1 {
+        line-height: 1.1;
+    }
 }
 .rating-row {
     display: flex;
@@ -313,6 +331,19 @@
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 1rem;
+}
+@media (max-width: 640px) {
+    .cta-row {
+        gap: 0.75rem;
+    }
+    .cta-row .pill-wrapper {
+        width: 100%;
+    }
+    .cta-row .pill-button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+    }
 }
 
 .hero-right {
@@ -475,15 +506,31 @@
 
 @media(max-width: 640px) {
     .hc-v3-inner {
-        flex-direction: column;
-        gap: 0;
+        flex-direction: row; /* keep horizontal */
+        gap: 0.75rem;
     }
     .hc-v3-left {
-        flex: 0 0 6.25rem;
-        min-height: 6.25rem;
+        flex: 0 0 5rem;
+        min-height: 5rem;
+        border-radius: 1rem;
+    }
+    .hc-v3-icon-wrapper svg {
+        width: 1.75rem;
+        height: 1.75rem;
     }
     .hc-v3-right {
-        padding: 1.25rem;
+        padding: 0.75rem 0.75rem 0.75rem 0;
+    }
+    .hc-v3-heading {
+        height: auto;
+        min-height: 2.8rem;
+    }
+    .hc-v3-morph-text {
+        font-size: 1.1rem !important;
+    }
+    .hc-v3-desc {
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
     }
 }
 .partners {
@@ -540,6 +587,10 @@
     text-transform: uppercase;
     letter-spacing: 0.025em;
     color: rgba(252, 252, 247, 0.7);
+    padding-inline: 1.25rem;
+}
+@media(min-width: 640px) {
+    .hero-bot { padding-inline: 2rem; }
 }
 @media(max-width: 639px){
     .hb-mid { display: none; }
@@ -634,17 +685,13 @@
 
 .si-footer {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
     padding-top: 2.5rem;
     border-top: 1px solid rgba(26, 36, 33, 0.1);
-}
-@media(min-width: 640px) {
-    .si-footer {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
 }
 
 .si-socials-wrapper {
@@ -688,16 +735,21 @@
     background: var(--color-cream);
 }
 .band-ul {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 1rem;
     padding: 4rem 1.25rem;
 }
 @media(min-width: 640px) {
     .band-ul {
-        flex-direction: row;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1.5rem;
         padding: 5rem 2rem;
+    }
+}
+@media(min-width: 1024px) {
+    .band-ul {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 .band-li {
@@ -1272,4 +1324,257 @@
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.1;
+}
+
+/* ── Responsive hardening ── */
+@media (max-width: 640px) {
+    .sticky-nav {
+        min-height: 3.75rem;
+    }
+
+    .sticky-nav-left,
+    .sticky-nav-right {
+        min-width: 0;
+    }
+
+    .hero-grid {
+        min-height: 100dvh;
+    }
+
+    .wk-card {
+        min-width: 0;
+    }
+
+    .stakeholder-grid,
+    .stakeholder-wheel-panel,
+    .stakeholder-wheel-mask,
+    .stakeholder-card-panel {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .stakeholder-option-wheel {
+        --ow-font-size: clamp(2.5rem, 12vw, 3.25rem) !important;
+        --ow-inset: 1rem !important;
+    }
+
+    .cta-banner {
+        padding-inline: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .shell,
+    .sv-shell,
+    .wk-shell {
+        padding-inline: 1rem;
+    }
+
+    .sticky-nav {
+        padding: 0.75rem 1rem;
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    .sticky-nav-right {
+        gap: 0.5rem;
+    }
+
+    .sticky-nav-btn {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.7rem !important;
+        white-space: nowrap;
+    }
+
+    .menu-spacer {
+        width: 44px;
+    }
+
+    .hero-grid {
+        padding: 4.5rem 1rem 2.5rem;
+    }
+
+    .hero-left {
+        gap: 1.35rem;
+    }
+
+    .hero-left h1 {
+        font-size: clamp(2rem, 11vw, 2.75rem);
+    }
+
+    .hero-subhead {
+        font-size: 1rem !important;
+    }
+
+    .hero-card-v3 {
+        border-radius: 1.25rem;
+    }
+
+    .hc-v3-content {
+        min-height: 6.75rem;
+    }
+
+    .hero-bot {
+        padding-inline: 1rem;
+        font-size: 0.625rem;
+    }
+
+    .studio-intro {
+        padding-block: 4.5rem;
+    }
+
+    .si-shell {
+        gap: 3rem;
+    }
+
+    .si-heading {
+        margin-bottom: 2.5rem;
+    }
+
+    .band-ul {
+        padding: 3rem 1rem;
+    }
+
+    .wk-card {
+        min-height: 25rem;
+        border-radius: 1.5rem;
+        padding: 1.25rem;
+    }
+
+    .wk-card-full {
+        min-height: 0;
+        gap: 1.5rem;
+    }
+
+    .wk-badge {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .wk-h3 {
+        font-size: 1.875rem;
+    }
+
+    .wk-p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .wk-vid-wrapper {
+        min-height: 14rem;
+        border-radius: 1.125rem;
+    }
+
+    .tag-chip {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .sv-h2 {
+        font-size: clamp(2.15rem, 11vw, 3rem);
+    }
+
+    .stakeholder-option-wheel {
+        --ow-font-size: clamp(2.25rem, 12vw, 2.85rem) !important;
+        --ow-inset: 0.75rem !important;
+    }
+
+    .stakeholder-card-inner {
+        padding: 1.25rem !important;
+        gap: 0.75rem;
+    }
+
+    .stakeholder-card-inner .sv-card-header {
+        gap: 0.75rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .stakeholder-card-inner .sv-icon-large {
+        width: 2.75rem !important;
+        height: 2.75rem !important;
+        border-radius: 0.875rem !important;
+    }
+
+    .stakeholder-card-inner .sv-card-h3 {
+        font-size: 1.55rem !important;
+    }
+
+    .stakeholder-card-inner .sv-card-desc {
+        font-size: 0.925rem !important;
+        line-height: 1.5;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .stakeholder-card-inner .sv-pills {
+        gap: 0.25rem !important;
+    }
+
+    .stakeholder-card-inner .sv-pill {
+        padding: 0.625rem 0 !important;
+        font-size: 0.8rem !important;
+        border-radius: 0 !important;
+    }
+
+    .cta-banner {
+        padding-block: 7rem;
+    }
+
+    .cta-banner--compact-top {
+        padding-block: 4rem;
+    }
+
+    .cta-banner__inner {
+        gap: 2rem;
+    }
+
+    .cta-banner__h2 {
+        font-size: clamp(2.15rem, 11vw, 3rem);
+    }
+
+    .cta-banner__sub {
+        font-size: 1rem;
+    }
+
+    .cta-banner__btns,
+    .cta-banner__btn {
+        width: 100%;
+    }
+
+    .cta-banner__btn {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 360px) {
+    .sticky-nav {
+        padding-inline: 0.875rem;
+    }
+
+    .sticky-nav .nav-logo-text-solid,
+    .sticky-nav-right .pill-wrapper {
+        display: none;
+    }
+
+    .menu-spacer {
+        width: 46px;
+    }
+
+    .hc-v3-left {
+        flex-basis: 4.25rem;
+        min-height: 4.25rem;
+    }
+
+    .hc-v3-desc {
+        max-width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .landing-main *,
+    .landing-main *::before,
+    .landing-main *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
 }
