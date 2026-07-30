@@ -151,7 +151,7 @@ export default function SiteFooter() {
                 {/* Bottom Legal / Copyright Bar */}
                 <div className="ft-bottom">
                     <div className="ft-bottom-text">
-                        © {new Date().getFullYear()} BCBX INNOVATIONS PRIVATE LIMITED. All rights reserved. | Made in India 🇮🇳
+                        © {new Date().getFullYear()} BCBX INNOVATIONS PRIVATE LIMITED. All rights reserved.
                     </div>
                     <div className="ft-bottom-links">
                         <Link href="/privacy">Privacy Policy</Link>
