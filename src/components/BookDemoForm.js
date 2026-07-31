@@ -56,7 +56,7 @@ export default function BookDemoForm() {
                     <div className="lp-form-side">
                         <span className="lp-form-tag">Get Started</span>
                         <h2 className="lp-form-title">Book Your Free Demo</h2>
-                        <p className="lp-form-desc">See BigChalkBox evaluate a real answer sheet against your rubric live. Fill out the form and we'll set it up.</p>
+                        <p className="lp-form-desc">Experience BigChalkBox in action. Fill out the form below to book a live demonstration tailored to your institution's workflow.</p>
 
                         {formStatus ? (
                             <div className="lp-success">
