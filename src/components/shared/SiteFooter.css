@@ -47,7 +47,7 @@
 }
 
 .ft-brand-logo img {
-    height: 3.5rem;
+    height: 48px;
     width: auto;
     object-fit: contain;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -58,7 +58,7 @@
 }
 
 .ft-brand-logo span {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
     letter-spacing: -0.03em;
     color: var(--color-ink);
@@ -229,6 +229,15 @@
     color: rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 768px) {
+    .ft-brand-logo img {
+        height: 28px;
+    }
+    .ft-brand-logo span {
+        font-size: 1.1rem;
+    }
+}
+
 @media (max-width: 420px) {
     .ft-links-shell {
         padding-inline: 1rem;
@@ -247,14 +256,6 @@
 
     .ft-links-grid {
         gap: 2.5rem;
-    }
-
-    .ft-brand-logo img {
-        height: 3rem;
-    }
-
-    .ft-brand-logo span {
-        font-size: 1.2rem;
     }
 
     .ft-newsletter-form button {

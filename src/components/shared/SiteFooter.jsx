@@ -64,7 +64,7 @@ export default function SiteFooter() {
                     <div className="ft-brand-col">
                         <Link href="/" className="ft-brand-logo">
                             <img src="/logo_new/logo.png" alt="BigChalkBox Logo" />
-                            <span><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
+                            <span className="nav-logo-text-solid" style={{ fontFamily: "'Amaranth', sans-serif" }}><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
                         </Link>
                         <p className="ft-brand-desc">
                             Comprehensive EdTech Automation Suite. Powering institutions with AI-driven grading, moderation, and content generation.

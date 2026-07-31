@@ -23,48 +23,56 @@ const solutionCards = [
         title: 'Automated QP Generation',
         desc: 'Create syllabus-aligned question papers with one click. Complete support for complex math, diagrams, and varying difficulty levels.',
         tag: 'Generation',
+        link: '/products/qp-generation'
     },
     {
         icon: 'document_scanner',
         title: 'Multi-Format Assembly',
         desc: 'Compile, format, and export exam papers instantly to PDF or LaTeX. Eliminate hours of manual formatting in word processors.',
         tag: 'Generation',
+        link: '/products/qp-generation'
     },
     {
         icon: 'psychology',
         title: 'Cognitive Level Analysis',
         desc: 'Automatically map questions to Bloom\'s Taxonomy to ensure a balanced exam that tests both memory and critical thinking.',
         tag: 'Moderation',
+        link: '/products/qp-moderation'
     },
     {
         icon: 'rule',
         title: 'Pre-Exam Error Detection',
         desc: 'AI flags ambiguous phrasing, duplicate questions, and mismatched marks before the paper ever reaches the students.',
         tag: 'Moderation',
+        link: '/products/qp-moderation'
     },
     {
         icon: 'visibility',
         title: 'Handwriting Intelligence',
         desc: 'Advanced OCR reads complex handwritten student responses, including diagrams, equations, and margin notes with extremely high accuracy.',
         tag: 'Evaluation',
+        link: '/products/dases'
     },
     {
         icon: 'auto_awesome',
         title: 'Dynamic Rubric Engine',
         desc: 'Provide model answers and let AI instantly generate detailed, criterion-based rubrics. Supports multiple valid approaches per question.',
         tag: 'Evaluation',
+        link: '/products/dases'
     },
     {
         icon: 'bolt',
         title: 'Parallel Grading at Scale',
         desc: 'Process up to 500 answer sheets simultaneously. Each sheet is scored, annotated, and ready for review in under 15 seconds.',
         tag: 'Evaluation',
+        link: '/products/dases'
     },
     {
         icon: 'query_stats',
         title: 'Actionable Analytics',
         desc: 'Generate branded reports with deep score breakdowns and criterion-level feedback to close the learning loop for students.',
         tag: 'Reporting',
+        link: '/products/dases'
     },
 ]
 
@@ -94,6 +102,22 @@ export default function SolutionsPage() {
                                 <p style={{ fontSize: '1.25rem', color: 'var(--color-ink-soft)', fontWeight: 500, lineHeight: 1.7, margin: 0 }}>
                                     From intelligent question paper generation to AI-powered grading and student feedback, Big Chalk Box covers the complete assessment lifecycle so faculty can focus on what matters: teaching.
                                 </p>
+                            </div>
+                        </Reveal>
+                        <Reveal delay={0.3}>
+                            <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem', flexWrap: 'wrap' }}>
+                                <Link href="/products/dases" style={{ display: 'inline-flex', alignItems: 'center', padding: '1rem 2.5rem', background: 'var(--color-ink)', color: 'var(--color-cream)', borderRadius: '9999px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', transition: 'all 0.25s' }}
+                                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                                    onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                                >
+                                    Explore DASES
+                                </Link>
+                                <Link href="/products/qp-generation" style={{ display: 'inline-flex', alignItems: 'center', padding: '1rem 2.5rem', background: 'transparent', color: 'var(--color-ink)', borderRadius: '9999px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', border: '2px solid rgba(26,36,33,0.2)', transition: 'all 0.25s' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(26,36,33,0.05)'; e.currentTarget.style.borderColor = 'rgba(26,36,33,0.4)' }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(26,36,33,0.2)' }}
+                                >
+                                    Explore QP Generation
+                                </Link>
                             </div>
                         </Reveal>
                     </div>
@@ -141,22 +165,27 @@ export default function SolutionsPage() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
                             {solutionCards.map((card, idx) => (
                                 <Reveal key={idx} delay={idx * 0.05}>
-                                    <motion.div whileHover={{ y: -4, borderColor: `var(--color-gold)`, boxShadow: '0 12px 36px rgba(0,0,0,0.04)' }}
-                                        style={{ background: 'var(--color-cream)', border: '1px solid var(--color-border)', borderRadius: '1rem', padding: '2.5rem', height: '100%', transition: 'all 0.3s', display: 'flex', flexDirection: 'column' }}
-                                    >
-                                        <div style={{ display: 'inline-flex', padding: '0.25rem 0.75rem', background: 'var(--color-cream-dark)', border: '1px solid var(--color-border)', borderRadius: '9999px', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-ink-soft)', marginBottom: '1.5rem', alignSelf: 'flex-start' }}>
-                                            {card.tag}
-                                        </div>
-                                        <div style={{ color: 'var(--color-gold)', marginBottom: '1.25rem' }}>
-                                            <span className="material-symbols-outlined" style={{ fontSize: '2rem' }}>{card.icon}</span>
-                                        </div>
-                                        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '1rem', lineHeight: 1.2 }}>
-                                            {card.title}
-                                        </h3>
-                                        <p style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.6, fontWeight: 500, margin: 0 }}>
-                                            {card.desc}
-                                        </p>
-                                    </motion.div>
+                                    <Link href={card.link || '#'} style={{ textDecoration: 'none', height: '100%', display: 'block' }}>
+                                        <motion.div whileHover={{ y: -4, borderColor: `var(--color-gold)`, boxShadow: '0 12px 36px rgba(0,0,0,0.04)' }}
+                                            style={{ background: 'var(--color-cream)', border: '1px solid var(--color-border)', borderRadius: '1rem', padding: '2.5rem', height: '100%', transition: 'all 0.3s', display: 'flex', flexDirection: 'column', cursor: 'pointer' }}
+                                        >
+                                            <div style={{ display: 'inline-flex', padding: '0.25rem 0.75rem', background: 'var(--color-cream-dark)', border: '1px solid var(--color-border)', borderRadius: '9999px', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-ink-soft)', marginBottom: '1.5rem', alignSelf: 'flex-start' }}>
+                                                {card.tag}
+                                            </div>
+                                            <div style={{ color: 'var(--color-gold)', marginBottom: '1.25rem' }}>
+                                                <span className="material-symbols-outlined" style={{ fontSize: '2rem' }}>{card.icon}</span>
+                                            </div>
+                                            <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '1rem', lineHeight: 1.2 }}>
+                                                {card.title}
+                                            </h3>
+                                            <p style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.6, fontWeight: 500, margin: 0, flexGrow: 1 }}>
+                                                {card.desc}
+                                            </p>
+                                            <div style={{ marginTop: '1.5rem', fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                                Explore Solution <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>arrow_forward</span>
+                                            </div>
+                                        </motion.div>
+                                    </Link>
                                 </Reveal>
                             ))}
                         </div>

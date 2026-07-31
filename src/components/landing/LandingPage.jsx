@@ -22,29 +22,29 @@ import BookDemoForm from '../BookDemoForm'
 import FAQSection from '../FAQSection'
 
 const MORPHING_TEXTS = [
-    "AI Evaluation",
-    "Question Paper Generation",
-    "Question Paper Moderation"
+    "Generate Smarter Questions",
+    "Moderate with Confidence",
+    "Evaluate Without Bias"
 ];
 
 const STAKEHOLDERS = [
     {
         title: "For Educators",
         icon: <UserCircle size={28} />,
-        desc: "Eliminate the burnout of manual grading. BigChalkBox's AI instantly evaluates answer scripts with pinpoint accuracy, letting you focus entirely on pedagogy.",
-        points: ["Zero manual grading", "Pinpoint AI precision", "Automated rubrics"]
+        desc: "Stop drowning in paperwork. BigChalkBox gives you AI tools to generate curriculum-aligned question papers, audit them for quality, and evaluate handwritten answers. All in one place.",
+        points: ["AI-powered question creation", "Automated quality checks", "Instant answer evaluation"]
     },
     {
         title: "For Institutions",
         icon: <Building2 size={28} />,
-        desc: "Scale your examination infrastructure flawlessly. DASES guarantees absolute standardization, zero bias, and massive operational cost reductions.",
-        points: ["100% Bias-free evaluation", "Massive cost scaling", "Real-time analytics"]
+        desc: "Transform your entire examination workflow. From generating NAAC-compliant question papers to moderating quality and evaluating hundreds of scripts, BigChalkBox scales with your institution.",
+        points: ["End-to-end exam automation", "NAAC & IQAC ready", "Zero bias, full consistency"]
     },
     {
         title: "For Students",
         icon: <GraduationCap size={28} />,
-        desc: "No more waiting weeks for subjective results. Get immediate, hyper-transparent AI feedback that actually helps you master the curriculum.",
-        points: ["Instant results", "Hyper-transparent grading", "Actionable insights"]
+        desc: "Benefit from exams that are fair, thorough, and scientifically structured. BigChalkBox ensures every question paper is balanced and every answer is evaluated without human bias.",
+        points: ["Fairer, balanced exams", "Transparent evaluation", "Faster results"]
     }
 ];
 
@@ -52,10 +52,35 @@ export default function LandingPage() {
     const statsRef = useRef(null)
     const wkGridRef = useRef(null)
     const svGridRef = useRef(null)
+    const mobileCarouselRef = useRef(null)
     const statsInView = useInView(statsRef, { once: true, margin: "-100px" })
 
     // Stakeholder OptionWheel State
     const [selectedStakeholder, setSelectedStakeholder] = useState(0)
+
+    // Mobile Carousel Auto-Scroll Logic
+    useEffect(() => {
+        let interval;
+        if (mobileCarouselRef.current) {
+            interval = setInterval(() => {
+                const container = mobileCarouselRef.current;
+                if (!container) return;
+                
+                // Get the width of one card plus gap
+                const firstChild = container.children[0];
+                const cardWidth = firstChild ? firstChild.offsetWidth + 24 : container.clientWidth * 0.8; 
+                const maxScrollLeft = container.scrollWidth - container.clientWidth;
+                
+                // If we reached the end, reset to 0. Otherwise, advance one card.
+                if (container.scrollLeft >= maxScrollLeft - 10) {
+                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    container.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                }
+            }, 3000);
+        }
+        return () => clearInterval(interval);
+    }, []);
 
     // Sticky Navbar State
     const { scrollY } = useScroll()
@@ -73,24 +98,24 @@ export default function LandingPage() {
     const products = [
         { 
             id: 'qpgen', 
-            name: 'AI Question Generation', 
-            desc: 'Creation Engine', 
+            name: 'QP Generation', 
+            desc: 'AI Creation Engine', 
             icon: <BrainCircuit size={20} strokeWidth={2} />,
-            details: 'Instantly generate perfectly balanced, blueprint-aligned assessments with our advanced AI.'
+            details: 'Generate perfectly structured, Bloom\'s Taxonomy-aligned question papers in seconds. No more hours spent drafting from scratch.'
         },
         { 
             id: 'qpmod', 
-            name: 'Quality Moderation', 
-            desc: 'Automated Audit', 
+            name: 'QP Moderation', 
+            desc: 'Automated Quality Audit', 
             icon: <SearchCheck size={20} strokeWidth={2} />,
-            details: 'Rigorous automated audits to guarantee 100% syllabus coverage and eliminate human errors.'
+            details: 'Run a 10-point AI audit on every question paper before it reaches students. Catch errors, imbalance, and out-of-syllabus questions instantly.'
         },
         { 
             id: 'dases', 
-            name: 'DASES Evaluation', 
-            desc: 'Grading & Analytics', 
+            name: 'DASES', 
+            desc: 'AI Answer Evaluation', 
             icon: <FileSignature size={20} strokeWidth={2} />,
-            details: 'High-precision OCR and AI technology to instantly and fairly grade handwritten answer sheets.'
+            details: 'Every handwritten script is evaluated against a fixed AI rubric, ensuring every student is judged on merit alone. Results in minutes, not weeks.'
         }
     ]
     const [activeProductIdx, setActiveProductIdx] = useState(0)
@@ -250,7 +275,7 @@ export default function LandingPage() {
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveProductIdx((prev) => (prev + 1) % products.length)
-        }, 3000)
+        }, 5000)
         return () => clearInterval(interval)
     }, [products.length])
 
@@ -294,7 +319,7 @@ export default function LandingPage() {
                         animate="visible"
                     >
                         <motion.div variants={fadeUp} className="eyebrow eyebrow-light">
-                            <div className="eyebrow-dot"></div> AI Assessment Suite
+                            <div className="eyebrow-dot"></div> The AI Examination Suite
                         </motion.div>
                         
                         <motion.h1 variants={fadeUp}>
@@ -304,7 +329,7 @@ export default function LandingPage() {
                         </motion.h1>
 
                         <motion.p variants={fadeUp} className="hero-subhead mt-6 text-lg text-[var(--color-cream-dark)] opacity-90 max-w-xl leading-relaxed">
-                            A unified platform powering Question Generation, Quality Moderation, and Automated Evaluation.
+                            BigChalkBox automates the entire examination process. AI-powered question generation, quality moderation and unbiased answer evaluation. Built for modern universities.
                         </motion.p>
                         
                         <motion.div variants={fadeUp}>
@@ -404,7 +429,7 @@ export default function LandingPage() {
 
                 <div className="shell hero-bot">
                     <span>Working since 2023</span>
-                    <span className="hb-mid">Based in India, worldwide</span>
+                    <span className="hb-mid">Built for universities, worldwide</span>
                     <span className="hb-right">Scroll to explore <ArrowRight size={12} style={{ transform: 'rotate(90deg)' }} /></span>
                 </div>
             </section>
@@ -437,7 +462,7 @@ export default function LandingPage() {
                             </div>
                         </div>
                         <p className="si-subtitle">
-                            Built for modern education.
+                            The complete AI suite for modern universities.
                         </p>
                     </motion.div>
                     
@@ -449,7 +474,7 @@ export default function LandingPage() {
                         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <h2 className="si-heading">
-                            We build AI that grades, generates, and moderates assessments. Empowering educators with precision and scale.
+                            Three AI modules. One unified platform. Covering every step: from crafting the perfect question paper to delivering bias-free results at scale.
                         </h2>
                         
                         <div className="si-footer">
@@ -630,19 +655,19 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* CTA BANNER 1 — After The Suite */}
+            {/* CTA BANNER 1 - After The Suite */}
             <section className="cta-banner cta-banner--light cta-banner--pre-pixel">
                 <div className="shell cta-banner__inner">
                     <div className="cta-banner__text">
                         <h2 className="cta-banner__h2">
-                            Smarter assessments.<br/>
-                            <span className="cta-banner__accent">From creation to evaluation.</span>
+                            Generate. Moderate. Evaluate.<br/>
+                            <span className="cta-banner__accent">The complete exam lifecycle, automated.</span>
                         </h2>
-                        <p className="cta-banner__sub">Join forward-thinking institutions already using BigChalkBox to streamline exam generation, ensure quality moderation, and deliver faster, fairer evaluation.</p>
+                        <p className="cta-banner__sub">Forward-thinking institutions trust BigChalkBox to create flawless question papers, audit them for quality, and evaluate thousands of answer sheets. All with AI precision that no manual process can match.</p>
                     </div>
                     <div className="cta-banner__btns">
                         <Link href="#book-demo" className="cta-banner__btn cta-banner__btn--primary">Book a Free Demo</Link>
-                        <Link href="#services" className="cta-banner__btn cta-banner__btn--ghost">Explore Solutions</Link>
+                        <Link href="#works" className="cta-banner__btn cta-banner__btn--ghost">Explore the Suite</Link>
                     </div>
                 </div>
             </section>
@@ -660,36 +685,60 @@ export default function LandingPage() {
                         initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                         className="eyebrow eyebrow-light mb-4"
                     >
-                        <div className="eyebrow-dot"></div> Built For Everyone
+                        <div className="eyebrow-dot"></div> Built For The Entire Institution
                     </motion.div>
                     
                     <motion.h2 
                         initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                         className="sv-h2 !mb-0 text-white"
                     >
-                        Less stress. More success.<br/>
-                        <span className="sv-accent-sassy">Everyone wins.</span>
+                        One suite. Infinite impact.<br/>
+                        <span className="sv-accent-sassy">For every stakeholder.</span>
                     </motion.h2>
                 </div>
 
                 <div className="shell sv-shell w-full mt-6 lg:-mt-8 relative z-20">
-                    <div className="stakeholder-grid grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 relative w-full max-w-6xl mx-auto h-[750px] lg:h-[380px]" ref={svGridRef}>
+                    {/* MOBILE VIEW: Horizontal Card Carousel */}
+                    <div ref={mobileCarouselRef} className="flex lg:hidden w-full overflow-x-auto snap-x snap-mandatory gap-6 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                        {STAKEHOLDERS.map((stakeholder, idx) => (
+                            <div key={idx} className="snap-center shrink-0 w-[85vw] max-w-sm sv-bento-card stakeholder-card flex flex-col justify-start overflow-hidden relative">
+                                <div className="sv-card-inner stakeholder-card-inner !p-6 sm:!p-8 h-full flex flex-col justify-start">
+                                    <div className="sv-card-header !gap-4 !mb-6">
+                                        <div className="sv-icon-large !w-14 !h-14 !rounded-2xl">
+                                            {stakeholder.icon}
+                                        </div>
+                                        <h3 className="sv-card-h3 !text-2xl sm:!text-3xl">
+                                            {stakeholder.title}
+                                        </h3>
+                                    </div>
+                                    <p className="sv-card-desc !text-sm sm:!text-base !mb-6">
+                                        {stakeholder.desc}
+                                    </p>
+                                    <div className="sv-pills !gap-3 flex-wrap mt-auto">
+                                        {stakeholder.points.map((pt, i) => (
+                                            <div key={i} className="sv-pill !py-2 !px-3 sm:!py-2.5 sm:!px-4 !text-[13px] sm:!text-sm !rounded-xl flex items-center gap-2">
+                                                <CheckCircle size={14} className="shrink-0" /> {pt}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* DESKTOP VIEW: Wheel + Dynamic Card */}
+                    <div className="stakeholder-grid hidden lg:grid grid-cols-2 gap-16 relative w-full max-w-6xl mx-auto h-[380px]" ref={svGridRef}>
                         
                         {/* LEFT: OptionWheel */}
-                        <div className="stakeholder-wheel-panel relative w-full max-w-md mx-auto h-[250px] lg:h-full group">
+                        <div className="stakeholder-wheel-panel relative w-full h-full group">
                             
                             {/* Scroll Hint */}
-                            <div className="absolute left-0 lg:-left-4 top-1/2 -translate-y-1/2 -translate-x-full hidden lg:flex flex-col items-center justify-center gap-4 text-white/20 transition-colors duration-500 group-hover:text-white/50">
+                            <div className="absolute -left-4 top-1/2 -translate-y-1/2 -translate-x-full flex flex-col items-center justify-center gap-4 text-white/20 transition-colors duration-500 group-hover:text-white/50">
                                 <span className="text-[10px] font-medium uppercase tracking-[0.2em] -rotate-180" style={{ writingMode: 'vertical-rl' }}>Scroll or Drag</span>
                                 <ChevronsUpDown size={16} className="animate-pulse" />
                             </div>
 
-                            {/* Mobile Hint */}
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 lg:hidden flex items-center gap-2 text-white/60 text-[10px] font-medium uppercase tracking-[0.1em] bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-xl border border-white/20 z-20 shadow-xl">
-                                <Mouse size={12} /> Scroll or Drag
-                            </div>
-
-                            <div className="stakeholder-wheel-mask relative h-full flex items-center justify-center lg:justify-start overflow-hidden w-full" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)'}}>
+                            <div className="stakeholder-wheel-mask relative h-full flex items-center justify-start overflow-hidden w-full" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)'}}>
                                 <OptionWheel
                                     items={STAKEHOLDERS.map(s => s.title.replace('For ', ''))}
                                     defaultSelected={0}
@@ -714,7 +763,7 @@ export default function LandingPage() {
                         </div>
 
                         {/* RIGHT: Dynamic Card */}
-                        <div className="stakeholder-card-panel relative h-[460px] lg:h-full flex items-center justify-center lg:justify-end w-full max-w-md mx-auto">
+                        <div className="stakeholder-card-panel relative h-full flex items-center justify-end w-full max-w-md mx-auto">
                             <div className="relative w-full h-full">
                                 <AnimatePresence mode="wait">
                                     <motion.div
@@ -759,18 +808,18 @@ export default function LandingPage() {
             {/* FAQs */}
             <FAQSection />
 
-            {/* CTA BANNER 2 — After FAQs */}
+            {/* CTA BANNER 2 - After FAQs */}
             <section className="cta-banner cta-banner--light cta-banner--compact-top">
                 <div className="shell cta-banner__inner">
                     <div className="cta-banner__text">
                         <h2 className="cta-banner__h2">
-                            Your rubric.<br/>
-                            <span className="cta-banner__accent">Our AI. Zero compromise.</span>
+                            Stop managing exams manually.<br/>
+                            <span className="cta-banner__accent">Let BigChalkBox run the full cycle.</span>
                         </h2>
-                        <p className="cta-banner__sub">4,000+ sheets processed. 200+ question papers generated. Results that speak for themselves.</p>
+                        <p className="cta-banner__sub">4,000+ answer sheets evaluated. 200+ question papers generated & moderated. Trusted by educators worldwide. Your institution is next.</p>
                     </div>
                     <div className="cta-banner__btns">
-                        <Link href="#book-demo" className="cta-banner__btn cta-banner__btn--primary">Get Started Free</Link>
+                        <Link href="#book-demo" className="cta-banner__btn cta-banner__btn--primary">Book a Free Pilot</Link>
                         <Link href="/pricing" className="cta-banner__btn cta-banner__btn--ghost">View Pricing</Link>
                     </div>
                 </div>

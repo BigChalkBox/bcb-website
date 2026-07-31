@@ -163,7 +163,6 @@
     inset: 0;
     opacity: 0.15;
     pointer-events: none;
-    mix-blend-mode: overlay;
 }
 
 .lp-contact-dark .bg-map img {

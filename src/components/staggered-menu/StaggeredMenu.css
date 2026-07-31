@@ -339,10 +339,11 @@
 }
 
 @media (max-width: 1024px) {
-  .staggered-menu-panel {
-    width: 100%;
-    left: 0;
-    right: 0;
+  .staggered-menu-panel,
+  .sm-prelayers {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
   }
 
   .staggered-menu-wrapper[data-open] .sm-logo-img {
@@ -351,10 +352,11 @@
 }
 
 @media (max-width: 640px) {
-  .staggered-menu-panel {
-    width: 100%;
-    left: 0;
-    right: 0;
+  .staggered-menu-panel,
+  .sm-prelayers {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
   }
 
   .staggered-menu-wrapper[data-open] .sm-logo-img {
@@ -366,7 +368,7 @@
   }
 
   .sm-panel-item {
-    font-size: clamp(2.4rem, 13vw, 3.5rem);
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
 }
 

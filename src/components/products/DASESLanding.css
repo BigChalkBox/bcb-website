@@ -3,20 +3,20 @@
    No Tailwind CDN dependency
    ============================================ */
 
-/* --- CSS Variables --- */
+/* --- CSS Variables (remapped to global design system) --- */
 :root {
-    --primary: #1B5E20;
-    --secondary: #4E6E5D;
-    --accent: #22C55E;
-    --sage: #84A59D;
-    --pale-olive: #C6D3C1;
-    --classic-beige: #F5F5DC;
-    --cream: #FFFDF5;
-    --deep-forest: #0B2613;
-    --bg-light: #FFFDF5;
-    --bg-dark: #0F1A14;
-    --slate-deep: #1E2923;
-    --slate-content: #3D4E44;
+    --primary: var(--color-gold);
+    --secondary: var(--color-gold-light);
+    --accent: var(--color-gold);
+    --sage: var(--color-slate);
+    --pale-olive: var(--color-border);
+    --classic-beige: var(--color-cream-dark);
+    --cream: var(--color-cream);
+    --deep-forest: var(--color-ink);
+    --bg-light: var(--color-cream);
+    --bg-dark: var(--color-ink);
+    --slate-deep: var(--color-ink);
+    --slate-content: var(--color-ink-soft);
 }
 
 /* --- Base --- */
@@ -37,7 +37,7 @@
 
 /* --- Hero Gradient --- */
 .lp-hero-gradient {
-    background: radial-gradient(circle at top center, rgba(34, 197, 94, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle at top center, rgba(20, 90, 56, 0.08) 0%, transparent 70%); /* Chalkboard green glow */
 }
 
 /* --- Logo Path --- */
@@ -200,7 +200,7 @@
     width: 100%;
     height: 100%;
     border-radius: 9999px;
-    background: var(--accent);
+    background: var(--color-gold);
     opacity: 0.75;
 }
 
@@ -210,7 +210,7 @@
     border-radius: 9999px;
     width: 0.875rem;
     height: 0.875rem;
-    background: var(--accent);
+    background: var(--color-gold);
 }
 
 @keyframes ping {
@@ -235,7 +235,7 @@
 }
 
 .lp-gradient-text {
-    background: linear-gradient(to right, var(--primary), var(--accent));
+    background: linear-gradient(to right, var(--color-gold), var(--color-gold-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -336,9 +336,9 @@
    ============================================ */
 .lp-problem {
     padding: 4rem 0;
-    background: rgba(198, 211, 193, 0.2);
-    border-top: 1px solid rgba(198, 211, 193, 0.3);
-    border-bottom: 1px solid rgba(198, 211, 193, 0.3);
+    background: var(--color-cream-dark);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .lp-problem h2 {
@@ -442,12 +442,12 @@
     flex-grow: 1;
 }
 
-/* Green gradient card */
+/* Green gradient card (now Chalkboard Green) */
 .lp-card-green {
-    background: linear-gradient(135deg, var(--accent), var(--primary));
+    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
     color: white;
     border: none;
-    box-shadow: 0 25px 50px -12px rgba(20, 83, 45, 0.3);
+    box-shadow: 0 25px 50px -12px rgba(20, 90, 56, 0.25);
 }
 
 .lp-card-green h3 {
@@ -455,7 +455,7 @@
 }
 
 .lp-card-green p {
-    color: #f0fdf4;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .lp-card-green .lp-card-icon {
@@ -471,7 +471,7 @@
 }
 
 .lp-stat-label {
-    color: #f0fdf4;
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 900;
     font-size: 1rem;
     text-transform: uppercase;
@@ -493,7 +493,7 @@
 }
 
 .lp-blockquote .hl {
-    background: rgba(34, 197, 94, 0.2);
+    background: rgba(20, 90, 56, 0.1);
     padding: 0.125rem 0.5rem;
     border-radius: 0.25rem;
     font-weight: 900;
@@ -742,6 +742,11 @@
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
     border-bottom: 2px solid rgba(198, 211, 193, 0.5);
+}
+
+.lp-accordion-header[aria-expanded="true"] {
+    background: var(--color-cream-dark);
+    color: var(--primary);
 }
 
 .lp-ai-header .material-symbols-outlined {

@@ -26,7 +26,7 @@ export default function SiteHeader() {
 
     const menuItems = [
         { label: 'Solutions', ariaLabel: 'Explore our product suite', link: '/solutions' },
-        { label: 'Contact', ariaLabel: 'Get in touch', link: '/#contact' },
+        { label: 'Contact', ariaLabel: 'Get in touch', link: '/#book-demo' },
         { label: 'About', ariaLabel: 'About Big Chalk Box', link: '/about' },
         { label: 'Pricing', ariaLabel: 'View pricing', link: '/pricing' },
         { label: 'Blog', ariaLabel: 'Engineering journal', link: '/blog' },
@@ -50,7 +50,7 @@ export default function SiteHeader() {
                         <div className="shell flex justify-between items-center w-full px-0">
                             <Link href="/" className="sticky-nav-left" style={{ textDecoration: 'none' }}>
                                 <img src="/logo_new/logo.png" alt="Icon" className="nav-icon" />
-                                <span className="nav-logo-text-solid"><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
+                                <span className="nav-logo-text-solid" style={{ fontFamily: "'Amaranth', sans-serif" }}><span className="accent">Big</span>Chalk<span className="accent">Box</span></span>
                             </Link>
                             <div className="sticky-nav-right">
                                 <div className="pill-wrapper hide-mobile">
