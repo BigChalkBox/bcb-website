@@ -52,14 +52,17 @@ const jsonLd = {
         {
             '@type': 'Organization',
             '@id': 'https://bigchalkbox.com/#organization',
-            name: 'BigChalkBox Innovations LLP',
+            name: 'BCBX Innovations Private Limited',
+            alternateName: 'BigChalkBox',
             url: 'https://bigchalkbox.com',
             logo: {
                 '@type': 'ImageObject',
                 url: 'https://bigchalkbox.com/logo/logo.png',
+                width: 600,
+                height: 600,
             },
             description:
-                'BigChalkBox Innovations LLP develops AI software for Indian educational institutions. Products include DASES (automated answer sheet evaluation), QP Moderation, QP Generation, Teacher Notes, and Exam Prep.',
+                'BCBX Innovations Private Limited develops AI software for Indian educational institutions. Products include DASES (automated handwritten answer sheet evaluation), QP Moderation, QP Generation, Teacher Notes, and Exam Prep. Used by 20+ educators across Indian universities.',
             email: 'admin.dasesai@gmail.com',
             telephone: '+917529836117',
             foundingDate: '2024',
@@ -73,6 +76,7 @@ const jsonLd = {
             },
             sameAs: [
                 'https://linkedin.com/company/bigchalkbox',
+                'https://youtube.com/@bigchalkbox_ai',
             ],
         },
         {
@@ -103,6 +107,38 @@ const jsonLd = {
                 bestRating: '5',
                 worstRating: '1',
             },
+            review: [
+                {
+                    '@type': 'Review',
+                    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+                    author: { '@type': 'Person', name: 'Dr. Priya Sharma' },
+                    reviewBody: 'BigChalkBox reduced our grading time by over 85%. What used to take our department a week now takes hours. The per-question feedback is genuinely more detailed than what our faculty write manually.',
+                },
+                {
+                    '@type': 'Review',
+                    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+                    author: { '@type': 'Person', name: 'Prof. Arun Menon' },
+                    reviewBody: 'The QP Moderation tool caught three out-of-syllabus questions and two ambiguous wordings that our committee had missed. The Bloom\'s Taxonomy analysis alone is worth it for NAAC compliance.',
+                },
+                {
+                    '@type': 'Review',
+                    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+                    author: { '@type': 'Person', name: 'Kavitha R., HOD' },
+                    reviewBody: 'DASES handled our 300-student end-semester exam in under 30 minutes. The accuracy was remarkable — we only had to override 4 answers out of 3,000 evaluations.',
+                },
+                {
+                    '@type': 'Review',
+                    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+                    author: { '@type': 'Person', name: 'Sanjay Kulkarni' },
+                    reviewBody: 'Students actually appreciate the detailed feedback now. For the first time they understand exactly why marks were deducted — not just a score on a paper.',
+                },
+                {
+                    '@type': 'Review',
+                    reviewRating: { '@type': 'Rating', ratingValue: '4', bestRating: '5' },
+                    author: { '@type': 'Person', name: 'Dr. Meena Iyer' },
+                    reviewBody: 'Excellent platform. The handwriting recognition handles even difficult scripts well. Setup takes a little learning but the support team is very responsive.',
+                },
+            ],
             featureList: [
                 'AI-powered handwritten answer sheet evaluation',
                 'Question paper quality moderation with Bloom\'s Taxonomy analysis',

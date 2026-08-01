@@ -20,6 +20,24 @@ export default function sitemap() {
             priority: 0.9,
         },
         {
+            url: `${baseUrl}/products/dases`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/products/qp-moderation`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.85,
+        },
+        {
+            url: `${baseUrl}/products/qp-generation`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.85,
+        },
+        {
             url: `${baseUrl}/pricing`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
@@ -30,6 +48,12 @@ export default function sitemap() {
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/careers`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.5,
         },
         {
             url: `${baseUrl}/blog`,

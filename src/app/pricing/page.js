@@ -28,10 +28,11 @@ const jsonLd = {
             '@type': 'Product',
             name: 'BigChalkBox AI Assessment Suite',
             description:
-                'AI-powered handwritten exam evaluation platform and question paper generation suite.',
+                'AI-powered handwritten exam evaluation platform and question paper generation suite for Indian universities.',
             brand: {
                 '@type': 'Brand',
                 name: 'BigChalkBox',
+                manufacturer: 'BCBX Innovations Private Limited',
             },
             url: 'https://bigchalkbox.com/pricing',
             offers: [
@@ -59,8 +60,10 @@ const jsonLd = {
                     '@type': 'Offer',
                     name: 'Evaluation Module',
                     description:
-                        'Automated AI evaluation for handwritten assessments.',
+                        'Automated AI evaluation for handwritten assessments. Price on request — contact for institutional quote.',
                     priceCurrency: 'INR',
+                    price: '0',
+                    priceValidUntil: '2027-03-31',
                     availability: 'https://schema.org/InStock',
                     url: 'https://bigchalkbox.com/pricing',
                 },

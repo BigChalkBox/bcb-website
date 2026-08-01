@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
             type: 'article',
             publishedTime: article.publishedAt,
             modifiedTime: article.updatedAt,
-            authors: ['Big Chalk Box Pvt. Ltd.'],
+            authors: ['BCBX Innovations Private Limited'],
             tags: article.tags,
         },
         twitter: {
@@ -86,7 +86,7 @@ export default async function BlogArticlePage({ params }) {
                 abstract: article.heroAnswer,
                 author: {
                     '@type': 'Organization',
-                    name: 'Big Chalk Box Pvt. Ltd.',
+                    name: 'BCBX Innovations Private Limited',
                     url: 'https://bigchalkbox.com',
                 },
                 publisher: {

@@ -1,36 +1,36 @@
 import AboutPage from '../../components/about/AboutPage'
 
 export const metadata = {
-    title: 'About | Big Chalk Box Pvt. Ltd.',
+    title: 'About | BCBX Innovations Private Limited — BigChalkBox',
     description:
-        'Big Chalk Box Pvt. Ltd. is an EdTech engineering company solving the hardest, most tedious problems in education so teachers can get back to teaching.',
+        'BCBX Innovations Private Limited is an EdTech engineering company solving the hardest, most tedious problems in education so teachers can get back to teaching. Makers of BigChalkBox — AI examination suite for Indian universities.',
     openGraph: {
         type: 'website',
         locale: 'en_IN',
         url: 'https://bigchalkbox.com/about',
-        title: 'About | Big Chalk Box Pvt. Ltd.',
+        title: 'About | BCBX Innovations Private Limited',
         description:
-            'An EdTech engineering company building deep-tech solutions for educators. Makers of DASES.',
-        siteName: 'Big Chalk Box',
+            'An EdTech engineering company building deep-tech solutions for educators across India. Makers of BigChalkBox.',
+        siteName: 'BigChalkBox',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'About | Big Chalk Box Pvt. Ltd.',
+        title: 'About | BCBX Innovations Private Limited',
         description:
-            'Solving the hardest problems in education. Makers of DASES.',
+            'Solving the hardest problems in Indian education. Makers of BigChalkBox.',
     },
     alternates: {
         canonical: 'https://bigchalkbox.com/about',
     },
     authors: [
         {
-            name: 'Big Chalk Box Pvt. Ltd.',
+            name: 'BCBX Innovations Private Limited',
             url: 'https://bigchalkbox.com',
             email: 'admin.dasesai@gmail.com',
         },
     ],
     summary:
-        'Big Chalk Box Pvt. Ltd. is an EdTech engineering company building deep-tech solutions to automate the most grueling parts of an educator\'s job.',
+        'BCBX Innovations Private Limited is an EdTech engineering company building deep-tech solutions to automate the most grueling parts of an educator\'s job.',
 }
 
 const jsonLd = {
@@ -38,12 +38,13 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'Organization',
-            name: 'Big Chalk Box Pvt. Ltd.',
+            name: 'BCBX Innovations Private Limited',
+            alternateName: 'BigChalkBox',
             url: 'https://bigchalkbox.com',
             email: 'admin.dasesai@gmail.com',
             telephone: '+917529836117',
             description:
-                'Big Chalk Box Pvt. Ltd. is an EdTech engineering company building deep-tech solutions to automate the most grueling parts of an educator\'s job. Based in India, our flagship product is DASES.',
+                'BCBX Innovations Private Limited is an EdTech engineering company building deep-tech solutions to automate the most grueling parts of an educator\'s job. Based in India, our flagship product is BigChalkBox — an AI examination suite for Indian universities.',
             address: {
                 '@type': 'PostalAddress',
                 addressCountry: 'IN',
@@ -53,17 +54,25 @@ const jsonLd = {
                 '@type': 'Country',
                 name: 'India',
             },
-            sameAs: [],
+            sameAs: [
+                'https://linkedin.com/company/bigchalkbox',
+                'https://youtube.com/@bigchalkbox_ai',
+            ],
             makesOffer: {
                 '@type': 'Offer',
                 itemOffered: {
                     '@type': 'SoftwareApplication',
-                    name: 'DASES',
-                    alternateName: 'Digital Academic Student Evaluation System',
+                    name: 'BigChalkBox Academic Suite',
+                    alternateName: [
+                        'DASES',
+                        'Digital Academic Student Evaluation System',
+                        'QP Moderation',
+                        'QP Generation',
+                    ],
                     applicationCategory: 'EducationalApplication',
                     operatingSystem: 'Web',
                     description:
-                        'AI-powered handwritten exam evaluation platform with 98% rubric accuracy. Processes 500 sheets in parallel with per-question feedback.',
+                        'AI-powered handwritten exam evaluation platform with 98% rubric accuracy. Processes 500 sheets in parallel with per-question feedback. Includes QP Moderation and QP Generation tools.',
                 },
             },
         },

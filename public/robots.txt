@@ -1,14 +1,22 @@
-# DASES Robots.txt — Optimized for Humans and AI Crawlers
+# BigChalkBox Robots.txt — Optimized for Humans and AI Crawlers
 
 User-agent: *
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /solutions
+Allow: /pricing
+Allow: /about
+Allow: /products
+Allow: /products/*
+Allow: /careers
+Disallow: /admin
+Disallow: /sample-report
+Disallow: /DASESLanding
 
 # Sitemap link for search engines
-Sitemap: https://dasesai.com/sitemap.xml
+Sitemap: https://bigchalkbox.com/sitemap.xml
 
-# AI Crawler instructions (GEO strategy)
-# Linked to our public AI context files
-# Full Reference: https://dasesai.com/llms-full.txt
-# Summary: https://dasesai.com/llms.txt
+# AI Crawler reference files
+# Summary: https://bigchalkbox.com/llms.txt
+# Full Reference: https://bigchalkbox.com/llms-full.txt
