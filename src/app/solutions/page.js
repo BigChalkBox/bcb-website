@@ -8,14 +8,14 @@ export const metadata = {
         canonical: 'https://bigchalkbox.com/solutions',
     },
     openGraph: {
-        title: 'DASES Solutions | End-to-End AI Exam Automation',
+        title: 'Answer Sheet Evaluation Solutions | End-to-End AI Exam Automation',
         description:
             'From paper creation to evaluation reports: automate every step of the exam lifecycle with AI. 98% rubric accuracy on handwritten answers.',
         url: 'https://bigchalkbox.com/solutions',
         type: 'website',
     },
     twitter: {
-        title: 'DASES Solutions | AI Exam Grading & Rubric Generation',
+        title: 'Answer Sheet Evaluation Solutions | AI Exam Grading & Rubric Generation',
         description:
             'Paper creation → Rubric generation → AI evaluation → Reports. 500 sheets in 15 seconds each.',
     },
@@ -26,7 +26,7 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'ItemList',
-            name: 'DASES AI Exam Solutions',
+            name: 'Answer Sheet Evaluation AI Exam Solutions',
             description:
                 'Complete suite of AI-powered exam automation solutions for universities and schools.',
             url: 'https://bigchalkbox.com/solutions',
@@ -51,7 +51,7 @@ const jsonLd = {
                     position: 3,
                     name: 'AI Rubric Engine',
                     description:
-                        'Provide model answers and DASES generates detailed criterion-based rubrics with customizable weights. Supports multiple valid answer approaches per question.',
+                        'Provide model answers and Answer Sheet Evaluation generates detailed criterion-based rubrics with customizable weights. Supports multiple valid answer approaches per question.',
                 },
                 {
                     '@type': 'ListItem',

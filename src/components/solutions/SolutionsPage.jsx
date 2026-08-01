@@ -20,7 +20,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => (
 const solutionCards = [
     {
         icon: 'magic_button',
-        title: 'Automated QP Generation',
+        title: 'Automated Question Paper Generation',
         desc: 'Create syllabus-aligned question papers with one click. Complete support for complex math, diagrams, and varying difficulty levels.',
         tag: 'Generation',
         link: '/products/qp-generation'
@@ -110,13 +110,13 @@ export default function SolutionsPage() {
                                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                                     onMouseLeave={e => e.currentTarget.style.transform = 'none'}
                                 >
-                                    Explore DASES
+                                    Explore Answer Sheet Evaluation
                                 </Link>
                                 <Link href="/products/qp-generation" style={{ display: 'inline-flex', alignItems: 'center', padding: '1rem 2.5rem', background: 'transparent', color: 'var(--color-ink)', borderRadius: '9999px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', border: '2px solid rgba(26,36,33,0.2)', transition: 'all 0.25s' }}
                                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(26,36,33,0.05)'; e.currentTarget.style.borderColor = 'rgba(26,36,33,0.4)' }}
                                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(26,36,33,0.2)' }}
                                 >
-                                    Explore QP Generation
+                                    Explore Question Paper Generation
                                 </Link>
                             </div>
                         </Reveal>

@@ -192,7 +192,7 @@ export default function AboutPage() {
                 </Reveal>
                 <Reveal delay={0.2}>
                   <p style={{ fontSize: '1.5rem', color: 'var(--color-cream)', fontWeight: 500, lineHeight: 1.6, margin: 0 }}>
-                    Our flagship product, DASES, is just the beginning. We are committed to building a suite of tools that fundamentally changes how institutions operate, evaluate, and educate.
+                    Our flagship product, Answer Sheet Evaluation, is just the beginning. We are committed to building a suite of tools that fundamentally changes how institutions operate, evaluate, and educate.
                   </p>
                 </Reveal>
               </div>
@@ -214,7 +214,7 @@ export default function AboutPage() {
                   onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                   onMouseLeave={e => e.currentTarget.style.transform = 'none'}
                 >
-                  Explore DASES
+                  Explore Answer Sheet Evaluation
                 </Link>
                 <Link href="/#contact" style={{ display: 'inline-flex', alignItems: 'center', padding: '1rem 2.5rem', background: 'transparent', color: 'var(--color-ink)', borderRadius: '9999px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', border: '2px solid var(--color-ink)', transition: 'all 0.25s' }}
                   onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.color = 'white' }}

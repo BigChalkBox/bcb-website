@@ -22,7 +22,7 @@ const HeroSection = () => {
             <Link href="/" className={styles.logo}>
               <Image
                 src={navlogo}
-                alt="DASES Logo"
+                alt="Answer Sheet Evaluation Logo"
                 width={120}
                 height={50}
                 priority
@@ -64,7 +64,7 @@ const HeroSection = () => {
             <div className={styles.logoBox}>
               <Image
                 src={logo}
-                alt="DASES Logo"
+                alt="Answer Sheet Evaluation Logo"
                 width={0}
                 height={0}
                 priority
@@ -73,7 +73,7 @@ const HeroSection = () => {
             </div>
 
             <div className={styles.innercontainercontent}>
-              <h2>Descriptive Answer Sheet Evaluation System.</h2>
+              <h2>Intelligent System.</h2>
             </div>
 
             {/* BUTTON GROUP (left untouched) */}

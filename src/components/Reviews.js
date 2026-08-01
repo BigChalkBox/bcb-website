@@ -9,17 +9,17 @@ import styles from "./Reviews.module.css";
 
 const testimonials = [
   {
-    text: "DASES has transformed our evaluation process. What used to take weeks now takes days, and the consistency across evaluators has improved dramatically.",
+    text: "Answer Sheet Evaluation has transformed our evaluation process. What used to take weeks now takes days, and the consistency across evaluators has improved dramatically.",
     name: "Dr. Sahara Mittal",
     title: "Academic Dean",
   },
   {
-    text: "The automation and consistency of DASES have saved us countless hours while improving evaluation fairness.",
+    text: "The automation and consistency of Answer Sheet Evaluation have saved us countless hours while improving evaluation fairness.",
     name: "Prof. R. Sharma",
     title: "Head of Department",
   },
   {
-    text: "DASES ensures every student gets unbiased feedback while making the evaluation process smooth for faculty.",
+    text: "Answer Sheet Evaluation ensures every student gets unbiased feedback while making the evaluation process smooth for faculty.",
     name: "Dr. Meera Kapoor",
     title: "Associate Professor",
   },

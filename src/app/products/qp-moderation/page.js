@@ -1,15 +1,15 @@
-// Server wrapper to provide metadata for the 'use client' QP Moderation page
+// Server wrapper to provide metadata for the 'use client' Question Paper Moderation page
 import QPModerationPage from './client-page'
 
 export const metadata = {
-    title: 'QP Moderation | AI Question Paper Quality Audit for Indian Universities',
+    title: 'Question Paper Moderation | AI Question Paper Quality Audit for Indian Universities',
     description:
         "Automated 10-point AI audit for question papers: Bloom's Taxonomy balance, ambiguity detection, out-of-syllabus checker, OR-choice parity, and IQAC-ready moderation reports. Built for Indian universities.",
     alternates: {
         canonical: 'https://bigchalkbox.com/products/qp-moderation',
     },
     openGraph: {
-        title: 'QP Moderation | 10-Point AI Question Paper Audit — BigChalkBox',
+        title: 'Question Paper Moderation | 10-Point AI Question Paper Audit — BigChalkBox',
         description:
             "Flawless exams. Zero manual effort. AI checks Bloom's distribution, ambiguity, syllabus coverage, OR parity, and mark allocation in under 5 minutes.",
         url: 'https://bigchalkbox.com/products/qp-moderation',
@@ -19,13 +19,13 @@ export const metadata = {
                 url: '/logo/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: 'QP Moderation — AI Question Paper Audit by BigChalkBox',
+                alt: 'Question Paper Moderation — AI Question Paper Audit by BigChalkBox',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'QP Moderation | AI Question Paper Audit',
+        title: 'Question Paper Moderation | AI Question Paper Audit',
         description:
             "10-point AI audit in under 5 minutes. Bloom's analysis, out-of-syllabus detection, and IQAC-ready reports.",
         images: ['/logo/og-image.png'],
@@ -37,7 +37,7 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'SoftwareApplication',
-            name: 'QP Moderation by BigChalkBox',
+            name: 'Question Paper Moderation by BigChalkBox',
             applicationCategory: 'EducationalApplication',
             operatingSystem: 'Web Browser',
             url: 'https://bigchalkbox.com/products/qp-moderation',
@@ -68,7 +68,7 @@ const jsonLd = {
                 {
                     '@type': 'ListItem',
                     position: 3,
-                    name: 'QP Moderation',
+                    name: 'Question Paper Moderation',
                     item: 'https://bigchalkbox.com/products/qp-moderation',
                 },
             ],
@@ -89,7 +89,7 @@ const jsonLd = {
                     name: "How does the AI know our institution's syllabus?",
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'You simply upload your syllabus document once during onboarding. DASES indexes it and acts as your personalized reference for all future out-of-syllabus checks.',
+                        text: 'You simply upload your syllabus document once during onboarding. Answer Sheet Evaluation indexes it and acts as your personalized reference for all future out-of-syllabus checks.',
                     },
                 },
                 {

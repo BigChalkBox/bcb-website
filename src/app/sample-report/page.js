@@ -60,7 +60,7 @@ export default function SampleReportPage() {
         <div className={styles.ctaContent}>
           <h2 className={styles.ctaTitle}>Ready to Simplify Evaluation & Save Hours?</h2>
           <p className={styles.ctaDescription}>
-            Join leading institutions that trust DASES for faster, fairer, and smarter assessments.
+            Join leading institutions that trust Answer Sheet Evaluation for faster, fairer, and smarter assessments.
           </p>
           <button
             className={styles.primaryButton}

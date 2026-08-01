@@ -65,19 +65,19 @@ const packages = [
             { name: 'QP, sample answers, & rubrics flow in directly', included: true },
             { name: 'Faculty upload student scripts for AI evaluation', included: true },
             { name: 'Per-sheet, per-question scores with feedback', included: true },
-            { name: 'Seamlessly connected to QP Generation', included: true },
+            { name: 'Seamlessly connected to Question Paper Generation', included: true },
         ],
     },
 ]
 
 const faqData = [
     {
-        question: 'How is DASES priced?',
+        question: 'How is the Answer Sheet Evaluation priced?',
         answer: 'Pricing is based on your chosen package and institution size. Contact us for a custom quote — we\'ll tailor it to your volume and requirements.',
     },
     {
         question: 'Is there a free pilot?',
-        answer: 'Yes. We offer a free pilot where you can test DASES with your real question papers and answer sheets before committing. No credit card required.',
+        answer: 'Yes. We offer a free pilot where you can test the Answer Sheet Evaluation system with your real question papers and answer sheets before committing. No credit card required.',
     },
     {
         question: 'Can I upgrade my package later?',

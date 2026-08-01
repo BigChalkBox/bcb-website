@@ -14,15 +14,7 @@ const REVIEWS = [
         shadow: 'shadow-emerald-900/50',
         quote: 'BigChalkBox brought a level of speed and fairness to our evaluation process that we had never seen before. Results that took weeks now arrive within hours.'
     },
-    {
-        initials: 'VK',
-        name: 'Dr. Virender Kadyan',
-        role: 'Prof.',
-        gradient: 'from-teal-400 to-teal-800',
-        ring: 'ring-teal-500/20 group-hover:ring-teal-500/50',
-        shadow: 'shadow-teal-900/50',
-        quote: 'The evaluation turnaround is remarkable. Scripts that used to sit for weeks are now graded with full accuracy overnight. Our students get their results faster and our faculty gets their time back.'
-    },
+
     {
         initials: 'P',
         name: 'Dr. Pramod',

@@ -6,7 +6,7 @@ export default function Topsec() {
   return (
     <header className={styles.header}>
       <div className={styles.topRow}>
-        <h1 className={styles.logo}>DASES</h1>
+        <h1 className={styles.logo}>Answer Sheet Evaluation</h1>
         <p className={styles.tagline}>
           THE AI-POWERED EVALUATION SYSTEM FOR MODERN EDUCATION.
         </p>

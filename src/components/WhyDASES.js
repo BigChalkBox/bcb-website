@@ -8,7 +8,7 @@ export default function WhyDASES() {
       <section className={styles.section}>
         <div className={styles.left}>
           <p className={styles.subtitle}>
-            Why <span></span><span className={styles.subtitle1}>DASES?</span>
+            Why <span></span><span className={styles.subtitle1}>Answer Sheet Evaluation?</span>
           </p>
 
           <span className={styles.title}>Built for Educators. Designed for Results.</span>
@@ -16,7 +16,7 @@ export default function WhyDASES() {
           <p className={styles.description}>
             Traditional evaluation is broken. It&apos;s slow, subjective, and drains valuable time from teaching.
             <br /><br />
-            <strong>DASES fixes it.</strong> We combine advanced OCR, Large Language Models (LLMs),
+            <strong>Answer Sheet Evaluation fixes it.</strong> We combine advanced OCR, Large Language Models (LLMs),
             and structured rubrics to deliver accurate, unbiased grading in a fraction of the time.
           </p>
 

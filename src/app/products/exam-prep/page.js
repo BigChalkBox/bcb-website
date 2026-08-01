@@ -37,7 +37,7 @@ export default function ExamPrepPage() {
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ fontSize: '1.15rem', color: '#64748b', fontWeight: 500, lineHeight: 1.75, maxWidth: '480px', marginBottom: '2.5rem' }}>
-                  DASES Exam Prep turns grading data into actionable study plans. Based on past performance, the AI generates a bespoke revision guide highlighting exactly what each student needs to focus on.
+                  Answer Sheet Evaluation Exam Prep turns grading data into actionable study plans. Based on past performance, the AI generates a bespoke revision guide highlighting exactly what each student needs to focus on.
                 </p>
               </Reveal>
               <Reveal delay={0.15}>
@@ -93,7 +93,7 @@ export default function ExamPrepPage() {
           </div></Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.25rem' }}>
             {[
-              { icon: 'insights', title: 'Data-Driven Insights', desc: 'Analyzes student performance across multiple DASES-evaluated exams to identify consistent weak points.' },
+              { icon: 'insights', title: 'Data-Driven Insights', desc: 'Analyzes student performance across multiple Answer Sheet Evaluation-evaluated exams to identify consistent weak points.' },
               { icon: 'target', title: 'Targeted Revision Plans', desc: 'Creates a custom study schedule for each student, prioritizing topics where they lost the most marks.' },
               { icon: 'library_books', title: 'Curated Study Material', desc: 'Links weak topics to specific textbook chapters, lecture slides, or recorded videos from your syllabus.' },
               { icon: 'trending_up', title: 'Progress Tracking', desc: 'Visualizes improvement over the semester, showing students how their targeted study is affecting their grades.' },

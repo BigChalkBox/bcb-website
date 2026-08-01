@@ -91,7 +91,7 @@ export default async function BlogArticlePage({ params }) {
                 },
                 publisher: {
                     '@type': 'Organization',
-                    name: 'DASES',
+                    name: 'Answer Sheet Evaluation',
                     url: 'https://bigchalkbox.com',
                     logo: {
                         '@type': 'ImageObject',

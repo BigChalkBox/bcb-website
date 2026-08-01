@@ -20,10 +20,10 @@ const AUDIT_POINTS = [
 
 const FAQS = [
   { q: 'What format does the question paper need to be in?', a: 'We accept Word documents, PDFs, and plain text. The AI seamlessly identifies question numbers, marks, and stems automatically — no special formatting template required.' },
-  { q: "How does the AI know our institution's syllabus?", a: 'You simply upload your syllabus document once during onboarding. DASES indexes it and acts as your personalized reference for all future out-of-syllabus checks.' },
+  { q: "How does the AI know our institution's syllabus?", a: 'You simply upload your syllabus document once during onboarding. Answer Sheet Evaluation indexes it and acts as your personalized reference for all future out-of-syllabus checks.' },
   { q: "Can we customise the Bloom's policy thresholds?", a: "Absolutely. Institution admins can set exact target percentages for LOT/HOT, minimum HOT requirements, and maximum marks per level." },
   { q: 'How long does a moderation run take?', a: 'A standard 10-question paper completes a full 10-point moderation in under 5 minutes, delivering a comprehensive dashboard of insights instantly.' },
-  { q: 'Does this replace our human moderation committee?', a: 'Not at all. QP Moderation is designed to supercharge your committee by automating the tedious, rules-based checks. Your experts can focus on judgment calls and institutional context.' },
+  { q: 'Does this replace our human moderation committee?', a: 'Not at all. Question Paper Moderation is designed to supercharge your committee by automating the tedious, rules-based checks. Your experts can focus on judgment calls and institutional context.' },
 ]
 
 const Reveal = ({ children, delay = 0 }) => (
@@ -60,7 +60,7 @@ export default function QPModerationPage() {
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 1rem', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 900, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                     <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'bcbPulse 2s infinite' }} />Live — Active
                   </span>
-                  <span style={{ padding: '0.35rem 1rem', background: 'rgba(20,90,56,0.08)', border: '1px solid rgba(20,90,56,0.2)', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 900, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>QP Moderation</span>
+                  <span style={{ padding: '0.35rem 1rem', background: 'rgba(20,90,56,0.08)', border: '1px solid rgba(20,90,56,0.2)', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 900, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Question Paper Moderation</span>
                 </div>
               </Reveal>
               <Reveal delay={0.05}>
@@ -98,7 +98,7 @@ export default function QPModerationPage() {
               <div style={{ background: 'var(--color-cream)', border: '1px solid var(--color-border)', borderRadius: '1.5rem', overflow: 'hidden', boxShadow: '0 24px 64px rgba(0,0,0,0.06)' }}>
                 <div style={{ background: 'var(--color-cream-dark)', borderBottom: '1px solid var(--color-border)', padding: '0.875rem 1.25rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                   {['#fe5f57','#febb2c','#27c840'].map((c, i) => <span key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />)}
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-slate)', marginLeft: '0.75rem' }}>QP Moderation · CS-401 Final Exam</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-slate)', marginLeft: '0.75rem' }}>Question Paper Moderation · CS-401 Final Exam</span>
                 </div>
                 <div style={{ padding: '1.5rem' }}>
                   <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1.25rem' }}>Audit Summary</div>
@@ -143,7 +143,7 @@ export default function QPModerationPage() {
               <iframe
                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
                 src="https://www.youtube.com/embed/u5cW1WLE958"
-                title="QP Moderation Tutorial"
+                title="Question Paper Moderation Tutorial"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

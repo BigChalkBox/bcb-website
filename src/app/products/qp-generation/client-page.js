@@ -47,7 +47,7 @@ export default function QPGenerationPage() {
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 1rem', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 900, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                     <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'bcbPulse 2s infinite' }} />Live — Active
                   </span>
-                  <span style={{ padding: '0.35rem 1rem', background: 'rgba(20,90,56,0.08)', border: '1px solid rgba(20,90,56,0.2)', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 900, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>QP Generation</span>
+                  <span style={{ padding: '0.35rem 1rem', background: 'rgba(20,90,56,0.08)', border: '1px solid rgba(20,90,56,0.2)', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 900, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Question Paper Generation</span>
                 </div>
               </Reveal>
               <Reveal delay={0.05}>
@@ -58,7 +58,7 @@ export default function QPGenerationPage() {
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ fontSize: '1.15rem', color: 'var(--color-ink-soft)', fontWeight: 500, lineHeight: 1.75, maxWidth: '480px', marginBottom: '2.5rem' }}>
-                  Define your syllabus, difficulty curve, and Bloom's targets. QP Generation produces a complete, balanced, anti-repeat question bank automatically.
+                  Define your syllabus, difficulty curve, and Bloom's targets. Question Paper Generation produces a complete, balanced, anti-repeat question bank automatically.
                 </p>
               </Reveal>
               <Reveal delay={0.15}>
@@ -125,7 +125,7 @@ export default function QPGenerationPage() {
               <iframe
                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
                 src="https://www.youtube.com/embed/M1WxSPve1_s"
-                title="QP Generation Tutorial"
+                title="Question Paper Generation Tutorial"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -146,7 +146,7 @@ export default function QPGenerationPage() {
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }}>
             {[
-              { icon: 'library_books', title: 'Syllabus-Aware Generation', desc: 'Upload your unit-wise syllabus. QP Generation draws questions proportionately from every topic — no unit gets over-tested or ignored.' },
+              { icon: 'library_books', title: 'Syllabus-Aware Generation', desc: 'Upload your unit-wise syllabus. Question Paper Generation draws questions proportionately from every topic — no unit gets over-tested or ignored.' },
               { icon: 'psychology', title: "Bloom's Level Control", desc: 'Set your HOT/LOT percentages. The generator distributes questions across Remember, Understand, Apply, Analyse, and Evaluate instantly.' },
               { icon: 'block', title: 'Anti-Repeat Engine', desc: 'Cross-references your institutional question bank. If a question was used in previous years, it is excluded from the new paper.' },
               { icon: 'tune', title: 'Difficulty Curve Builder', desc: 'Define easy/medium/hard ratios per section. The generator respects the cognitive load across the entire paper.' },

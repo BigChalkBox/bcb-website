@@ -64,13 +64,13 @@ export default function HeroGridSection() {
 <p className={styles.subtext}>
     Traditional evaluation is broken. It&apos;s slow, subjective, and drains valuable time from teaching.
     <br /><br />
-    <strong>DASES</strong> fixes it by combining OCR, LLMs, and structured rubrics to deliver fast, accurate &amp; unbiased grading.
+    <strong>Answer Sheet Evaluation</strong> fixes it by combining OCR, LLMs, and structured rubrics to deliver fast, accurate &amp; unbiased grading.
 </p>
 
                 <div className={styles.buttons}>
 
                                        <Link href="#bookDemo">
-                    <button className={styles.primaryBtn}>Try DASES</button>
+                    <button className={styles.primaryBtn}>Try Answer Sheet Evaluation</button>
                                        </Link>
                    <Link href="https://test-dases.vercel.app/">
                    <button className={styles.secondaryBtn}>See How It Works</button>

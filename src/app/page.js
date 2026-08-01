@@ -1,7 +1,7 @@
 import LandingPage from '../components/landing/LandingPage'
 
 export const metadata = {
-    title: 'BigChalkBox | AI Examination Suite for Indian Universities — DASES, QP Moderation & More',
+    title: 'BigChalkBox | AI Examination Suite for Indian Universities — Answer Sheet Evaluation, Question Paper Moderation & More',
     description:
         'BigChalkBox automates answer sheet grading, question paper moderation, and exam content creation for Indian universities. Grade 500 sheets in 15 minutes. Book a Free Demo.',
     keywords: [
@@ -11,7 +11,7 @@ export const metadata = {
         'Bloom\'s Taxonomy question paper checker',
         'AI question paper generation',
         'university exam automation India',
-        'DASES answer sheet evaluation',
+        'Answer Sheet Evaluation',
         'NAAC exam quality improvement',
         'IQAC digital tools',
         'EdTech for universities India',
@@ -62,7 +62,7 @@ const jsonLd = {
                 height: 600,
             },
             description:
-                'BCBX Innovations Private Limited develops AI software for Indian educational institutions. Products include DASES (automated handwritten answer sheet evaluation), QP Moderation, QP Generation, Teacher Notes, and Exam Prep. Used by 20+ educators across Indian universities.',
+                'BCBX Innovations Private Limited develops AI software for Indian educational institutions. Products include Answer Sheet Evaluation (automated handwritten grading), Question Paper Moderation, Question Paper Generation, Teacher Notes, and Exam Prep. Used by 20+ educators across Indian universities.',
             email: 'admin.dasesai@gmail.com',
             telephone: '+917529836117',
             foundingDate: '2024',
@@ -118,13 +118,13 @@ const jsonLd = {
                     '@type': 'Review',
                     reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
                     author: { '@type': 'Person', name: 'Prof. Arun Menon' },
-                    reviewBody: 'The QP Moderation tool caught three out-of-syllabus questions and two ambiguous wordings that our committee had missed. The Bloom\'s Taxonomy analysis alone is worth it for NAAC compliance.',
+                    reviewBody: 'The Question Paper Moderation tool caught three out-of-syllabus questions and two ambiguous wordings that our committee had missed. The Bloom\'s Taxonomy analysis alone is worth it for NAAC compliance.',
                 },
                 {
                     '@type': 'Review',
                     reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
                     author: { '@type': 'Person', name: 'Kavitha R., HOD' },
-                    reviewBody: 'DASES handled our 300-student end-semester exam in under 30 minutes. The accuracy was remarkable — we only had to override 4 answers out of 3,000 evaluations.',
+                    reviewBody: 'Answer Sheet Evaluation handled our 300-student end-semester exam in under 30 minutes. The accuracy was remarkable — we only had to override 4 answers out of 3,000 evaluations.',
                 },
                 {
                     '@type': 'Review',
@@ -156,7 +156,7 @@ const jsonLd = {
                     name: 'What is AI-powered answer sheet evaluation?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'AI-powered answer sheet evaluation uses computer vision and large language models to read handwritten descriptive answers and compare them against a teacher\'s rubric. DASES by BigChalkBox processes handwritten scripts using multimodal AI — it understands the semantic meaning of each answer, not just keyword matching. This enables accurate, objective grades with per-question feedback in seconds per sheet.',
+                        text: 'AI-powered answer sheet evaluation uses computer vision and large language models to read handwritten descriptive answers and compare them against a teacher\'s rubric. Answer Sheet Evaluation by BigChalkBox processes handwritten scripts using multimodal AI — it understands the semantic meaning of each answer, not just keyword matching. This enables accurate, objective grades with per-question feedback in seconds per sheet.',
                     },
                 },
                 {
@@ -164,7 +164,7 @@ const jsonLd = {
                     name: 'How does BigChalkBox ensure question paper quality?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'BigChalkBox\'s QP Moderation module runs a 10-point AI audit on every question paper. It checks for Bloom\'s Taxonomy balance, ambiguous phrasing, OR-choice difficulty parity, syllabus coverage gaps, out-of-syllabus questions, marks-vs-effort alignment, duplicate questions, and more. Each flagged issue comes with an AI-suggested rewrite.',
+                        text: 'BigChalkBox\'s Question Paper Moderation module runs a 10-point AI audit on every question paper. It checks for Bloom\'s Taxonomy balance, ambiguous phrasing, OR-choice difficulty parity, syllabus coverage gaps, out-of-syllabus questions, marks-vs-effort alignment, duplicate questions, and more. Each flagged issue comes with an AI-suggested rewrite.',
                     },
                 },
                 {
@@ -172,7 +172,7 @@ const jsonLd = {
                     name: 'Is BigChalkBox compliant with NAAC and IQAC requirements?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'Yes. BigChalkBox is built for the Indian university ecosystem, including NAAC, IQAC, and NBA compliance frameworks. The QP Moderation module\'s Bloom\'s Taxonomy mapping directly supports Learning Outcome Based Education (LOBE) requirements. All data is processed with role-based access controls, and student data is never shared with third-party AI providers.',
+                        text: 'Yes. BigChalkBox is built for the Indian university ecosystem, including NAAC, IQAC, and NBA compliance frameworks. The Question Paper Moderation module\'s Bloom\'s Taxonomy mapping directly supports Learning Outcome Based Education (LOBE) requirements. All data is processed with role-based access controls, and student data is never shared with third-party AI providers.',
                     },
                 },
                 {

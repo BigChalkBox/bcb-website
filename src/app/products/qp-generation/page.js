@@ -1,15 +1,15 @@
-// Server wrapper to provide metadata for the 'use client' QP Generation page
+// Server wrapper to provide metadata for the 'use client' Question Paper Generation page
 import QPGenerationPage from './client-page'
 
 export const metadata = {
-    title: 'QP Generation | AI Question Paper Generator for Indian Universities',
+    title: 'Question Paper Generation | AI Question Paper Generator for Indian Universities',
     description:
         "Generate syllabus-perfect, Bloom's-balanced, anti-repeat question papers in seconds. BigChalkBox's QP Generator creates curriculum-aligned exam papers with difficulty control and export-ready formatting.",
     alternates: {
         canonical: 'https://bigchalkbox.com/products/qp-generation',
     },
     openGraph: {
-        title: 'QP Generation | AI Question Paper Generator — BigChalkBox',
+        title: 'Question Paper Generation | AI Question Paper Generator — BigChalkBox',
         description:
             "Syllabus-perfect exams generated in seconds. Define your Bloom's targets, difficulty curve, and anti-repeat rules — get a complete question paper instantly.",
         url: 'https://bigchalkbox.com/products/qp-generation',
@@ -19,13 +19,13 @@ export const metadata = {
                 url: '/logo/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: 'QP Generation — AI Question Paper Generator by BigChalkBox',
+                alt: 'Question Paper Generation — AI Question Paper Generator by BigChalkBox',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'QP Generation | AI Question Paper Generator',
+        title: 'Question Paper Generation | AI Question Paper Generator',
         description:
             "Syllabus-aware. Bloom's-balanced. Anti-repeat. Generate complete question papers in seconds.",
         images: ['/logo/og-image.png'],
@@ -37,7 +37,7 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'SoftwareApplication',
-            name: 'QP Generation by BigChalkBox',
+            name: 'Question Paper Generation by BigChalkBox',
             applicationCategory: 'EducationalApplication',
             operatingSystem: 'Web Browser',
             url: 'https://bigchalkbox.com/products/qp-generation',
@@ -66,7 +66,7 @@ const jsonLd = {
                 {
                     '@type': 'ListItem',
                     position: 3,
-                    name: 'QP Generation',
+                    name: 'Question Paper Generation',
                     item: 'https://bigchalkbox.com/products/qp-generation',
                 },
             ],

@@ -99,19 +99,19 @@ export default function SiteFooter() {
                         <ul>
                             <li>
                                 <Link href="/products/dases">
-                                    DASES Evaluation
+                                    Answer Sheet Evaluation
                                     <span className="ft-live-badge">Live</span>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/products/qp-moderation">
-                                    QP Moderation
+                                    Question Paper Moderation
                                     <span className="ft-live-badge">Live</span>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/products/qp-generation">
-                                    QP Generation
+                                    Question Paper Generation
                                     <span className="ft-live-badge">Live</span>
                                 </Link>
                             </li>

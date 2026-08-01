@@ -50,7 +50,7 @@ export default function DASESLanding() {
                     events: {
                         onReady: (event) => {
                             event.target.setVolume(15);
-                            event.target.getIframe().setAttribute('title', 'DASES AI Grading Workflow Demonstration');
+                            event.target.getIframe().setAttribute('title', 'Answer Sheet Evaluation AI Grading Workflow Demonstration');
                         }
                     }
                 });
@@ -69,27 +69,27 @@ export default function DASESLanding() {
     }, []);
 
     const workflowSteps = [
-        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs — from a document scanner or phone camera." },
+        { title: "Upload & Scan", desc: "Bulk upload scanned answer sheet PDFs from a document scanner or phone camera." },
         { title: "AI Evaluation", desc: "Our engine reads handwriting, maps answers to questions, and scores against your rubric." },
         { title: "Review & Publish", desc: "Verify scores, download branded PDF reports, and share results with students." }
     ]
 
     const faqData = [
         {
-            question: "How accurate is DASES compared to human grading?",
-            answer: "DASES achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers — matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
+            question: "How accurate is the system compared to human grading?",
+            answer: "Our system achieves <span class='hl'>98% rubric accuracy</span> on handwritten descriptive answers, matching experienced evaluator standards while eliminating subjective bias and inconsistencies across graders."
         },
         {
-            question: "How many answer sheets can DASES process at once?",
-            answer: "DASES processes up to <span class='hl'>500 sheets in parallel</span>, with each sheet scored in approximately 15 seconds. An entire batch that would take a faculty member days can be completed in minutes."
+            question: "How many answer sheets can the system process at once?",
+            answer: "The evaluation engine processes up to <span class='hl'>500 sheets in parallel</span>, with each sheet scored in approximately 15 seconds. An entire batch that would take a faculty member days can be completed in minutes."
         },
         {
-            question: "How do I get started with DASES?",
-            answer: "It takes less than 10 minutes. Upload your question paper, add model answers, and DASES generates rubrics automatically. From there, just upload student answer sheets and let the AI handle the rest."
+            question: "How do I get started?",
+            answer: "It takes less than 10 minutes. Upload your question paper, add model answers, and the system generates rubrics automatically. From there, just upload student answer sheets and let the AI handle the rest."
         },
         {
-            question: "Can I customize how DASES grades?",
-            answer: "Absolutely. You define the rubric — your criteria, your weights, your standards. DASES adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
+            question: "Can I customize how the system grades?",
+            answer: "Absolutely. You define the rubric: your criteria, your weights, your standards. The evaluation engine adapts to your grading expectations, not the other way around. It also supports multiple valid answer approaches per question."
         },
         {
             question: "Is student data secure?",
@@ -124,7 +124,7 @@ export default function DASESLanding() {
                                 <span className="lp-gradient-text">in Minutes, Not Days.</span>
                             </h1>
                             <p className="lp-hero-sub">
-                                <strong>DASES is an AI-powered descriptive answer evaluation system</strong> that reads handwriting, scores against your rubric, and delivers detailed per-question feedback for educational institutions — at 98% accuracy.
+                                <strong>Our AI-powered Answer Sheet Evaluation system</strong> that reads handwriting, scores against your rubric, and delivers detailed per-question feedback for educational institutions at 98% accuracy.
                             </p>
                             <FadeIn delay={0.1} className="lp-cta-buttons" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', position: 'relative', zIndex: 10 }}>
                                 <Link href="https://www.youtube.com/watch?v=k13pAnWj0Tc&list=TLGGtZTxRZOBne8yMjAyMjAyNg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
@@ -136,7 +136,7 @@ export default function DASESLanding() {
                             </FadeIn>
                             <FadeIn className="lp-dash-wrap" delay={0.2}>
                                 <div className="lp-dash-outer">
-                                    <img alt="DASES Evaluation Dashboard Preview" src="/images/landing/dashboard_preview.png" />
+                                    <img alt="Answer Sheet Evaluation Dashboard Preview" src="/images/landing/dashboard_preview.png" />
                                     <div className="lp-float-badge lp-float-left">
                                         <div className="icon-box" style={{ background: 'var(--color-cream-dark)', color: 'var(--primary)' }}>
                                             <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>edit_note</span>
@@ -161,7 +161,7 @@ export default function DASESLanding() {
                                             <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>verified</span>
                                         </div>
                                         <div>
-                                            <span className="label-small">Only on DASES</span>
+                                            <span className="label-small">Only on Answer Sheet Evaluation</span>
                                             <span className="label-main">QuickPass™</span>
                                         </div>
                                     </div>
@@ -186,7 +186,7 @@ export default function DASESLanding() {
                                     letterSpacing: '0.01em',
                                     paddingRight: '0.25rem',
                                 }}>
-                                    * For illustration purposes only. No real student data is shown. DASES secures all data with end-to-end encryption.
+                                    * For illustration purposes only. No real student data is shown. Answer Sheet Evaluation secures all data with end-to-end encryption.
                                 </p>
                             </FadeIn>
                         </div>
@@ -198,7 +198,7 @@ export default function DASESLanding() {
                             <FadeIn>
                                 <h2>
                                     Grading descriptive answers takes days of valuable teaching time. <br />
-                                    <span className="highlight">DASES brings that down to minutes</span> empowering you to focus on teaching.
+                                    <span className="highlight">BigChalkBox Evaluation System brings that down to minutes</span> empowering you to focus on teaching.
                                 </h2>
                             </FadeIn>
                         </div>
@@ -319,7 +319,7 @@ export default function DASESLanding() {
                                         in Three Steps.
                                     </h2>
                                     <p className="lp-workflow-desc">
-                                        Upload your students&apos; answer sheets. DASES reads the handwriting, scores each answer against your rubric, and generates personalized feedback — ready for faculty review and student delivery.
+                                        Upload your students&apos; answer sheets. Answer Sheet Evaluation reads the handwriting, scores each answer against your rubric, and generates personalized feedback, ready for faculty review and student delivery.
                                     </p>
                                     <div className="lp-steps">
                                         {workflowSteps.map((step, idx) => {
@@ -364,7 +364,7 @@ export default function DASESLanding() {
                                 <span className="lp-gradient-text">and start evaluating?</span>
                             </h2>
                             <p>
-                                Join 20+ educators already using DASES to deliver faster, fairer, and more meaningful assessment feedback.
+                                Join 20+ educators already using Answer Sheet Evaluation to deliver faster, fairer, and more meaningful assessment feedback.
                             </p>
                             <div className="lp-cta-buttons">
                                 <Link href="/#contact"><button className="lp-btn-primary">Book a Free Demo</button></Link>
@@ -379,7 +379,7 @@ export default function DASESLanding() {
                         <FadeIn className="lp-container" style={{ position: 'relative', zIndex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
                             <h2 className="lp-faq-title" style={{ textAlign: 'center' }}>Frequently Asked Questions</h2>
-                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about DASES — from accuracy to data security.</p>
+                            <p className="lp-faq-subtitle" style={{ textAlign: 'center' }}>Everything you need to know about the Answer Sheet Evaluation module, from accuracy to data security.</p>
 
                             <div className="lp-faq-list" style={{ textAlign: 'left', width: '100%' }}>
                                 {faqData.map((faq, idx) => {

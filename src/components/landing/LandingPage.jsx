@@ -98,21 +98,21 @@ export default function LandingPage() {
     const products = [
         { 
             id: 'qpgen', 
-            name: 'QP Generation', 
+            name: 'Question Paper Generation', 
             desc: 'AI Creation Engine', 
             icon: <BrainCircuit size={20} strokeWidth={2} />,
             details: 'Generate perfectly structured, Bloom\'s Taxonomy-aligned question papers in seconds. No more hours spent drafting from scratch.'
         },
         { 
             id: 'qpmod', 
-            name: 'QP Moderation', 
+            name: 'Question Paper Moderation', 
             desc: 'Automated Quality Audit', 
             icon: <SearchCheck size={20} strokeWidth={2} />,
             details: 'Run a 10-point AI audit on every question paper before it reaches students. Catch errors, imbalance, and out-of-syllabus questions instantly.'
         },
         { 
             id: 'dases', 
-            name: 'DASES', 
+            name: 'Answer Sheet Evaluation', 
             desc: 'AI Answer Evaluation', 
             icon: <FileSignature size={20} strokeWidth={2} />,
             details: 'Every handwritten script is evaluated against a fixed AI rubric, ensuring every student is judged on merit alone. Results in minutes, not weeks.'
@@ -481,7 +481,12 @@ export default function LandingPage() {
                             <div className="si-socials-wrapper">
                                 <span className="si-socials-label">Find us online</span>
                                 <div className="si-socials">
-                                    <a href="https://www.youtube.com/@dases_ai" target="_blank" rel="noopener noreferrer" className="si-social-btn">YT</a>
+                                    <a href="https://youtube.com/@bigchalkbox_ai" target="_blank" rel="noopener noreferrer" className="si-social-btn" title="YouTube" style={{ padding: '0', background: 'transparent', border: 'none' }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                                            <path fill="#FF0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
+                                            <path fill="#ffffff" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
                             
@@ -575,8 +580,8 @@ export default function LandingPage() {
                                     <div className="wk-badge"><ArrowUpRight /></div>
                                 </div>
                                 <div className="wk-bot mt-auto">
-                                    <h3 className="wk-h3">DASES</h3>
-                                    <p className="wk-p">Descriptive Answer Sheet Evaluation System. Combines OCR and LLMs to deliver fast, accurate, and unbiased grading for handwritten assessments.</p>
+                                    <h3 className="wk-h3">Answer Sheet Evaluation</h3>
+                                    <p className="wk-p">An intelligent system. Combines OCR and LLMs to deliver fast, accurate, and unbiased grading for handwritten assessments.</p>
                                     <div className="wk-tags">
                                         <span className="tag-chip"><CheckCircle size={16} /> Grades in minutes</span>
                                         <span className="tag-chip"><CheckCircle size={16} /> Objective rubrics</span>
@@ -584,7 +589,7 @@ export default function LandingPage() {
                                     </div>
                                     <Link href="/products/dases" className="mt-8 inline-block pointer-events-auto">
                                         <span className="pill-button light has-arrow">
-                                            Explore DASES
+                                            Explore Answer Sheet Evaluation
                                             <span className="arrow-badge right"><ArrowRight size={18} /></span>
                                         </span>
                                     </Link>
@@ -593,13 +598,13 @@ export default function LandingPage() {
                             <div className="wk-vid-wrapper mt-8 lg:mt-0 relative z-10 pointer-events-none">
                                 <img 
                                     src="/images/landing/dashboard_preview_1.png"
-                                    alt="DASES Dashboard Preview"
+                                    alt="Answer Sheet Evaluation Dashboard Preview"
                                     className="wk-vid"
                                 />
                             </div>
                         </motion.div>
 
-                        {/* Product 3: QP Moderation */}
+                        {/* Product 3: Question Paper Moderation */}
                         <motion.div 
                             initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
                             className="wk-card wk-card-3 group magic-bento-card--border-glow"
@@ -610,7 +615,7 @@ export default function LandingPage() {
                                 <div className="wk-badge"><ArrowUpRight /></div>
                             </div>
                             <div className="wk-bot relative z-10 pointer-events-none">
-                                <h3 className="wk-h3">QP Moderation</h3>
+                                <h3 className="wk-h3">Question Paper Moderation</h3>
                                 <p className="wk-p">Automated quality audits for your question papers. Ensure syllabus coverage, difficulty balance, and eliminate errors before exams.</p>
                                 <div className="wk-tags mb-6">
                                     <span className="tag-chip">Repetitive checks</span>
@@ -618,14 +623,14 @@ export default function LandingPage() {
                                 </div>
                                 <Link href="/products/qp-moderation" className="mt-auto inline-block pointer-events-auto">
                                     <span className="pill-button light has-arrow">
-                                        Explore QP Moderation
+                                        Explore Question Paper Moderation
                                         <span className="arrow-badge right"><ArrowRight size={18} /></span>
                                     </span>
                                 </Link>
                             </div>
                         </motion.div>
 
-                        {/* Product 2: QP Generation */}
+                        {/* Product 2: Question Paper Generation */}
                         <motion.div 
                             initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
                             className="wk-card wk-card-2 group magic-bento-card--border-glow"
@@ -636,7 +641,7 @@ export default function LandingPage() {
                                 <div className="wk-badge"><ArrowUpRight /></div>
                             </div>
                             <div className="wk-bot relative z-10 pointer-events-none">
-                                <h3 className="wk-h3">QP Generation</h3>
+                                <h3 className="wk-h3">Question Paper Generation</h3>
                                 <p className="wk-p">Instantly create curriculum-aligned question papers. Generate diverse question types with balanced difficulty levels in seconds.</p>
                                 <div className="wk-tags mb-6">
                                     <span className="tag-chip">Blueprint-aligned</span>
@@ -644,7 +649,7 @@ export default function LandingPage() {
                                 </div>
                                 <Link href="/products/qp-generation" className="mt-auto inline-block pointer-events-auto">
                                     <span className="pill-button light has-arrow">
-                                        Explore QP Generation
+                                        Explore Question Paper Generation
                                         <span className="arrow-badge right"><ArrowRight size={18} /></span>
                                     </span>
                                 </Link>

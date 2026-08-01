@@ -23,7 +23,7 @@ export const metadata = {
     "Bloom's Taxonomy question paper checker",
     'AI question paper generation India',
     'university exam automation India',
-    'DASES answer sheet evaluation',
+    'Answer Sheet Evaluation answer sheet evaluation',
     'NAAC exam quality improvement',
     'IQAC digital tools India',
     'EdTech for universities India',
@@ -45,7 +45,7 @@ export const metadata = {
     siteName: 'BigChalkBox',
     title: 'BigChalkBox | AI Examination Suite for Indian Universities',
     description:
-      'Explore our suite of AI-powered educational tools: DASES Answer Sheet Checking, Question Paper Moderation, QP Generation, Teacher Notes, and Exam Prep.',
+      'Explore our suite of AI-powered educational tools: Answer Sheet Evaluation Answer Sheet Checking, Question Paper Moderation, Question Paper Generation, Teacher Notes, and Exam Prep.',
     url: 'https://bigchalkbox.com',
     images: [
       {
@@ -61,7 +61,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'BigChalkBox | AI Examination Suite for Indian Universities',
     description:
-      'Explore our suite of AI-powered educational tools: DASES Answer Sheet Checking, Question Paper Moderation, QP Generation, Teacher Notes, and Exam Prep.',
+      'Explore our suite of AI-powered educational tools: Answer Sheet Evaluation Answer Sheet Checking, Question Paper Moderation, Question Paper Generation, Teacher Notes, and Exam Prep.',
     images: ['/logo/og-image.png'],
   },
 

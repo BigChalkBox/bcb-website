@@ -62,7 +62,7 @@ export default function Home() {
           <div className={styles.sectionAlt1}>
             <div className={styles.sectionTitleHeading1}>
               <h2 className={styles.sectionTitle}>Trusted by Institutions That Shape the Future</h2>
-              <p>From classrooms to universities, DASES empowers educators and delivers results institutions can rely on.</p>
+              <p>From classrooms to universities, Answer Sheet Evaluation empowers educators and delivers results institutions can rely on.</p>
             </div>
 
 
@@ -130,7 +130,7 @@ export default function Home() {
               Trusted by educators. Designed with academic integrity at the core.
             </p>
             <p className={styles.trust}>
-              2026 © DASES by Big Chalk Box Pvt. Ltd.
+              2026 © Answer Sheet Evaluation by Big Chalk Box Pvt. Ltd.
               <br />
               All rights reserved.
             </p>

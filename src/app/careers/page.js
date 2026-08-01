@@ -32,7 +32,7 @@ const ROLES = [
     team: 'Engineering',
     location: 'Remote (India)',
     type: 'Full-time',
-    desc: 'Architect and scale the core DASES platform using Next.js, Node, and Python. You will lead technical decisions and mentor junior devs.'
+    desc: 'Architect and scale the core Answer Sheet Evaluation platform using Next.js, Node, and Python. You will lead technical decisions and mentor junior devs.'
   },
   {
     title: 'AI / ML Researcher',

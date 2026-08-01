@@ -1,13 +1,13 @@
 import DASESLanding from '../../../components/products/DASESLanding'
 
 export const metadata = {
-    title: 'DASES | AI-Powered Handwritten Answer Sheet Evaluation for Indian Universities',
-    description: 'DASES by BigChalkBox reads handwritten student exams, scores against your rubric, and delivers detailed per-question feedback. 98% accuracy. 500 sheets in parallel. Built for India.',
+    title: 'Answer Sheet Evaluation | AI-Powered Handwritten Answer Sheet Evaluation for Indian Universities',
+    description: 'Answer Sheet Evaluation by BigChalkBox reads handwritten student exams, scores against your rubric, and delivers detailed per-question feedback. 98% accuracy. 500 sheets in parallel. Built for India.',
     alternates: {
         canonical: 'https://bigchalkbox.com/products/dases',
     },
     openGraph: {
-        title: 'DASES | Automated Handwritten Exam Evaluation — BigChalkBox',
+        title: 'Answer Sheet Evaluation | Automated Handwritten Exam Evaluation — BigChalkBox',
         description: 'AI reads student handwriting, scores each answer against your rubric, and generates written feedback per question. 98% accuracy. Free demo available.',
         url: 'https://bigchalkbox.com/products/dases',
         type: 'website',
@@ -16,13 +16,13 @@ export const metadata = {
                 url: '/logo/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: 'DASES — AI Handwritten Exam Evaluation by BigChalkBox',
+                alt: 'Answer Sheet Evaluation — AI Handwritten Exam Evaluation by BigChalkBox',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'DASES | AI Answer Sheet Evaluation for Indian Universities',
+        title: 'Answer Sheet Evaluation | AI Answer Sheet Evaluation for Indian Universities',
         description: 'Grade 500 handwritten answer sheets in parallel. 98% rubric accuracy. Per-question feedback for every student.',
         images: ['/logo/og-image.png'],
     },
@@ -34,7 +34,7 @@ const jsonLd = {
         {
             '@type': 'SoftwareApplication',
             '@id': 'https://bigchalkbox.com/products/dases#software',
-            name: 'DASES (Digital Academic Student Evaluation System)',
+            name: 'Answer Sheet Evaluation (Digital Academic Student Evaluation System)',
             applicationCategory: 'EducationalApplication',
             operatingSystem: 'Web Browser',
             url: 'https://bigchalkbox.com/products/dases',
@@ -91,7 +91,7 @@ const jsonLd = {
                 {
                     '@type': 'ListItem',
                     position: 3,
-                    name: 'DASES',
+                    name: 'Answer Sheet Evaluation',
                     item: 'https://bigchalkbox.com/products/dases',
                 },
             ],

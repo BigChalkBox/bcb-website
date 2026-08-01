@@ -6,29 +6,20 @@ import { useEffect, useState, useRef } from "react";
 
 const testimonials = [
   {
-    logo: "Dr. Sanjeev Kumar",
     quote:
-      "DASES dramatically improved our evaluation turnaround time while maintaining academic rigor. Our faculty can now focus more on teaching and mentorship.",
+      "This system dramatically improved our evaluation turnaround time while maintaining academic rigor. Our faculty can now focus more on teaching and mentorship.",
     name: "Dr. Sanjeev Kumar",
     title: "Professor",
     img: "/images/image.png"
   },
   {
-    logo: "Prof. Lalit Sachan",
     quote:
-      "We saw immediate impact. Faster grading, consistent rubrics, and detailed student feedback: DASES has set a new benchmark.",
+      "We saw immediate impact. Faster grading, consistent rubrics, and detailed student feedback: the evaluation engine has set a new benchmark.",
     name: "Prof. Lalit Sachan",
     title: "Director AI/ML",
     img: "/images/image.png"
   },
-  {
-    logo: "Dr. Virender Kadyan",
-    quote:
-      "The transparency and quality of feedback helped students learn better. A true innovation in descriptive assessment.",
-    name: "Dr. Virender Kadyan",
-    title: "HOD Data Science",
-    img: "/images/image.png"
-  }
+
 ];
 
 export default function TestimonialStack() {
@@ -72,7 +63,6 @@ export default function TestimonialStack() {
         <div className={`${styles.cardMid} ${flip && styles.stackMoveMid}`}></div>
 
         <div className={`${styles.cardMain} ${flip && styles.flip}`}>
-          <div className={styles.logo}>{t.logo}</div>
           <p className={styles.quote}>{t.quote}</p>
 
           <div className={styles.userRow}>
@@ -88,7 +78,7 @@ export default function TestimonialStack() {
       {/* ✅ Updated CTA Section */}
       <div className={styles.right}>
         <p className={styles.tag}>Ready for the Future of Grading?</p>
-        <h2 className={styles.heading}>Transform Assessment with DASES</h2>
+        <h2 className={styles.heading}>Transform Assessment with AI-Powered Evaluation</h2>
         <p className={styles.sub}>
           Join the institutions redefining descriptive evaluation. Increase fairness, speed, and transparency without compromising academic integrity.
         </p>
