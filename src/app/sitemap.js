@@ -37,6 +37,7 @@ export default function sitemap() {
             changeFrequency: 'monthly',
             priority: 0.85,
         },
+
         {
             url: `${baseUrl}/pricing`,
             lastModified: new Date(),

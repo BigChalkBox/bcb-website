@@ -73,6 +73,14 @@ const jsonLd = {
                 },
             ],
         },
+        {
+            '@type': 'ItemList',
+            itemListElement: articles.map((article, idx) => ({
+                '@type': 'ListItem',
+                position: idx + 1,
+                url: `https://bigchalkbox.com/blog/${article.slug}`,
+            })),
+        },
     ],
 }
 

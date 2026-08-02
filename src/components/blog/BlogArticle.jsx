@@ -57,7 +57,10 @@ export default function BlogArticle({ article, allArticles }) {
                             
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem 0', borderTop: '1px solid var(--color-border)' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>Big Chalk Box Engineering</span>
+                                    <span style={{ fontSize: '1rem', fontWeight: 700 }}>{article.author ? article.author.name : 'Big Chalk Box Engineering'}</span>
+                                    {article.author && article.author.credentials && (
+                                        <span style={{ fontSize: '0.85rem', color: 'var(--color-ink-soft)', marginBottom: '0.25rem' }}>{article.author.credentials}</span>
+                                    )}
                                     <span style={{ fontSize: '0.85rem', color: 'var(--color-ink-soft)', fontWeight: 500 }}>
                                         {new Date(article.publishedAt).toLocaleDateString('en-IN', {
                                             day: 'numeric',
@@ -79,7 +82,7 @@ export default function BlogArticle({ article, allArticles }) {
                                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>
                                     The Short Answer
                                 </div>
-                                <p style={{ fontSize: '1.1rem', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                                <p className="hero-answer-text" style={{ fontSize: '1.1rem', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
                                     {article.heroAnswer}
                                 </p>
                             </div>
@@ -101,8 +104,44 @@ export default function BlogArticle({ article, allArticles }) {
                                             <p style={{ margin: 0 }}>{section.content}</p>
                                         </div>
                                     </div>
+                                    {article.screenshots && article.screenshots[idx] && (
+                                        <div style={{ margin: '3rem 0', borderRadius: '1rem', overflow: 'hidden', border: '1px solid var(--color-border)', background: 'var(--color-cream-dark)', padding: '1rem' }}>
+                                            <img src={article.screenshots[idx].src} alt={article.screenshots[idx].alt} style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '0.5rem' }} />
+                                            {article.screenshots[idx].caption && (
+                                                <p style={{ fontSize: '0.95rem', color: 'var(--color-ink-soft)', marginTop: '1rem', textAlign: 'center', fontStyle: 'italic', fontWeight: 500 }}>
+                                                    {article.screenshots[idx].caption}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </Reveal>
                             ))}
+
+                            {/* INLINE COMPARISON TABLE */}
+                            {article.comparisonTable && (
+                                <Reveal>
+                                    <div style={{ margin: '2rem 0 4rem 0', overflowX: 'auto', borderRadius: '1rem', border: '1px solid var(--color-border)', background: 'var(--color-cream)' }}>
+                                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+                                            <thead>
+                                                <tr style={{ background: 'var(--color-cream-dark)', borderBottom: '2px solid var(--color-border)' }}>
+                                                    {article.comparisonTable.headers.map((header, i) => (
+                                                        <th key={i} style={{ padding: '1.5rem 1rem', fontWeight: 700, fontSize: '1.1rem', color: 'var(--color-ink)' }}>{header}</th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {article.comparisonTable.rows.map((row, i) => (
+                                                    <tr key={i} style={{ borderBottom: i === article.comparisonTable.rows.length - 1 ? 'none' : '1px solid var(--color-border)' }}>
+                                                        {row.map((cell, j) => (
+                                                            <td key={j} style={{ padding: '1.25rem 1rem', color: j === 0 ? 'var(--color-ink)' : 'var(--color-ink-soft)', fontWeight: j === 0 ? 600 : 400, fontSize: '1.05rem', lineHeight: 1.5 }}>{cell}</td>
+                                                        ))}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </Reveal>
+                            )}
 
                             {/* INLINE FAQ */}
                             {article.faqItems && article.faqItems.length > 0 && (

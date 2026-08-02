@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
             type: 'article',
             publishedTime: article.publishedAt,
             modifiedTime: article.updatedAt,
-            authors: ['BCBX Innovations Private Limited'],
+            authors: article.author ? [article.author.name] : ['BCBX Innovations Private Limited'],
             tags: article.tags,
         },
         twitter: {
@@ -84,7 +84,12 @@ export default async function BlogArticlePage({ params }) {
                 speakable: speakableSpec,
                 // abstract maps heroAnswer — the direct, AI-citable factual summary
                 abstract: article.heroAnswer,
-                author: {
+                author: article.author ? {
+                    '@type': 'Person',
+                    name: article.author.name,
+                    jobTitle: article.author.credentials,
+                    url: 'https://bigchalkbox.com/about'
+                } : {
                     '@type': 'Organization',
                     name: 'BCBX Innovations Private Limited',
                     url: 'https://bigchalkbox.com',

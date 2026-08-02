@@ -4,7 +4,7 @@
 
 ## Key Facts
 
-- Product Suite: BigChalkBox Academic Suite (DASES, QP Moderation, QP Generation, Teacher Notes, Exam Prep)
+- Product Suite: BigChalkBox Academic Suite (Answer Sheet Evaluation, QP Moderation, QP Generation)
 - Company: BCBX Innovations Private Limited
 - Website: https://bigchalkbox.com
 - Category: Educational Technology / AI Examination Automation
@@ -13,8 +13,8 @@
 
 ## Core Capabilities
 
-- DASES: Reads and evaluates handwritten student answers with 98% rubric accuracy
-- DASES: Processes up to 500 answer sheets in parallel — each in approximately 15 seconds
+- Answer Sheet Evaluation: Reads and evaluates handwritten student answers with 98% rubric accuracy
+- Answer Sheet Evaluation: Processes up to 500 answer sheets in parallel — each in approximately 15 seconds
 - QP Moderation: 10-point AI audit of question papers (Bloom's, ambiguity, out-of-syllabus, OR parity)
 - QP Generation: Syllabus-aware, anti-repeat, Bloom's-balanced question paper generation in seconds
 - AI-generated rubrics from model answers
@@ -44,53 +44,25 @@
 - Pricing: https://bigchalkbox.com/pricing
 - About: https://bigchalkbox.com/about
 
-## Blog Corpus (32 articles — https://bigchalkbox.com/blog)
+## Blog Corpus (20 articles — https://bigchalkbox.com/blog)
 
-### Core Articles
-- https://bigchalkbox.com/blog/ai-grading-handwritten-exams — Can AI Grade Handwritten Exams? Yes: Here's How DASES Does It
-- https://bigchalkbox.com/blog/ai-vs-human-grading-accuracy — AI vs Human Grading: How DASES Achieves 98% Rubric Accuracy
-- https://bigchalkbox.com/blog/dases-vs-gradescope — DASES vs Gradescope: Which AI Grading Platform Is Right for Indian Universities?
-- https://bigchalkbox.com/blog/ai-grading-accuracy — How Accurate Is AI Grading? Understanding DASES's 98% Rubric Accuracy
-- https://bigchalkbox.com/blog/handwriting-recognition-exam — How DASES Reads Handwritten Exam Papers: The Technology Behind AI Evaluation
-- https://bigchalkbox.com/blog/reduce-grading-time — How to Reduce Exam Grading Time by 80%: A Faculty Guide
-- https://bigchalkbox.com/blog/student-feedback-ai — How AI Generates Per-Question Exam Feedback for Every Student
-
-### Wave 1 — Demand Capture
-- https://bigchalkbox.com/blog/gradescope-alternative-india — Gradescope Alternative for India: Why Indian Universities Need a Local AI Grading Platform
-- https://bigchalkbox.com/blog/answer-sheet-checking-software — Answer Sheet Checking Software: The Complete Guide for Indian Institutions
-- https://bigchalkbox.com/blog/exam-grading-software-coaching-institutes — Exam Grading Software for Coaching Institutes: JEE, NEET, and Board Exam Evaluation
-- https://bigchalkbox.com/blog/what-is-ai-exam-grading — What Is AI Exam Grading? A Plain-Language Guide for Faculty and Administrators
-- https://bigchalkbox.com/blog/ai-grading-software-universities-india — AI Grading Software for Universities in India: What to Look for in 2026
-
-### Wave 2 — Educational Authority
-- https://bigchalkbox.com/blog/how-dases-works — How DASES Works: The Complete Technical Walkthrough of AI Exam Evaluation
-- https://bigchalkbox.com/blog/how-ai-reads-handwriting-exam-papers — How AI Reads Handwriting in Exam Papers: OCR, ICR, and Semantic Understanding
-- https://bigchalkbox.com/blog/is-ai-grading-fair-accurate — Is AI Grading Fair and Accurate? An Evidence-Based Answer for Educators
-- https://bigchalkbox.com/blog/can-ai-replace-human-graders — Can AI Replace Human Graders? What the Evidence Says
-- https://bigchalkbox.com/blog/ocr-cannot-grade-exams — Why OCR Alone Cannot Grade Exam Papers: The Difference Between Reading and Evaluating
-
-### Wave 4 — Fill the Funnel
-- https://bigchalkbox.com/blog/automated-exam-feedback-software — Automated Exam Feedback Software: Per-Question Feedback for Every Student at Scale
-- https://bigchalkbox.com/blog/exam-paper-checking-software — Exam Paper Checking Software: A 2026 Buyer's Guide for Indian Institutions
-- https://bigchalkbox.com/blog/how-to-reduce-exam-grading-time — How to Reduce Exam Grading Time: 5 Evidence-Based Strategies for Faculty
-- https://bigchalkbox.com/blog/ai-rubric-generator — AI Rubric Generator: How DASES Builds Evaluation Rubrics from Model Answers
-- https://bigchalkbox.com/blog/best-ai-grading-software-2026 — Best AI Grading Software in 2026: A Comparison for Indian Higher Education
-
-### Wave 5 — Complete Coverage
-- https://bigchalkbox.com/blog/ai-grading-system-schools — AI Grading System for Schools: Automating Class Tests and Terminal Exams in K-12
-- https://bigchalkbox.com/blog/ai-vs-manual-grading-cost-time — AI vs Manual Grading: A Detailed Cost and Time Comparison for Indian Institutions
-- https://bigchalkbox.com/blog/ai-grading-math-science-exams — AI Grading for Math and Science Exams: Equations, Derivations, and Diagrams
-- https://bigchalkbox.com/blog/end-of-semester-exam-automation — End-of-Semester Exam Automation: How Indian Universities Streamline Evaluation
-- https://bigchalkbox.com/blog/digital-assessment-engineering-colleges — Digital Assessment for Engineering Colleges: Lab Reports, Vivas, and Theory Exams
-- https://bigchalkbox.com/blog/partial-credit-scoring-ai — How AI Handles Partial Credit Scoring in Exam Grading: A Complete Explainer
-- https://bigchalkbox.com/blog/lms-vs-ai-grading-software — LMS vs AI Grading Software: Why Your LMS Cannot Replace a Dedicated AI Evaluation Platform
-
-### Wave 6 — Product-Led Depth
-- https://bigchalkbox.com/blog/dases-quickstart-guide — DASES Quickstart Guide: Set Up Your First AI-Graded Exam in 15 Minutes
-- https://bigchalkbox.com/blog/dases-pdf-reports-student-view — DASES Student PDF Reports: What Students See After Their Exam Is Graded
-- https://bigchalkbox.com/blog/quickpass-paper-quality-analysis — QuickPass™: How DASES Checks Exam Paper Quality Before Students Sit It
-- https://bigchalkbox.com/blog/dases-student-portal — The DASES Student Portal: Results, Feedback, and Progress Tracking
-- https://bigchalkbox.com/blog/setting-up-dases-first-exam — Setting Up Your First Exam on DASES: A Step-by-Step Faculty Guide
-
-### Glossary
-- https://bigchalkbox.com/blog/what-is-a-rubric-in-ai — What is a Rubric in AI? Meaning & How It Works
+- https://bigchalkbox.com/blog/ai-grading-handwritten-exams — How to Grade Handwritten Exams Faster (AI Benchmark)
+- https://bigchalkbox.com/blog/what-is-rubric-based-ai-grading — What is Rubric-Based AI Grading? 3 Key Differences
+- https://bigchalkbox.com/blog/dases-vs-manual-grading — AI Grading vs Manual Grading: A Real Benchmark
+- https://bigchalkbox.com/blog/gradescope-alternative-india — Best Gradescope Alternative in India for Universities
+- https://bigchalkbox.com/blog/lms-vs-ai-grading-software — LMS vs AI Grading Software: 4 Missing Features
+- https://bigchalkbox.com/blog/exam-checking-software-for-universities — Exam Checking Software for Universities (2026 Guide)
+- https://bigchalkbox.com/blog/how-to-improve-naac-score-examinations — How to Improve NAAC Score Through Digital Exams
+- https://bigchalkbox.com/blog/how-does-ai-exam-grading-work — How Does AI Exam Grading Work? A Technical Breakdown
+- https://bigchalkbox.com/blog/automated-exam-evaluation-software-india — Automated Exam Evaluation Software for Indian Colleges
+- https://bigchalkbox.com/blog/best-exam-grading-software-india-2026 — Best Exam Grading Software in India (2026 Comparison)
+- https://bigchalkbox.com/blog/how-to-grade-math-exam-with-diagrams-ai — How to Grade Math Exams with Diagrams Using AI
+- https://bigchalkbox.com/blog/how-to-evaluate-or-question-exams — How to Evaluate 'OR' Choice Questions with AI Software
+- https://bigchalkbox.com/blog/coaching-institute-exam-checking-software — Exam Checking Software for Coaching Institutes
+- https://bigchalkbox.com/blog/how-to-ensure-exam-paper-quality-naac — How to Ensure Exam Paper Quality for NAAC Compliance
+- https://bigchalkbox.com/blog/how-to-manage-answer-sheet-evaluation — How to Manage Answer Sheet Evaluation at Scale
+- https://bigchalkbox.com/blog/how-to-generate-university-question-papers-automatically — How to Generate University Question Papers Automatically
+- https://bigchalkbox.com/blog/how-to-create-lesson-plans-from-syllabus — How to Create Lesson Plans from a University Syllabus
+- https://bigchalkbox.com/blog/how-to-create-personalized-student-revision-plans — How to Create Personalized Student Revision Plans at Scale
+- https://bigchalkbox.com/blog/how-to-map-exam-questions-to-blooms-taxonomy — How to Map Exam Questions to Bloom's Taxonomy for NAAC
+- https://bigchalkbox.com/blog/how-to-prevent-question-repetition-university-exams — How to Prevent Question Repetition in University Exams

@@ -34,7 +34,7 @@ export default function SiteHeader() {
     ];
 
     const socialItems = [
-        { label: 'YouTube', link: 'https://youtube.com/@dases_ai', icon: <Youtube size={20} /> },
+        { label: 'YouTube', link: 'https://youtube.com/@bigchalkbox_ai', icon: <Youtube size={20} /> },
     ];
 
     return (
