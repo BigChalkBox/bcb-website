@@ -83,6 +83,9 @@ export const metadata = {
     languages: {
       'en-IN': 'https://bigchalkbox.com',
     },
+    types: {
+      'application/rss+xml': 'https://bigchalkbox.com/rss.xml',
+    },
   },
 
   category: 'educational technology',
