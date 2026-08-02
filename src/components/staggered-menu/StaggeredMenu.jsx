@@ -25,8 +25,9 @@ export const StaggeredMenu = ({
   const panelRef = useRef(null);
   const preLayersRef = useRef(null);
   const preLayerElsRef = useRef([]);
-  const plusHRef = useRef(null);
-  const plusVRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+  const line3Ref = useRef(null);
   const iconRef = useRef(null);
   const textInnerRef = useRef(null);
   const textWrapRef = useRef(null);
@@ -45,11 +46,12 @@ export const StaggeredMenu = ({
     const ctx = gsap.context(() => {
       const panel = panelRef.current;
       const preContainer = preLayersRef.current;
-      const plusH = plusHRef.current;
-      const plusV = plusVRef.current;
+      const line1 = line1Ref.current;
+      const line2 = line2Ref.current;
+      const line3 = line3Ref.current;
       const icon = iconRef.current;
       const textInner = textInnerRef.current;
-      if (!panel || !plusH || !plusV || !icon || !textInner) return;
+      if (!panel || !line1 || !line2 || !line3 || !icon || !textInner) return;
 
       let preLayers = [];
       if (preContainer) {
@@ -62,14 +64,12 @@ export const StaggeredMenu = ({
       if (preContainer) {
         gsap.set(preContainer, { xPercent: 0, opacity: 1 });
       }
-      gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
-      gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
-      gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
+      gsap.set([line1, line2, line3], { transformOrigin: '50% 50%', rotate: 0, y: 0, opacity: 1 });
+      gsap.set(icon, { rotate: 0 });
       gsap.set(textInner, { yPercent: 0 });
-      if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
     return () => ctx.revert();
-  }, [menuButtonColor, position]);
+  }, [position]);
 
   const buildOpenTimeline = useCallback(() => {
     const panel = panelRef.current;
@@ -84,7 +84,7 @@ export const StaggeredMenu = ({
     itemEntranceTweenRef.current?.kill();
 
     const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
-    const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'));
+    const numberEls = Array.from(panel.querySelectorAll('.sm-bento-grid[data-numbering] .sm-panel-item'));
     const socialTitle = panel.querySelector('.sm-socials-title');
     const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
 
@@ -219,7 +219,7 @@ export const StaggeredMenu = ({
         if (itemEls.length) {
           gsap.set(itemEls, { yPercent: 140, rotate: 10 });
         }
-        const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'));
+        const numberEls = Array.from(panel.querySelectorAll('.sm-bento-grid[data-numbering] .sm-panel-item'));
         if (numberEls.length) {
           gsap.set(numberEls, { '--sm-num-opacity': 0 });
         }
@@ -233,13 +233,20 @@ export const StaggeredMenu = ({
   }, [position]);
 
   const animateIcon = useCallback(opening => {
+    const line1 = line1Ref.current;
+    const line2 = line2Ref.current;
+    const line3 = line3Ref.current;
     const icon = iconRef.current;
-    if (!icon) return;
-    spinTweenRef.current?.kill();
+    if (!icon || !line1 || !line2 || !line3) return;
+    
     if (opening) {
-      spinTweenRef.current = gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
+      gsap.to(line1, { y: 5, rotate: 45, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
+      gsap.to(line2, { opacity: 0, duration: 0.3, ease: 'power3.out', overwrite: 'auto' });
+      gsap.to(line3, { y: -5, rotate: -45, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
     } else {
-      spinTweenRef.current = gsap.to(icon, { rotate: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+      gsap.to(line1, { y: 0, rotate: 0, duration: 0.4, ease: 'power3.inOut', overwrite: 'auto' });
+      gsap.to(line2, { opacity: 1, duration: 0.4, ease: 'power3.inOut', overwrite: 'auto' });
+      gsap.to(line3, { y: 0, rotate: 0, duration: 0.4, ease: 'power3.inOut', overwrite: 'auto' });
     }
   }, []);
 
@@ -400,31 +407,49 @@ export const StaggeredMenu = ({
             </span>
           </span>
           <span ref={iconRef} className="sm-icon" aria-hidden="true">
-            <span ref={plusHRef} className="sm-icon-line" />
-            <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
+            <span ref={line1Ref} className="sm-icon-line sm-icon-line-1" />
+            <span ref={line2Ref} className="sm-icon-line sm-icon-line-2" />
+            <span ref={line3Ref} className="sm-icon-line sm-icon-line-3" />
           </span>
         </button>
       </header>
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
         <div className="sm-panel-inner">
-          <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
+          <div className="sm-bento-grid" data-numbering={displayItemNumbering || undefined}>
             {items && items.length ? (
-              items.map((it, idx) => (
-                <li className="sm-panel-itemWrap" key={it.label + idx}>
-                  <a className="sm-panel-item" href={it.link} aria-label={it.ariaLabel} data-index={idx + 1}>
-                    <span className="sm-panel-itemLabel">{it.label}</span>
-                  </a>
-                </li>
+              items.map((category, idx) => (
+                <div className="sm-panel-itemWrap" key={category.label + idx}>
+                  {category.subItems ? (
+                    <>
+                      <div className="sm-panel-item sm-category-title" data-index={idx + 1}>
+                        <span className="sm-panel-itemLabel">{category.label}</span>
+                      </div>
+                      <ul className="sm-subitems-list" role="list">
+                        {category.subItems.map((sub, subIdx) => (
+                          <li key={sub.label + subIdx} className="sm-subitem-wrap">
+                            <a href={sub.link} className="sm-subitem-link" aria-label={sub.label}>
+                              <span className="sm-subitem-label">{sub.label}</span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <a className="sm-panel-item" href={category.link} aria-label={category.label} data-index={idx + 1}>
+                      <span className="sm-panel-itemLabel">{category.label}</span>
+                    </a>
+                  )}
+                </div>
               ))
             ) : (
-              <li className="sm-panel-itemWrap" aria-hidden="true">
+              <div className="sm-bento-card sm-panel-itemWrap" aria-hidden="true">
                 <span className="sm-panel-item">
-                  <span className="sm-panel-itemLabel">No items</span>
+                  <span className="sm-panel-itemLabel sm-category-title">No items</span>
                 </span>
-              </li>
+              </div>
             )}
-          </ul>
+          </div>
           {displaySocials && socialItems && socialItems.length > 0 && (
             <div className="sm-socials" aria-label="Social links">
               <h3 className="sm-socials-title">Socials</h3>
@@ -432,7 +457,10 @@ export const StaggeredMenu = ({
                 {socialItems.map((s, i) => (
                   <li key={s.label + i} className="sm-socials-item">
                     <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link">
-                      {s.label}
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {s.icon && s.icon}
+                        {s.label}
+                      </span>
                     </a>
                   </li>
                 ))}

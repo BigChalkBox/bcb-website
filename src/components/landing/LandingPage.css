@@ -83,7 +83,7 @@
 }
 
 .menu-spacer {
-    width: 65px; /* Leaves room for StaggeredMenu button */
+    width: 110px; /* Leaves room for StaggeredMenu button */
 }
 
 @media (max-width: 768px) {
@@ -95,7 +95,7 @@
     }
     .nav-icon { height: 28px; }
     .nav-logo-text-solid { font-size: 1.1rem; }
-    .menu-spacer { width: 50px; }
+    .menu-spacer { width: 70px; }
 }
 
 /* ── Utilities ── */
@@ -1395,7 +1395,7 @@
     }
 
     .menu-spacer {
-        width: 44px;
+        width: 70px;
     }
 
     .hero-grid {

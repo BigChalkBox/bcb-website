@@ -581,7 +581,7 @@ export default function LandingPage() {
                                 </div>
                                 <div className="wk-bot mt-auto">
                                     <h3 className="wk-h3">Answer Sheet Evaluation</h3>
-                                    <p className="wk-p">An intelligent system. Combines OCR and LLMs to deliver fast, accurate, and unbiased grading for handwritten assessments.</p>
+                                    <p className="wk-p">Slash grading time from weeks to minutes. Deliver perfectly accurate, unbiased results for handwritten assessments while eliminating human error.</p>
                                     <div className="wk-tags">
                                         <span className="tag-chip"><CheckCircle size={16} /> Grades in minutes</span>
                                         <span className="tag-chip"><CheckCircle size={16} /> Objective rubrics</span>
@@ -616,7 +616,7 @@ export default function LandingPage() {
                             </div>
                             <div className="wk-bot relative z-10 pointer-events-none">
                                 <h3 className="wk-h3">Question Paper Moderation</h3>
-                                <p className="wk-p">Automated quality audits for your question papers. Ensure syllabus coverage, difficulty balance, and eliminate errors before exams.</p>
+                                <p className="wk-p">Never publish a flawed exam again. Automatically audit your question papers to guarantee perfect syllabus coverage and flawless difficulty balance.</p>
                                 <div className="wk-tags mb-6">
                                     <span className="tag-chip">Repetitive checks</span>
                                     <span className="tag-chip">Difficulty scoring</span>
@@ -642,7 +642,7 @@ export default function LandingPage() {
                             </div>
                             <div className="wk-bot relative z-10 pointer-events-none">
                                 <h3 className="wk-h3">Question Paper Generation</h3>
-                                <p className="wk-p">Instantly create curriculum-aligned question papers. Generate diverse question types with balanced difficulty levels in seconds.</p>
+                                <p className="wk-p">Generate high-quality, perfectly balanced question papers in seconds instead of hours. Fully aligned with your curriculum and ready for the classroom.</p>
                                 <div className="wk-tags mb-6">
                                     <span className="tag-chip">Blueprint-aligned</span>
                                     <span className="tag-chip">Bloom's Taxonomy</span>
@@ -821,7 +821,7 @@ export default function LandingPage() {
                             Stop managing exams manually.<br/>
                             <span className="cta-banner__accent">Let BigChalkBox run the full cycle.</span>
                         </h2>
-                        <p className="cta-banner__sub">4,000+ answer sheets evaluated. 200+ question papers generated & moderated. Trusted by educators worldwide. Your institution is next.</p>
+                        <p className="cta-banner__sub">10K+ answer sheets evaluated. 500+ question papers generated & moderated. Trusted by 150+ leading educators worldwide. Your institution is next.</p>
                     </div>
                     <div className="cta-banner__btns">
                         <Link href="#book-demo" className="cta-banner__btn cta-banner__btn--primary">Book a Free Pilot</Link>

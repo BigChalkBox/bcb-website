@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-
 import { useState } from 'react'
 import StaggeredMenu from '../staggered-menu/StaggeredMenu'
 import '../landing/LandingPage.css' // Import styles for sticky-nav
+import { Youtube } from 'lucide-react'
 
 export default function SiteHeader() {
     const pathname = usePathname()
@@ -25,15 +26,15 @@ export default function SiteHeader() {
     })
 
     const menuItems = [
-        { label: 'Solutions', ariaLabel: 'Explore our product suite', link: '/solutions' },
-        { label: 'Contact', ariaLabel: 'Get in touch', link: '/#book-demo' },
-        { label: 'About', ariaLabel: 'About Big Chalk Box', link: '/about' },
-        { label: 'Pricing', ariaLabel: 'View pricing', link: '/pricing' },
-        { label: 'Blog', ariaLabel: 'Engineering journal', link: '/blog' },
+        { label: 'Solutions', link: '/solutions' },
+        { label: 'Pricing', link: '/pricing' },
+        { label: 'About', link: '/about' },
+        { label: 'Blog', link: '/blog' },
+        { label: 'Contact', link: '/#book-demo' },
     ];
 
     const socialItems = [
-        { label: 'YouTube', link: 'https://youtube.com/@dases_ai' },
+        { label: 'YouTube', link: 'https://youtube.com/@dases_ai', icon: <Youtube size={20} /> },
     ];
 
     return (
@@ -75,10 +76,10 @@ export default function SiteHeader() {
                 socialItems={socialItems}
                 displaySocials={true}
                 displayItemNumbering={false}
-                menuButtonColor={showNav ? "#0a0f12" : "#ffffff"}
+                menuButtonColor={showNav ? "#0F5A37" : "#ffffff"}
                 openMenuButtonColor="#f5f0e8"
                 changeMenuColorOnOpen={true}
-                colors={['#0d1117', '#0a0f12']}
+                colors={['#083D24', '#0B472A']}
                 logoUrl=""
                 accentColor="#c8a84b"
                 isFixed={true}
