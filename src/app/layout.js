@@ -21,6 +21,7 @@ export const metadata = {
     'automated answer evaluation software',
     'question paper moderation software India',
     "Bloom's Taxonomy question paper checker",
+    "Bloom's Taxonomy question papers",
     'AI question paper generation India',
     'university exam automation India',
     'Answer Sheet Evaluation answer sheet evaluation',
@@ -33,6 +34,9 @@ export const metadata = {
     'exam grading automation',
     'engineering college assessment software',
     'AI examination platform India',
+    'education assessment software',
+    'university assessment platform',
+    'handwritten answer evaluation',
   ],
 
   authors: [{ name: 'BCBX Innovations Private Limited', url: 'https://bigchalkbox.com' }],

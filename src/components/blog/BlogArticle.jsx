@@ -82,9 +82,17 @@ export default function BlogArticle({ article, allArticles }) {
                                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>
                                     The Short Answer
                                 </div>
-                                <p className="hero-answer-text" style={{ fontSize: '1.1rem', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
-                                    {article.heroAnswer}
-                                </p>
+                                {article.isHtml ? (
+                                    <div 
+                                        className="hero-answer-text blog-html-content"
+                                        style={{ fontSize: '1.1rem', lineHeight: 1.6, margin: 0, fontWeight: 500 }}
+                                        dangerouslySetInnerHTML={{ __html: article.heroAnswer }}
+                                    />
+                                ) : (
+                                    <p className="hero-answer-text" style={{ fontSize: '1.1rem', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                                        {article.heroAnswer}
+                                    </p>
+                                )}
                             </div>
                         </Reveal>
                     </div>
@@ -100,9 +108,17 @@ export default function BlogArticle({ article, allArticles }) {
                                         <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
                                             {section.heading}
                                         </h2>
-                                        <div style={{ fontSize: '1.1rem', color: 'var(--color-ink-soft)', lineHeight: 1.8, fontWeight: 400 }}>
-                                            <p style={{ margin: 0 }}>{section.content}</p>
-                                        </div>
+                                        {article.isHtml ? (
+                                            <div 
+                                                className="blog-html-content"
+                                                style={{ fontSize: '1.1rem', color: 'var(--color-ink-soft)', lineHeight: 1.8, fontWeight: 400 }}
+                                                dangerouslySetInnerHTML={{ __html: section.content }}
+                                            />
+                                        ) : (
+                                            <div style={{ fontSize: '1.1rem', color: 'var(--color-ink-soft)', lineHeight: 1.8, fontWeight: 400 }}>
+                                                <p style={{ margin: 0 }}>{section.content}</p>
+                                            </div>
+                                        )}
                                     </div>
                                     {article.screenshots && article.screenshots[idx] && (
                                         <div style={{ margin: '3rem 0', borderRadius: '1rem', overflow: 'hidden', border: '1px solid var(--color-border)', background: 'var(--color-cream-dark)', padding: '1rem' }}>
