@@ -91,6 +91,15 @@ export default function SiteFooter() {
                                 </p>
                             )}
                         </div>
+
+                        {/* AWS Startups Badge */}
+                        <div style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.5)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Backed by</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <img src="/aws-logo.svg" alt="AWS" style={{ height: '22px', objectFit: 'contain' }} />
+                                <span style={{ fontSize: '1rem', fontWeight: 700, color: '#232F3E', fontFamily: 'system-ui, -apple-system, sans-serif', paddingTop: '2px' }}>Startups</span>
+                            </div>
+                        </div>
                     </div>
                     
                     {/* Products Column */}
