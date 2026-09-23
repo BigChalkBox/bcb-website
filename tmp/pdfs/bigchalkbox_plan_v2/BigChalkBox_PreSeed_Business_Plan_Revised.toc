@@ -1,0 +1,33 @@
+\contentsline {section}{\numberline {1}Executive Summary}{2}{section.1}%
+\contentsline {section}{\numberline {2}The Problem}{2}{section.2}%
+\contentsline {section}{\numberline {3}The BigChalkBox Product Architecture}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Assessment Operations}{3}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Assessment Generation: INR\ 400 + GST per assessment}{3}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Assessment Moderation: INR\ 400 + GST per assessment}{3}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}DASES Evaluation}{3}{subsubsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.2}Academic Content Studio}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Institutional Intelligence and Custom Reports}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Traction and Validation}{4}{section.4}%
+\contentsline {section}{\numberline {5}Market Opportunity}{5}{section.5}%
+\contentsline {subsection}{\numberline {5.1}TAM: a segmented Indian higher-education budget pool}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}SAM: institutions with purchasing control and early-adopter fit}{5}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}SOM: Year 3 base case}{5}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Business Model and Pricing}{6}{section.6}%
+\contentsline {section}{\numberline {7}Competitive Landscape}{6}{section.7}%
+\contentsline {section}{\numberline {8}Go-To-Market Strategy}{7}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Land with a paid assessment deployment}{7}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Expand within the institution}{7}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Replicate through reference-led institutional sales}{8}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Financial Projections}{8}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Operating drivers}{8}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Revenue and gross profit bridge}{9}{subsection.9.2}%
+\contentsline {section}{\numberline {10}Unit Economics and Direct Costs}{9}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Cost build by product}{10}{subsection.10.1}%
+\contentsline {section}{\numberline {11}Team and Operating Plan}{11}{section.11}%
+\contentsline {section}{\numberline {12}The Round and Use of Funds}{11}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Use of funds}{11}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Milestones financed by the round}{11}{subsection.12.2}%
+\contentsline {section}{\numberline {13}Key Risks and Mitigants}{12}{section.13}%
+\contentsline {section}{\numberline {14}Appendix: Assumptions and Source Notes}{12}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Facts, company data, and management assumptions}{12}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Source register}{13}{subsection.14.2}%

@@ -1,0 +1,63 @@
+{
+  "manifest_version": "1.0",
+  "skill": "cim-builder",
+  "artifact_mode": "generated_package",
+  "output_dir": "/Users/konalsmac/Local-Desktop/PRODUCTION-LEVEL-DASES",
+  "first_read": {
+    "path": "/Users/konalsmac/Local-Desktop/PRODUCTION-LEVEL-DASES/output/pdf/BigChalkBox_PreSeed_Business_Plan_Revised.pdf",
+    "role": "primary human deliverable",
+    "why": "Open this first because it is the compiled and visually inspected investor-facing plan."
+  },
+  "primary_human_deliverable": "/Users/konalsmac/Local-Desktop/PRODUCTION-LEVEL-DASES/output/pdf/BigChalkBox_PreSeed_Business_Plan_Revised.pdf",
+  "human_deliverables": [
+    {
+      "path": "/Users/konalsmac/Local-Desktop/PRODUCTION-LEVEL-DASES/output/pdf/BigChalkBox_PreSeed_Business_Plan_Revised.pdf",
+      "role": "human_deliverable",
+      "artifact_type": "pdf",
+      "description": "Compiled investor-facing pre-seed business plan.",
+      "user_visible_default": true,
+      "contains_new_analysis": true,
+      "user_requested_machine_readable": false
+    }
+  ],
+  "companion_deliverables": [
+    {
+      "path": "/Users/konalsmac/Local-Desktop/PRODUCTION-LEVEL-DASES/investor_materials/BigChalkBox_PreSeed_Business_Plan_Revised.tex",
+      "role": "companion_deliverable",
+      "artifact_type": "tex",
+      "description": "Editable LaTeX source corresponding to the compiled PDF.",
+      "user_visible_default": true,
+      "contains_new_analysis": true,
+      "user_requested_machine_readable": false
+    }
+  ],
+  "support_artifacts": [
+    {
+      "path": "/Users/konalsmac/Local-Desktop/PRODUCTION-LEVEL-DASES/investor_materials/bigchalkbox_plan_revision_support/source_log.csv",
+      "role": "support_artifact",
+      "artifact_type": "csv",
+      "description": "Claim and assumption source ledger used for the revision.",
+      "user_visible_default": false,
+      "contains_new_analysis": false,
+      "support_reason": "Provides audit support for public facts, company-provided data, and management assumptions.",
+      "user_requested_machine_readable": false
+    }
+  ],
+  "agent_artifacts": [],
+  "support_artifacts_user_visible_default": false,
+  "blocked_or_partial_status": {
+    "status": "complete",
+    "reason": "",
+    "missing_inputs": []
+  },
+  "final_response_guidance": {
+    "lead_with": "primary_human_deliverable",
+    "mention_support_artifacts": "only_briefly_unless_requested"
+  },
+  "lead_skill": "cim-builder",
+  "supporting_skills": ["market-sizing", "pdf"],
+  "routing_confidence": "high",
+  "handoff_contracts_used": [],
+  "routing_reason": "An existing investor-facing private-capital business plan was upgraded in its original LaTeX format, with market-sizing analysis and rendered PDF quality control as support workstreams.",
+  "discipline_note": "Use the compiled PDF as the main output; the LaTeX source is the editable companion and the CSV is audit support."
+}

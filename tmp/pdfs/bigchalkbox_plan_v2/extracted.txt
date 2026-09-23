@@ -1,0 +1,753 @@
+                             BigChalkBox
+    AI-Native Assessment Infrastructure for Indian Higher Education
+
+
+
+     Assessment generation • moderation • evaluation • institutional intelligence
+
+
+
+       Pre-Seed Round: INR 45,00,000                |      12-month execution plan
+
+
+
+
+                             Investor Business Plan
+                            Prepared for prospective investors
+
+                                       August 2026
+
+
+
+
+Confidentiality and forecast status
+
+Prepared for prospective investors only. Not for distribution or reproduction without permis-
+sion. Historical usage metrics are company-provided. Market sizing and financial projections
+are management estimates based on the assumptions stated in this document and are not
+guaranteed outcomes.
+
+
+
+                              bigchalkbox.com   |       dasesai.com
+BigChalkBox Pre-Seed Business Plan                                            Confidential   Page 1 of 13
+
+
+
+Contents
+1 Executive Summary                                                                                    2
+
+2 The Problem                                                                                          2
+
+3 The BigChalkBox Product Architecture                                                                 3
+  3.1 Assessment Operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      3
+      3.1.1 Assessment Generation: INR 400 + GST per assessment . . . . . . . . . . . .                3
+      3.1.2 Assessment Moderation: INR 400 + GST per assessment . . . . . . . . . . .                  3
+      3.1.3 DASES Evaluation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         3
+  3.2 Academic Content Studio . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        3
+  3.3 Institutional Intelligence and Custom Reports . . . . . . . . . . . . . . . . . . . . . .        4
+
+4 Traction and Validation                                                                              4
+
+5 Market Opportunity                                                                                   5
+  5.1 TAM: a segmented Indian higher-education budget pool . . . . . . . . . . . . . . . .             5
+  5.2 SAM: institutions with purchasing control and early-adopter fit . . . . . . . . . . . .          5
+  5.3 SOM: Year 3 base case . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      5
+
+6 Business Model and Pricing                                                                           6
+
+7 Competitive Landscape                                                                                6
+
+8 Go-To-Market Strategy                                                                                7
+  8.1 Land with a paid assessment deployment . . . . . . . . . . . . . . . . . . . . . . . . .         7
+  8.2 Expand within the institution . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      7
+  8.3 Replicate through reference-led institutional sales . . . . . . . . . . . . . . . . . . . .      8
+
+9 Financial Projections                                                                                8
+  9.1 Operating drivers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    8
+  9.2 Revenue and gross profit bridge . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      9
+
+10 Unit Economics and Direct Costs                                                                   9
+   10.1 Cost build by product . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+11 Team and Operating Plan                                                                            11
+
+12 The Round and Use of Funds                                                                          11
+   12.1 Use of funds . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+   12.2 Milestones financed by the round . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+13 Key Risks and Mitigants                                                                            12
+
+14 Appendix: Assumptions and Source Notes                                                             12
+   14.1 Facts, company data, and management assumptions . . . . . . . . . . . . . . . . . . 12
+   14.2 Source register . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+
+
+
+                     AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                             Confidential   Page 2 of 13
+
+
+
+1. Executive Summary
+BigChalkBox is building an AI-native operating layer for the academic assessment lifecycle. The
+platform generates and moderates assessments, evaluates handwritten and digital responses, and
+converts the resulting data into institutional intelligence and custom reports. Its core design ad-
+vantage is a shared assessment record: the approved questions, sample answers, marking rubric,
+syllabus map, and evaluation results remain connected instead of being recreated at each step.
+The company has been building and validating the platform with faculty since 2025. Company-
+reported testing includes 20+ educators, 100+ assessments generated or moderated, 24,000+ one-
+page digital assignments evaluated in one department deployment, and 1,000+ full multi-question
+answer scripts evaluated across smaller pilots. These figures represent product validation and pilot
+activity rather than recurring paid revenue.
+ Investment case in brief
+  • Focused entry wedge: assessment generation and moderation enter before the exam;
+    DASES evaluation expands revenue after the exam.
+  • Connected data advantage: the same faculty-approved rubric powers creation, moder-
+    ation, grading, feedback, and institutional reporting.
+  • Visible monetisation: usage-based assessment operations are complemented by recurring
+    Academic Content Studio and Institutional Intelligence subscriptions.
+  • Large but disciplined market: a segmented INR 1,561Cr TAM narrows to a INR 362Cr
+    serviceable market; the Year 3 base case captures approximately 1.1% of SAM revenue.
+  • Capital-eﬀicient round: INR 45,00,000 funds product development, the core team, in-
+    frastructure, institutional deployments, and a repeatable proof case for the seed round.
+
+India’s higher education system includes 1,289 registered universities and university-level institu-
+tions, 48,246 colleges, and 15,221 standalone institutions, with approximately 4.5 crore students
+in AISHE 2023-24.1 BigChalkBox will commercialise through private universities and autonomous
+institutions that control assessment decisions, using a local reference deployment where founder
+access is strongest before expanding to NCR and other private higher-education clusters.
+ The round
+  BigChalkBox is raising INR 45,00,000 to complete production-grade assessment workflows,
+  add engineering and delivery capacity, strengthen cloud/security infrastructure, and convert
+  pilots into paid institutional deployments. The operating objective is a 12-month runway
+  ending with a validated university deployment, measured unit economics, and a seed-ready
+  operating data room.
+
+
+2. The Problem
+Indian universities run repeated assessment cycles across mid-terms, end-terms, internal exams,
+assignments, practicals, and re-evaluation windows. Four workflows remain fragmented:
+
+• Assessment design is inconsistent. Faculty manually draft papers, while syllabus coverage,
+  course-outcome mapping, diﬀiculty balance, and Bloom’s-level distribution are rarely checked
+  systematically before release.
+
+• Moderation is slow and subjective. A second faculty member often reviews the assessment
+  manually, adding time without creating a reusable record of the quality checks performed.
+   1
+     Department of Higher Education, AISHE Final Report 2023-24, released July 2026: https://www.dohe-educa
+tion.gov.in/static/uploads/2026/07/8616f33dfee644ab6b87a2bd0658b18d.pdf.
+
+
+                     AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                           Confidential   Page 3 of 13
+
+
+• Evaluation does not scale. Descriptive answer evaluation is slow and inconsistent across
+  evaluators, delaying results and limiting actionable feedback for students.
+
+• Leadership sees marks, not learning signals. Academic leaders typically receive final
+  scores without a structured view of weak concepts, prerequisite gaps, assessment-quality trends,
+  or teaching-assessment misalignment.
+
+NEP 2020 and outcome-based education frameworks increase the need for auditable academic pro-
+cesses. UGC’s Curriculum and Credit Framework for Undergraduate Programmes links curriculum
+design, learning outcomes, flexible credits, and student-centric delivery.2 Assessment quality is
+therefore an institutional management issue, not only a faculty workload issue.
+
+3. The BigChalkBox Product Architecture
+BigChalkBox separates the product into three commercial layers with one shared data model.
+
+3.1. Assessment Operations
+3.1.1. Assessment Generation: INR 400 + GST per assessment
+• End-to-end AI generation aligned to syllabus, section structure, diﬀiculty, course outcomes, and
+   Bloom’s levels.
+
+• Sample answers for every question and marking rubrics with criterion descriptors.
+
+• Print-ready output in the institution’s required format.
+
+3.1.2. Assessment Moderation: INR 400 + GST per assessment
+• AI-assisted review for syllabus coverage, ambiguity, gaps, overlaps, diﬀiculty balance, and
+   Bloom’s verification.
+
+• Structured moderation record for academic-quality and accreditation workflows.
+
+• Sample answers and marking rubrics scheduled for the September 2026 release.
+
+3.1.3. DASES Evaluation
+• Handwritten answer booklet evaluation: INR 40 + GST per full booklet. The
+   standard operating model includes the special printed booklet, scanning workflow, rubric-linked
+   scoring, question-level feedback, and faculty review.
+
+• Digital Text Evaluation: INR 25 + GST per student per course. The institution up-
+  loads typed responses; DASES produces per-question scores and feedback against the approved
+  rubric.
+
+• Question-level results preserve the link to the approved assessment, sample answers, and marking
+  criteria.
+
+3.2. Academic Content Studio
+The Academic Content Studio converts approved curricula into institution-controlled teaching as-
+sets: lecture-level plans, faculty notes, in-class quizzes, practice sets, prerequisite refreshers, and
+student Q&A constrained to approved course material.
+
+• Department plan: INR 60,000 + GST per year for up to 10 active courses and 5,000
+  pooled student Q&A queries.
+   2
+     UGC Curriculum and Credit Framework: https://www.ugc.gov.in/KeyInitiative; Department of Higher
+Education, NEP 2020: https://www.dohe-education.gov.in/department/nep/details/national-education-pol
+icy-2020-QzN1IzMtQWa.
+
+
+
+                    AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                           Confidential   Page 4 of 13
+
+
+• Institution plan: INR 1,50,000 + GST per year for up to 50 active courses and 25,000
+  pooled student Q&A queries.
+
+• Enterprise plan: custom quote + GST for larger course and query pools, integrations, and
+  dedicated support.
+
+3.3. Institutional Intelligence and Custom Reports
+This separate subscription turns curriculum, assessment, evaluation, and Q&A activity into decision
+support for deans, Controllers of Examination, IQAC teams, and academic leadership. Outputs
+include weak-topic analysis, prerequisite gaps, diﬀiculty and outcome-mapping trends, cross-section
+comparison, assessment-teaching mismatch, and institution-specific custom reports.
+
+• Institution plan: INR 2,00,000 + GST per year for up to 10 departments, standard
+  dashboards, and quarterly custom reports.
+
+• Enterprise plan: custom quote + GST for additional departments, ERP/LMS integration,
+  advanced data pipelines, and bespoke reporting cycles.
+
+ Why pooled institutional pricing solves course-size volatility
+
+  The subscription is not charged separately for every course or every enrolled student. Each
+  institution buys an annual pool of active-course capacity and student Q&A usage. A four-
+  student course consumes little of the pool; a 2,000-student course consumes more but benefits
+  from declining-volume query packs. Large contracts retain a minimum contribution-margin
+  floor, while Digital Text Evaluation remains a transparent INR 25 + GST per student-course
+  usage charge. This preserves adoption for small courses without making large cohorts pro-
+  hibitively expensive.
+
+
+      Assessment Generation          Handwritten and Digital         Institutional Intelligence
+         and Moderation                   Evaluation                   and Custom Reports
+
+
+
+    One shared assessment record: syllabus map • questions • sample answers • rubrics • results
+
+
+Figure 1: BigChalkBox connects pre-exam quality, post-exam evaluation, and institutional decision
+support through one governed assessment record.
+
+
+4. Traction and Validation
+ 20+ educators         Faculty members have tested assessment or evaluation workflows.
+ 100+        assess- Assessments generated or moderated during company testing.
+ ments
+ 24,000+ digital       One-page typed assignments evaluated in a high-volume department
+ assignments           deployment.
+ 1,000+ full     an- Multi-question evaluation runs closer to the core university exam use
+ swer scripts        case.
+ 500-sheet paral- Current DASES product claim; approximately 15 seconds per sheet in
+ lel capacity     the published workflow.
+
+The traction mix matters. The 24,000+ one-page assignments validate throughput, while the 1,000+
+
+
+                    AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                                Confidential    Page 5 of 13
+
+
+full scripts test the more demanding multi-question use case. The immediate commercial objective
+is to convert this technical validation into repeatable, paid institutional usage.3
+
+5. Market Opportunity
+5.1. TAM: a segmented Indian higher-education budget pool
+The TAM uses four non-overlapping client segments and segment-specific annual spend assumptions.
+GST is excluded because it is collected on behalf of the government and is not revenue. Autonomous
+colleges are separated from the wider college universe to avoid double counting.
+
+ Client segment                 Count      Annual spend assumption                               TAM
+
+ Universities and                 1,289    INR 20L evaluation capacity + INR               INR 309Cr
+ university-level                          4L assessment, content, and
+ institutions                              intelligence = INR 24L
+ Autonomous                       1,300    INR 8L evaluation capacity + INR                INR 130Cr
+ colleges                                  2L software layers = INR 10L
+ Other colleges                  46,946    5,000 digital student-course                    INR 939Cr
+                                           evaluations + assessment/content
+                                           tools = INR 2L
+ Standalone                      15,221    2,500 digital student-course                    INR 183Cr
+ institutions                              evaluations + core tools = INR 1.2L
+
+ Total TAM                      64,756     Sum of segment budget pools                           INR
+                                                                                              1,561Cr
+
+Institution counts come from AISHE 2023-24, except the 1,300 autonomous-college planning count,
+which is based on the current UGC public list and rounded for modelling.4
+
+5.2. SAM: institutions with purchasing control and early-adopter fit
+The serviceable market narrows the same TAM segments rather than applying a new ARPU. It
+includes 546 private unaided universities, approximately 1,300 autonomous colleges, 10% of private
+unaided responding colleges as an early-adopter filter, and 3,000 priority standalone professional
+institutions. AISHE reports that 70% of responding colleges are private unaided. The 10% and
+3,000 filters are management assumptions, clearly separated from published facts.
+
+ SAM segment                                 Institutions          Annual spend         SAM value
+
+ Private unaided universities                           546                 INR 24L     INR 131Cr
+ Autonomous colleges                                  1,300                 INR 10L     INR 130Cr
+ Early-adopter private colleges                       3,253                  INR 2L     INR 65Cr
+ Priority standalone institutions                     3,000                INR 1.2L     INR 36Cr
+
+ Total SAM                                            8,099                             INR 362Cr
+
+5.3. SOM: Year 3 base case
+The Year 3 operating target is 10 active university customers plus selective subscription adoption
+and small non-university validation revenue. The corresponding base-case revenue is INR 3.98Cr,
+equal to approximately 1.1% of the INR 362Cr SAM. This is a revenue-based SOM; customer
+  3
+     Company-provided pilot metrics as at August 2026. Published product claims are available at https://www.da
+sesai.com/ and https://www.dasesai.com/about.
+   4
+     UGC autonomous college list: https://www.ugc.gov.in/colleges/Autonomous_Colleges_list. The count is
+a planning approximation and should be refreshed before a formal financing close.
+
+
+                      AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                           Confidential   Page 6 of 13
+
+
+penetration is approximately 0.12% of the 8,099 SAM institutions.
+
+
+ TAM: INR 1,561Cr         64,756 higher-education institutions across four non-overlapping segments
+
+
+        SAM: INR 362Cr        8,099 institutions with purchasing control and early-adopter fit
+
+
+         Year 3 SOM: INR 3.98Cr         10 active universities plus limited adjacent revenue
+
+
+Figure 2: A consistent segment model keeps SAM below TAM and ties SOM directly to the
+operating forecast.
+
+
+6. Business Model and Pricing
+BigChalkBox uses a three-part revenue model: transactional Assessment Operations, a pooled
+Academic Content Studio licence, and a separate Institutional Intelligence subscription. All list
+prices below are exclusive of GST.
+
+ Product                         List price                  Commercial role
+
+ Assessment Generation           INR 400 + GST /             Low-friction entry into the pre-exam
+                                 assessment                  workflow.
+ Assessment Moderation           INR 400 + GST /             Quality and audit layer before release.
+                                 assessment
+ Handwritten evaluation          INR 40 + GST / full         High-volume evaluation and feedback
+                                 booklet                     workflow.
+ Digital Text Evaluation         INR 25 + GST /              Software-led evaluation for typed
+                                 student / course            responses.
+ Academic Content Studio         INR 60,000 or INR           Recurring department or institution
+                                 1.50L + GST / year          licence with pooled course and query
+                                                             capacity.
+ Institutional Intelligence      INR 2.00L + GST /           Separate analytics and reporting
+ and Custom Reports              year                        subscription for academic leadership.
+ Enterprise deployment           Custom quote + GST          Larger pools, integrations, SLAs, and
+                                                             bespoke reporting.
+
+Assessment Generation and Moderation are intentionally accessible entry products. Evaluation
+creates volume revenue, while the two software subscriptions increase recurring revenue and blended
+gross margin after institutional trust is established.
+
+7. Competitive Landscape
+The market includes broad exam platforms, specialist evaluation infrastructure, and grading tools.
+BigChalkBox’s position is not that competitors are absent; it is that pre-exam quality, post-exam
+evaluation, and institution-level insight are connected through one assessment record and sold with
+India-specific deployment support.
+
+
+
+
+                    AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                            Confidential   Page 7 of 13
+
+
+
+ Player             Public positioning           Overlap with                   BigChalkBox
+                                                 BigChalkBox                    differentiation
+
+ CodeTantra         Broad academic ERP,          Strong institutional           AI-native shared
+                    LMS, online/proctored        exam workflow and              rubric from
+                    exams, question-paper        established distribution       assessment design
+                    management, and                                             through evaluation;
+                    on-screen digital                                           focused deployment
+                    evaluation                                                  and transparent usage
+                                                                                pricing.
+ CrazyGoldFish      Multimodal evaluation        Direct overlap in              Owns the pre-exam
+                    infrastructure, learning     rubric-based                   generation and
+                    signals, APIs,               handwritten/digital            moderation workflow;
+                    personalisation, and a       evaluation and                 operational fit for
+                    persistent                   downstream insight             Indian university
+                    learning-memory layer                                       paper-based exams.
+ Eklavvya           Online exams, remote         Exam delivery,                 Descriptive-answer AI
+                    proctoring, and              evaluation workflow, and       evaluation linked to
+                    on-screen evaluation         institutional procurement      faculty-approved
+                                                                                sample answers,
+                                                                                rubrics, and
+                                                                                assessment-quality
+                                                                                records.
+ Gradescope         Rubric-assisted grading      Faculty grading                INR pricing, Indian
+                    and course-level             productivity and rubric        descriptive-exam
+                    assessment workflows in      workflows                      formats, handwriting
+                    global higher education                                     pipeline, local
+                                                                                deployment, and
+                                                                                institutional custom
+                                                                                reports.
+
+CodeTantra publicly describes support for online and blended assessments, handwritten uploads,
+programming questions, question-paper management, answer-booklet printing, and digital evalu-
+ation. CrazyGoldFish positions itself as evaluation infrastructure spanning handwriting, typed
+responses, diagrams, audio, and video, with structured learning signals and human review.5
+
+8. Go-To-Market Strategy
+8.1. Land with a paid assessment deployment
+The first paid reference will be pursued where the founders have the strongest access to academic
+leadership, including Dehradun and the wider Uttarakhand higher-education cluster. The initial
+deployment targets 2-3 programs, a defined assessment window, faculty-approved rubrics, and pre-
+agreed success metrics for turnaround, scoring agreement, exception rate, and unit cost.
+
+8.2. Expand within the institution
+After the first successful evaluation cycle, BigChalkBox expands along two paths: more programs
+and assessment volumes inside DASES; and recurring adoption of Academic Content Studio plus
+Institutional Intelligence and Custom Reports. The shared assessment record reduces implementa-
+  5
+    CodeTantra product evidence: https://play.google.com/store/apps/details?id=com.codetantra.seam and
+the Didac India 2025 catalogue at https://didacindia.com/. CrazyGoldFish: https://crazygoldfish.com/ and
+https://docs.crazygoldfish.com/products/evaluation-layer-overview. Eklavvya: https://www.eklavvya.c
+om/. Gradescope: https://www.gradescope.com/.
+
+
+
+                     AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                              Confidential   Page 8 of 13
+
+
+tion friction because the institution does not need to rebuild course, rubric, or outcome data for
+each module.
+
+8.3. Replicate through reference-led institutional sales
+Year 2 prioritises private universities and autonomous institutions in NCR and nearby markets
+where a credible reference can shorten diligence. Year 3 adds selected private-education clusters
+in Maharashtra, Karnataka, Telangana, Tamil Nadu, and the Gujarat-Rajasthan belt. Premium-
+school and coaching pilots remain controlled discovery channels rather than a primary forecast
+engine.
+ Sales motion and proof required
+
+  Paid pilot → faculty acceptance and cost benchmark → program expansion → university-wide
+  evaluation → content and intelligence subscriptions. Each stage has a clear buyer, deployment
+  scope, success metric, and expansion decision.
+
+
+9. Financial Projections
+The base case models one active university in Year 1, four in Year 2, and ten in Year 3. Revenue
+excludes GST. Handwritten evaluation volumes represent paid assessment cycles, not total institu-
+tional examination volume. Premium-school and coaching revenue is deliberately limited to INR
+0.25L, INR 0.50L, and INR 1.00L across the three years.
+
+9.1. Operating drivers
+
+ Driver                                                 Year 1               Year 2              Year 3
+
+ Active universities                                           1                    4                  10
+ Handwritten booklets                                    45,000              285,000             870,000
+ Digital student-course evaluations                            0              20,000              80,000
+ Assessment Generation / Moderation                          250               1,000                3,000
+ transactions
+ Academic Content Studio                          1 department        4 departments        6 institutions
+ subscriptions
+ Institutional Intelligence                                    0        1 institution      4 institutions
+ subscriptions
+
+ How the handwritten volumes are derived
+  Year 1: 1 new paid pilot × 45,000 booklets = 45,000.
+  Year 2: 1 expansion cycle × 150,000 + 3 new pilots × 45,000 = 285,000.
+  Year 3: 4 expansion cycles × 150,000 + 6 new pilots × 45,000 = 870,000.
+
+
+
+
+                       AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                                        Confidential     Page 9 of 13
+
+
+9.2. Revenue and gross profit bridge
+
+ Revenue line                                                             Year 1        Year 2               Year 3
+
+ Handwritten evaluation at INR 40 /                               INR 18.00L        INR 114.00L          INR 348.00L
+ booklet
+ Digital Text Evaluation at INR 25 /                               INR 0.00L          INR 5.00L          INR 20.00L
+ student-course
+ Assessment Generation / Moderation                                INR 1.00L          INR 4.00L          INR 12.00L
+ at INR 400 / transaction
+ Academic Content Studio                                           INR 0.60L          INR 2.40L           INR 9.00L
+ subscriptions
+ Institutional Intelligence                                        INR 0.00L          INR 2.00L           INR 8.00L
+ subscriptions
+ School / coaching validation revenue                              INR 0.25L          INR 0.50L           INR 1.00L
+
+ Total revenue                                                 INR 19.85L          INR 127.90L     INR 398.00L
+ Direct delivery costs                                            INR 10.15L         INR 65.85L          INR 203.95L
+ Gross profit                                                    INR 9.70L         INR 62.05L      INR 194.05L
+ Gross margin                                                              48.9%         48.5%                48.8%
+
+The total is the sum of the six revenue lines. For example, Year 3 equals INR 348.00L + INR
+20.00L + INR 12.00L + INR 9.00L + INR 8.00L + INR 1.00L = INR 398.00L. Gross profit
+subtracts product-level direct costs described in the next section; it is not EBITDA and excludes
+central payroll, sales, legal, rent, corporate cloud overhead, and financing costs.
+
+                    Green = gross profit           Amber = direct delivery cost
+
+
+             Y1          INR 19.85L
+                    GP INR 9.70L     |           Direct cost INR 10.15L
+
+             Y2                                      INR 127.90L
+                    GP INR 62.05L        |        Direct cost INR 65.85L
+
+             Y3                                                                            INR 398.00L
+                    GP INR 194.05L           |     Direct cost INR 203.95 L
+
+
+Figure 3: Revenue and direct-cost bridge. The lower initial margin reflects printing, scanning, and
+model costs in handwritten evaluation; the software subscriptions improve mix over time.
+
+
+10. Unit Economics and Direct Costs
+All contribution figures exclude GST. The model uses standard Gemini 3.5 Flash-Lite pricing of
+US$0.30 per million input tokens and US$2.50 per million output tokens, converted at INR 96.25
+per US dollar.6
+   6
+     Google Gemini Developer API pricing, last updated July 2026: https://ai.google.dev/gemini-api/docs/pr
+icing. Direct-cost estimates also include non-model delivery items and are management assumptions to be validated
+during paid deployments.
+
+
+
+
+                      AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                          Confidential   Page 10 of 13
+
+
+
+ Product unit                         Revenue          Direct cost       Gross profit      GM
+
+ Assessment Generation                  INR 400              INR 30            INR 370     92.5%
+ Assessment Moderation                  INR 400              INR 25            INR 375     93.8%
+ Handwritten full booklet                INR 40              INR 22             INR 18     45.0%
+ Digital text, student-course            INR 25              INR 10             INR 15     60.0%
+ Content Studio                      INR 1.50L           INR 0.32L           INR 1.18L     78.7%
+ institution-year
+ Intelligence institution-year       INR 2.00L           INR 0.35L           INR 1.65L     82.5%
+
+10.1. Cost build by product
+
+ Product                          Direct-cost build
+
+ Assessment Generation            Two-pass standard-model workflow using approximately
+                                  120,000 input and 40,000 output tokens per pass, plus
+                                  formatting and storage; modelled total INR 30.
+ Assessment Moderation            Two-pass review using approximately 100,000 input and 25,000
+                                  output tokens per pass, plus report formatting and storage;
+                                  modelled total INR 25.
+ Handwritten evaluation           INR 12 model/API + INR 6 printed booklet + INR 4 scanning
+                                  labour, QA, storage, and exception handling = INR 22.
+ Digital Text Evaluation          Company-provided direct cost of INR 10 per student-course,
+                                  including model processing and delivery infrastructure.
+ Academic Content Studio          Up to 50 course setups at approximately INR 150 each after a
+                                  two-pass generation/QA workflow; a 25,000-query pool
+                                  assuming 2,000 input and 500 output tokens per query;
+                                  retrieval, monitoring, usage variance, and direct support
+                                  produce a modelled annual cost of INR 32,000.
+ Institutional Intelligence       Data processing, scheduled analysis, quarterly custom report
+                                  generation, storage, and direct report QA produce a modelled
+                                  annual direct cost of INR 35,000 for the standard institution
+                                  plan.
+
+The raw model cost for a typical university course setup is approximately INR 57 for one pass at
+the cited Gemini rate, or about INR 114 for two passes; the model rounds this to INR 150 after
+formatting and storage. A 25,000-query pool at the stated query-token assumption has raw model
+cost of approximately INR 4,450. The larger INR 32,000 subscription direct-cost provision covers
+retrieval, monitoring, usage variance, course setup, and direct support rather than treating token
+cost as the entire cost of delivery.
+ Margin expansion levers
+
+  The current base case is intentionally conservative because handwritten evaluation includes
+  physical operations. Margin can improve through institution-operated scanning, negotiated
+  booklet printing, rubric-context caching, batch inference, lower exception rates, and a higher
+  mix of Digital Text Evaluation, Academic Content Studio, and Institutional Intelligence sub-
+  scriptions. The model does not assume these savings in the three-year gross-profit forecast.
+
+
+
+
+                    AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                               Confidential    Page 11 of 13
+
+
+
+11. Team and Operating Plan
+BigChalkBox has been operating since 2025 with a founder-led team combining product develop-
+ment, education relationships, and AI evaluation engineering.
+
+ Name                              Role                          Relevant responsibility
+
+ Konal Puri                        Co-founder / CEO              Product direction, institutional
+                                                                 relationships, commercial development,
+                                                                 and faculty validation.
+ Co-founder name available         Co-founder / CTO              AI evaluation pipeline, platform
+ in investor data room                                           engineering, workflow reliability, and
+                                                                 data infrastructure.
+
+The round adds focused capacity around the founders: two product/AI engineers, one institutional
+sales lead, and shared academic QA/customer-success and deployment-operations support. Hiring
+is milestone-led; the company does not plan a broad functional build before paid institutional proof.
+
+12. The Round and Use of Funds
+BigChalkBox is raising INR 45,00,000, approximately US$46,753 at INR 96.25 per US dol-
+lar.7 The financing is intended as a 12-month pre-seed execution round. Final security, valuation,
+and conversion terms will be agreed with the lead investor and transaction counsel.
+
+12.1. Use of funds
+ Category                                 Amount           Share     Execution outcome
+ Product and AI engineering             INR 16.0L           35.6%    Production-grade generation,
+                                                                     moderation, evaluation reliability, QA
+                                                                     tooling, integrations, and September
+                                                                     2026 rubric/sample-answer releases.
+ Core team and delivery                 INR 10.0L           22.2%    Two engineering contributors plus
+ capacity                                                            academic QA, customer-success, and
+                                                                     deployment support around the
+                                                                     founders.
+ Institutional GTM and pilot              INR 7.0L          15.6%    Target-account outreach, paid-pilot
+ acquisition                                                         conversion, travel, demos, proposals,
+                                                                     and reference-led sales.
+ Cloud, model API, security,              INR 5.5L          12.2%    Hosting, inference, observability,
+ and data infrastructure                                             backups, access controls, security
+                                                                     review, and India-oriented data
+                                                                     architecture.
+ Deployment hardware and                  INR 3.5L           7.8%    Scanners, pilot printing, site setup,
+ working capital                                                     payment-timing buffer, and controlled
+                                                                     delivery capacity.
+ Legal, finance, administration,          INR 3.0L           6.7%    Company compliance, accounting,
+ and contingency                                                     contracts, insurance, and execution
+                                                                     contingency.
+ Total                                INR 45.0L          100.0%      12-month pre-seed plan.
+
+12.2. Milestones financed by the round
+1. Ship production-ready Assessment Generation, Assessment Moderation, DASES evaluation, and
+   the first subscription-ready Academic Content Studio workflows.
+   7
+     RBI exchange-rate display: INR 96.2537 per US dollar at 1:00 p.m. on 21 July 2026, available through https:
+//www.rbi.org.in/. The document uses INR 96.25 for presentation.
+
+
+                      AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                         Confidential   Page 12 of 13
+
+
+2. Convert at least one university to a paid assessment deployment and process a first paid cycle
+   of up to 45,000 handwritten booklets.
+
+3. Complete a faculty-audited reliability benchmark covering scoring agreement, exception rate,
+   feedback quality, processing time, and dispute handling.
+
+4. Validate the full INR 22 direct-cost build per handwritten booklet and the INR 10 cost per
+   Digital Text Evaluation student-course.
+
+5. Establish a repeatable second-institution pipeline and package the first deployment into an
+   investor-grade case study and seed data room.
+
+13. Key Risks and Mitigants
+ Risk                            Mitigant
+
+ Long university sales and       Use a tightly scoped paid pilot with defined academic and
+ procurement cycles              financial success metrics, then expand through reference-led
+                                 selling.
+ Trust in AI-assisted grading    Preserve faculty authority, rubric provenance, question-level
+                                 evidence, human review, exceptions, and a complete dispute
+                                 audit trail.
+ 45% handwritten gross           Make physical costs visible; support institution-operated
+ margin is below software        scanning; improve print procurement, batching, caching, and
+ benchmarks                      software subscription mix.
+ On-site scanning complexity     Standardise answer booklets, benchmark throughput, maintain
+                                 batch controls, and stage rollout by assessment window and
+                                 program.
+ Established exam and            Compete on the connected pre-exam-to-insight workflow,
+ evaluation competitors          India-specific deployment, and transparent usage economics
+                                 rather than claiming feature exclusivity.
+ Data privacy and security       Use access controls, encryption, logging, retention/deletion
+ requirements                    policies, India-oriented hosting posture, and a funded security
+                                 workstream.
+ Small-team execution risk       Tie hiring to funded milestones and add focused engineering,
+                                 sales, academic QA, and deployment capacity around the
+                                 founders.
+ Subscription adoption           Keep subscription revenue assumptions modest, separate
+ remains unproven                content from intelligence pricing, and sell both only after
+                                 assessment workflows establish institutional trust.
+
+
+14. Appendix: Assumptions and Source Notes
+14.1. Facts, company data, and management assumptions
+• Company-provided: founding timeline, pilot volumes, 100+ assessment generation/modera-
+  tion count, prices, product roadmap, direct API cost of INR 12 per handwritten booklet, and
+  direct cost of INR 10 per Digital Text Evaluation student-course.
+
+• Public sources: AISHE institution and enrolment counts; UGC autonomous college list; com-
+  petitor public product descriptions; Gemini API prices; RBI exchange-rate display.
+
+• Management assumptions: segment annual spend, early-adopter filters, forecast conversion
+
+
+                   AI-native assessment infrastructure for Indian higher education
+BigChalkBox Pre-Seed Business Plan                                          Confidential   Page 13 of 13
+
+
+  and volume, subscription adoption, token workloads, non-API direct costs, school/coaching
+  validation revenue, and all projected financial outcomes.
+
+14.2. Source register
+• AISHE 2023-24: Department of Higher Education        Didac India exhibitor catalogue.
+  final report.
+                                                    • CrazyGoldFish: company site and evaluation-
+• UGC autonomous colleges: UGC public list.           layer documentation.
+• NEP and UGC context: NEP 2020 and UGC key
+                                               • Eklavvya and Gradescope: Eklavvya and Grade-
+  initiatives.
+                                                 scope.
+• DASES product: product site, company/product
+  metrics, and solution architecture.          • Gemini pricing: Google AI for Developers.
+• CodeTantra: oﬀicial Android app description and • USD/INR reference: Reserve Bank of India.
+
+
+ Investor diligence items
+
+  Before a financing close, BigChalkBox will provide the detailed pilot ledger, faculty validation
+  evidence, product-security documentation, customer pipeline, legal entity and cap-table doc-
+  uments, and a monthly cash plan. Forecasts in this business plan should be read alongside
+  those diligence materials.
+
+
+
+
+                    AI-native assessment infrastructure for Indian higher education
+

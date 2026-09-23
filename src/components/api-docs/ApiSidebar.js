@@ -62,39 +62,37 @@ export default function ApiSidebar({ toc }) {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         >
             <div className="api-sidebar-inner">
-                <p className="api-sidebar-heading">On this page</p>
-
-                <ul className="api-toc-list">
-                    {toc.map((item, idx) => {
-                        // Only render h1, h2, h3 — h4/h5 are too granular for a sidebar
-                        if (item.level > 3) return null;
-
-                        const isActive = activeId === item.id;
-
-                        return (
-                            <li
-                                key={`${item.id}-${idx}`}
-                                className={`api-toc-item api-toc-l${item.level}`}
-                            >
-                                <a
-                                    href={`#${item.id}`}
-                                    className={`api-toc-link${isActive ? ' active' : ''}`}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        const el = document.getElementById(item.id);
-                                        if (el) {
-                                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                            window.history.pushState(null, '', `#${item.id}`);
-                                        }
-                                    }}
-                                    title={item.title}
+                <div className="api-toc-group">
+                    <span className="api-toc-group-label">Contents</span>
+                    <ul className="api-toc-list">
+                        {toc.map((item, idx) => {
+                            if (item.level > 3) return null;
+                            const isActive = activeId === item.id;
+                            return (
+                                <li
+                                    key={`${item.id}-${idx}`}
+                                    className={`api-toc-item api-toc-l${item.level}`}
                                 >
-                                    {item.title}
-                                </a>
-                            </li>
-                        );
-                    })}
-                </ul>
+                                    <a
+                                        href={`#${item.id}`}
+                                        className={`api-toc-link${isActive ? ' active' : ''}`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            const el = document.getElementById(item.id);
+                                            if (el) {
+                                                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                window.history.pushState(null, '', `#${item.id}`);
+                                            }
+                                        }}
+                                        title={item.title}
+                                    >
+                                        {item.title}
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
             </div>
         </motion.aside>
     );
