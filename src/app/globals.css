@@ -60,7 +60,6 @@
     font-family: var(--font-sans);
     background: var(--color-cream);
     color: var(--color-ink);
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

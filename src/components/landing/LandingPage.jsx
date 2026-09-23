@@ -146,8 +146,8 @@ export default function LandingPage() {
 
         function loadResponsiveImage() {
             const nextImageSrc = window.innerWidth <= 640
-                ? '/images/hero_mobile_2.png'
-                : '/images/hero_chatgpt_2.png'
+                ? '/images/hero_mobile_2.webp'
+                : '/images/hero_chatgpt_2.webp'
 
             if (nextImageSrc === activeImageSrc) return
             activeImageSrc = nextImageSrc
@@ -303,8 +303,8 @@ export default function LandingPage() {
             <section id="home">
                 <div className="hero-liquid" id="liquid-wrap">
                     <picture>
-                        <source srcSet="/images/hero_mobile_1.png" media="(max-width: 640px)" />
-                        <img src="/images/hero_chatgpt_1.png" alt="Hero background" />
+                        <source srcSet="/images/hero_mobile_1.webp" media="(max-width: 640px)" />
+                        <img src="/images/hero_chatgpt_1.webp" alt="Hero background" fetchPriority="high" decoding="sync" />
                     </picture>
                     <canvas id="liquid-canvas" aria-hidden="true"></canvas>
                 </div>

@@ -127,7 +127,7 @@ curl -sL -H "X-API-Key: $BCB_API_KEY" "$BASE/assignments/42/export?format=zip"  
 Every `/partner/v1` request needs a key, sent either way (send only one; `X-API-Key`
 wins if both are present):
 
-```
+```prose
 X-API-Key: bcbk_Xk9fT2mQ...
 Authorization: Bearer bcbk_Xk9fT2mQ...
 ```
@@ -235,21 +235,29 @@ unpaginated (`webhook-deliveries` takes a `limit` up to 100, newest first).
 
 ## 3. Grading lifecycle
 
-```
-                 POST /assignments/{id}/submissions   (auto_grade=true, default)
-answer sheet ────────────────────────────────────────────▶ QUEUED ──▶ submission.received webhook (at upload)
-   PDF                                                        │  grading worker claims it
-                 POST /assignments/{id}/submissions           ▼
-                 (auto_grade=false)                    PROCESSING
-                      │                                     │
-                      ▼                                 ┌───┴────────────┐
-                  SUBMITTED  ── POST /submissions/{id}/grade ──▶ QUEUED │
-                                                                    ▼        ▼
-                                                                EVALUATED   ERROR
-                                                                    │        │
-                                                                    ▼        ▼
-                                    grading.completed / grading.failed webhook
-                                    (or: poll GET /submissions/{id} until terminal)
+```mermaid
+flowchart TD
+    classDef pdf fill:#f8fafc,stroke:#94a3b8,stroke-width:2px,color:#0f172a,rx:5px,ry:5px;
+    classDef submitted fill:#e2e8f0,stroke:#94a3b8,stroke-width:2px,color:#0f172a,rx:5px,ry:5px;
+    classDef queued fill:#e0f2fe,stroke:#38bdf8,stroke-width:2px,color:#0369a1,rx:5px,ry:5px;
+    classDef proc fill:#fef3c7,stroke:#fbbf24,stroke-width:2px,color:#b45309,rx:5px,ry:5px;
+    classDef eval fill:#ecfdf5,stroke:#34d399,stroke-width:2px,color:#047857,rx:5px,ry:5px;
+    classDef err fill:#ffe4e6,stroke:#fb7185,stroke-width:2px,color:#be123c,rx:5px,ry:5px;
+    classDef done fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#0f172a;
+
+    sub[📄 Answer Sheet PDF]:::pdf -- "POST /assignments/{id}/submissions <br/> (auto_grade=true)" --> queued[QUEUED]:::queued
+    sub -- "POST /assignments/{id}/submissions <br/> (auto_grade=false)" --> submitted[SUBMITTED]:::submitted
+    
+    queued -- "submission.received webhook" --> queued
+    queued -- "grading worker claims it" --> proc[PROCESSING]:::proc
+    
+    submitted -- "POST /submissions/{id}/grade" --> queued
+    
+    proc --> eval[EVALUATED]:::eval
+    proc --> err[ERROR]:::err
+    
+    eval -- "grading.completed webhook <br/> (or poll GET /submissions/{id})" --> done((Done)):::done
+    err -- "grading.failed webhook <br/> (or poll GET /submissions/{id})" --> done
 ```
 
 ### Status values
@@ -960,7 +968,7 @@ examiner's remark, in the order the report presents the questions (the shared MC
 block first, then questions in report order), with the total-score badge stamped
 on page 1. Response headers:
 
-```
+```json
 HTTP/1.1 200 OK
 Content-Type: application/pdf
 Content-Disposition: attachment; filename="report_Riya_Kapoor_6f0c9a2e.pdf"
@@ -991,7 +999,7 @@ the answer key is missing.
 
 **The recommended loop:**
 
-```
+```prose
 POST /papers/extract            paper PDF  → questions JSON (review it)
         or
 POST /assignments/from-file     markdown template → test (one call)
@@ -1329,7 +1337,7 @@ Delivery semantics:
 
 The `X-BCB-Signature` header is `t=<unix-timestamp>,v1=<hex>`, where
 
-```
+```prose
 v1 = HMAC-SHA256( key = your webhook secret,
                   msg = "<t>" + "." + <raw request body bytes> )
 ```
@@ -1337,7 +1345,7 @@ v1 = HMAC-SHA256( key = your webhook secret,
 Verify **both** the freshness of `t` (reject if `|now − t| > 300 s` — guards
 against replay) and the MAC (constant-time compare).
 
-**Python:**
+
 ```python
 import hashlib, hmac, time
 
@@ -1353,7 +1361,7 @@ def verify_bcb_signature(body: bytes, header: str, secret: str, tolerance: int =
     return hmac.compare_digest(v1, expected)
 ```
 
-**Bash (curl + openssl):**
+
 ```bash
 # sig_file contains the X-BCB-Signature header, body_file the raw body
 T=$(echo "$SIG" | cut -d, -f1 | cut -d= -f2)
@@ -1362,7 +1370,7 @@ EXPECTED=$(printf '%s.' "$T" | cat - body_file | openssl dgst -sha256 -hmac "$SE
 [ "$V1" = "$EXPECTED" ] && echo VALID || echo INVALID
 ```
 
-**Node.js:**
+
 ```js
 import crypto from "node:crypto";
 function verify(body, header, secret, tolerance = 300) {
@@ -1458,7 +1466,7 @@ def handle_bcb_webhook(body: bytes, headers: dict, secret: str):
 
 ### 7.1 The core loop (any language)
 
-```
+```prose
 0. create the test — any of (§4.6):
    a. POST /assignments                                (hand-built JSON)
    b. POST /papers/extract → POST /assignments         (scanned paper PDF → questions)
@@ -1624,93 +1632,143 @@ async function submit(assignment, pdfBytes, email, name) {
 
 ## 10. FAQ & gotchas
 
-**How do I create a test from my own question paper?**
+<details class="faq-item">
+<summary>How do I create a test from my own question paper?</summary>
+
 Two paths (§4.6): `POST /papers/extract` with the paper PDF — the AI returns the
 structured questions, you review them, then `POST /assignments` with them (map
 `q_number` → `question_number`; extra fields are ignored) — or, if your paper
 exists as text, `POST /assignments/from-file` with a Markdown template
 (FORMAT SPEC v1 is in §4.6; deterministic, no AI). Either way, missing model
 answers/rubrics/MCQ answers are filled by `POST /assignments/{id}/bulk-generate`.
+</details>
 
-**Can I create a test without an answer key?**
+<details class="faq-item">
+<summary>Can I create a test without an answer key?</summary>
+
 Yes (v1.2). Key-less tests are legal to create and to upload to; grading is
 simply refused with `422` naming the uncovered question until the key exists —
 via `PUT …/questions` + `PUT …/rubrics`, a filled `from-file` template, or
 `bulk-generate`. Nothing can grade silently against empty content.
+</details>
 
-**Why did my grade call 422 on an MCQ?**
+<details class="faq-item">
+<summary>Why did my grade call 422 on an MCQ?</summary>
+
 (v1.2) The MCQ has no complete `correct_answers` — top-level, or on every
 option-bearing sub-question. Complete them via `PUT …/questions` (or
 `POST …/bulk-generate` to let AI propose them), then grade.
+</details>
 
-**How long can `/papers/extract` take, and what if it 504s?**
+<details class="faq-item">
+<summary>How long can `/papers/extract` take, and what if it 504s?</summary>
+
 Large papers are read in 15-page batches and can take tens of minutes; the call
 stays open the whole time (no polling variant). Set a client read timeout of at
 least 30 minutes — the platform's proxy allows up to 50, so a `504` means your
 client (or an intermediate proxy of yours) timed out first. A `502` means our AI
 side is degraded — retry later. `extraction_confidence` below 1.0 is normal;
 review the questions before creating the test.
+</details>
 
-**Which AI reads my paper / grades my tests — can I choose?**
+<details class="faq-item">
+<summary>Which AI reads my paper / grades my tests — can I choose?</summary>
+
 No, and that's by design: BigChalkBox manages the extraction engine and grading
 provider server-side and can switch them at any time (e.g. when a provider is
 degraded). No request in this API exposes an engine or provider parameter.
+</details>
 
-**How do I know grading is done?**
+<details class="faq-item">
+<summary>How do I know grading is done?</summary>
+
 Subscribe to webhooks (§6) — `grading.completed` / `grading.failed` fire as the
 run finishes. Polling `GET /submissions/{id}` every 2–5 s still works and stays
 well within the rate limit. A submission typically finishes in tens of seconds to
 a few minutes.
+</details>
 
-**My webhook endpoint was down for a few hours — did I miss events?**
+<details class="faq-item">
+<summary>My webhook endpoint was down for a few hours — did I miss events?</summary>
+
 Delivery is retried for ~2.5 h total (1 m → 5 m → 30 m → 2 h), then the event is
 `dead` — **not deleted**. Check `GET /webhook-deliveries?status=dead` and
 `POST …/retry` the ones you need after fixing your endpoint. Anything older,
 reconcile from the roster (`GET /assignments/{id}/submissions`) — it is always
 the source of truth.
+</details>
 
-**I lost my webhook secret.**
+<details class="faq-item">
+<summary>I lost my webhook secret.</summary>
+
 `PATCH /webhooks` with a new `secret` — the old one stops working immediately
 (pending deliveries will be signed with the new one). There is no way to read it
 back by design.
+</details>
 
-**Can I subscribe to only some events?**
+<details class="faq-item">
+<summary>Can I subscribe to only some events?</summary>
+
 Yes — pass the `events` array you want to `POST`/`PATCH /webhooks`. `[]`
 subscribes to nothing (a clean kill switch).
+</details>
 
-**Can I have two webhook URLs (e.g. prod + a mirror)?**
+<details class="faq-item">
+<summary>Can I have two webhook URLs (e.g. prod + a mirror)?</summary>
+
 Not in v1.1 — one URL per client. Fan out inside your endpoint if needed.
+</details>
 
-**What does the marked PDF contain, and why is my marked-pdf a 400?**
+<details class="faq-item">
+<summary>What does the marked PDF contain, and why is my marked-pdf a 400?</summary>
+
 For tests created with `osm_enabled: true`, it's the student's own pages with the
 grader's ticks/crosses and remark, one PDF, score badge on page 1. A `400` means
 the test wasn't created with OSM — the flag only affects grading runs *after* it
 is set, so flip it and re-queue (`POST …/grade`) to regenerate.
+</details>
 
-**Can I improve rubrics after students are already graded?**
+<details class="faq-item">
+<summary>Can I improve rubrics after students are already graded?</summary>
+
 Yes — `PUT /assignments/{id}/rubrics` (or `/questions`), then
 `POST /submissions/{id}/grade` on each affected submission to re-grade. Regrading
 resets and recomputes everything for that submission (and fires a fresh
 `grading.completed`).
+</details>
 
-**How do I stop collecting submissions for a test?**
+<details class="faq-item">
+<summary>How do I stop collecting submissions for a test?</summary>
+
 `PATCH /assignments/{id}` with `{"status": "CLOSED"}`. Uploads then fail with
 `400`. Reopen by PATCHing back to `ACTIVE`. Deleting requires closing first.
+</details>
 
-**Do deadlines enforce anything?**
+<details class="faq-item">
+<summary>Do deadlines enforce anything?</summary>
+
 No — `deadline` is metadata the API stores and returns; the API does not
 auto-close at the deadline. Enforce it on your side by closing the assignment.
+</details>
 
-**Two students, same PDF?**
+<details class="faq-item">
+<summary>Two students, same PDF?</summary>
+
 Fine — one submission per (assignment, student-email). Students are upserted by
 email, so the same email across tests is the same student record.
+</details>
 
-**What does a 409 on upload mean?**
+<details class="faq-item">
+<summary>What does a 409 on upload mean?</summary>
+
 The student already has a submission that is queued, being graded, or already
 graded. It is *protective*, not an error in your request — capture the
 `submission_id` you already have (from the roster if needed) and poll that instead.
+</details>
 
-**I uploaded the wrong PDF or used the wrong student's email — how do I fix it?**
+<details class="faq-item">
+<summary>I uploaded the wrong PDF or used the wrong student's email — how do I fix it?</summary>
+
 While the submission is still `SUBMITTED` or `ERROR`, re-upload — the file is
 replaced in place (same `submission_id`). Once it's `QUEUED`/`PROCESSING`/`EVALUATED`
 the PDF is frozen: re-uploads answer `409` and there is no per-submission delete.
@@ -1718,8 +1776,11 @@ Double-check `student_email` before sending; a graded wrong upload needs BigChal
 admin intervention. If the *file* is right but the grader put a page under the
 wrong question, v1.3 fixes that without a new upload: `page-layout` →
 `page-overrides` → `grade?mode=overrides`.
+</details>
 
-**How do I upload a whole class of scanned sheets at once?** *(v1.3)*
+<details class="faq-item">
+<summary>How do I upload a whole class of scanned sheets at once? <em>(v1.3)</em></summary>
+
 `POST /assignments/{id}/submissions/bulk` — up to 50 PDFs per request. Identify
 students either with the `students` JSON map (filename → email/name, exact
 filename match) or by naming the files `[ID]_[First]_[Last]_[extra].pdf` and
@@ -1727,8 +1788,11 @@ sending your `email_domain`. The response is always `200` with a per-file
 report; grade-readiness problems store the file as `SUBMITTED` (message says
 why) instead of failing the batch. Each accepted file fires its own
 `submission.received` webhook.
+</details>
 
-**How do I re-grade without re-running the whole pipeline?** *(v1.3)*
+<details class="faq-item">
+<summary>How do I re-grade without re-running the whole pipeline? <em>(v1.3)</em></summary>
+
 `POST /submissions/{id}/grade?mode=existing-pages` re-grades every question
 from the pages the last run produced (no re-render/re-classify/re-segment —
 seconds, not minutes; the usual choice after a rubric or provider change).
@@ -1736,26 +1800,39 @@ seconds, not minutes; the usual choice after a rubric or provider change).
 `PUT …/page-overrides`, then bakes the arrangement. Both keep the current
 report until the new run lands, fire `grading.completed` like any grading run,
 and still honor the §3 answer-key gate.
+</details>
 
-**How do I get a spreadsheet / a bundle of marked sheets?** *(v1.3)*
+<details class="faq-item">
+<summary>How do I get a spreadsheet / a bundle of marked sheets? <em>(v1.3)</em></summary>
+
 `GET /assignments/{id}/export?format=xlsx` — the full results roster
 (Student Name, Student ID, per-question marks, Total Score), column-compatible
 with the teacher UI's Excel export. `?format=zip` — one marked PDF per graded
 student (OSM tests only; 100-submission cap). No client-side file building
 needed; both are plain authenticated downloads.
+</details>
 
-**What timezone is `deadline` in?**
+<details class="faq-item">
+<summary>What timezone is `deadline` in?</summary>
+
 ISO 8601 with offset is safest (`2026-09-10T23:59:59+05:30`). A naive value is
 interpreted as IST (UTC+5:30). All returned timestamps are UTC.
+</details>
 
-**Is there a sandbox?**
+<details class="faq-item">
+<summary>Is there a sandbox?</summary>
+
 Not yet — the test lifecycle is fully reversible (create → close → delete), so
 integrating against a throwaway assignment on the live API is low-risk. Don't
 upload real student data until you're ready to keep it.
+</details>
 
-**Where do keys come from?**
+<details class="faq-item">
+<summary>Where do keys come from?</summary>
+
 BigChalkBox admins issue them (Admin → API Clients). The raw key is shown once —
 store it in your secrets manager; if lost, rotate.
+</details>
 
 ---
 

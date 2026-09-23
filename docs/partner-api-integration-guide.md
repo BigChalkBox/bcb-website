@@ -28,31 +28,30 @@ every endpoint interactively (§9).
 
 ## 1. How the platform works
 
-```
-   your servers                           BigChalkBox
-┌──────────────────────┐        ┌────────────────────────────────────────────────────┐
-│  integration backend │ HTTPS  │ nginx                                              │
-│  (X-API-Key)         ├───────▶│  TLS + per-key rate limit (20 r/s, burst 40)       │
-└──────────▲───────────┘        └─────────┬────────────────────────────────────────────┘
-           │                             ▼
-           │                    ┌──────────────────┐      ┌────────────────┐
-           │                    │   partner-api    │◀────▶│   partner-db   │
-           │                    │ (FastAPI, :8004) │      │   your tests,  │
-           │                    │  webhook outbox  │      │  submissions,  │
-           │                    └────────┬─────────┘      │    students    │
-           │                             │  status=QUEUED └────────────────┘
-           │                             ▼
-           │                    ┌──────────────────┐  polls the queue,
-           │                    │ evaluator worker │  claims QUEUED rows
-           │                    │   (AI grading)   │
-           │                    └────────┬─────────┘
-           │                             ▼
-           │                    segmentation → per-question AI grading → report
-           │                    (osm tests also annotate the student’s pages →
-           │                     the marked PDF)
-           │
-           └────signed webhook POSTs (HMAC, retried, at-least-once):
-                submission.received · grading.completed · grading.failed
+```mermaid
+graph TD
+    %% Styling
+    classDef your_sys fill:#f4f4f5,stroke:#a1a1aa,stroke-width:2px,color:#09090b,rx:5px,ry:5px;
+    classDef bcb_api fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b,rx:5px,ry:5px;
+    classDef bcb_worker fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,color:#0f172a,rx:5px,ry:5px;
+    classDef bcb_db fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a;
+    classDef bcb_gateway fill:#f8fafc,stroke:#94a3b8,stroke-width:2px,color:#0f172a,rx:5px,ry:5px;
+
+    backend[Your Servers <br/><br/> integration backend <br/> X-API-Key]:::your_sys
+
+    subgraph BigChalkBox [BigChalkBox Platform]
+        nginx[nginx <br/> TLS + per-key rate limit 20 r/s]:::bcb_gateway
+        api[partner-api <br/> FastAPI :8004 <br/> webhook outbox]:::bcb_api
+        db[(partner-db <br/> your tests, submissions, students)]:::bcb_db
+        worker["<b>evaluator&nbsp;worker</b> <hr/> <div style='text-align:left'>➤&nbsp;segmentation <br/> ➤&nbsp;per-question&nbsp;AI&nbsp;grading <br/> ➤&nbsp;report&nbsp;generation</div>"]:::bcb_worker
+        
+        nginx --> api
+        api <--> db
+        worker -- "polls the queue, claims QUEUED rows" --> db
+    end
+
+    backend -- "HTTPS POST" --> nginx
+    api -. "signed webhooks <br/> (received, completed, failed)" .-> backend
 ```
 
 Key facts that shape everything else:
@@ -104,34 +103,48 @@ Key facts that shape everything else:
 
 ```mermaid
 sequenceDiagram
+    autonumber
     participant You as Your backend
     participant API as api.bigchalkbox.com
     participant W as Grading worker
 
+    Note over You,W: === 1. SETUP & REGISTRATION ===
     You->>API: POST /webhooks (register endpoint + secret, once)
     API-->>You: 201 — secret shown exactly once
-    You->>API: create the test (POST /assignments JSON, /papers/extract + create, or /assignments/from-file; v1.2)
+    
+    Note over You,W: === 2. CREATING THE TEST ===
+    You->>API: create the test<br/>(POST /assignments JSON, /papers/extract + create,<br/>or /assignments/from-file, v1.2)
     opt key incomplete
-        You->>API: POST /assignments/{id}/bulk-generate (AI fills the key)
+        You->>API: POST /assignments/{id}/bulk-generate<br/>(AI fills the key)
         API-->>You: 202 — poll until bulk_gen_status = DONE
     end
     API-->>You: 201 {id}
+    
+    Note over You,W: === 3. SUBMISSION & GRADING PIPELINE ===
     loop each student (or one POST …/submissions/bulk per class — v1.3)
         You->>API: POST /assignments/{id}/submissions (PDF, auto_grade=true)
         API-->>You: 201 {submission_id, status: QUEUED}
         API-->>You: webhook: submission.received (HMAC-signed)
     end
-    W->>W: claims QUEUED rows
+    
+    W--)API: polls for QUEUED rows
+    API--)W: returns QUEUED submissions
+    Note over W: AI Vision Grading Pipeline
+    W--)API: saves results & triggers outbox
+    
     alt webhook (recommended)
-        API-->>You: webhook: grading.completed / grading.failed (HMAC-signed)
+        API-->>You: webhook: grading.completed / grading.failed<br/>(HMAC-signed)
     else polling (fallback / reconciliation)
         loop until terminal (every 2–5 s + jitter, with a deadline)
             You->>API: GET /submissions/{submission_id}
             API-->>You: 200 {status: QUEUED|PROCESSING|EVALUATED}
         end
     end
+    
+    Note over You,W: === 4. RESULTS & ANALYTICS ===
     You->>API: GET /submissions/{submission_id}/results
     API-->>You: 200 {report: per-question detail}
+    
     opt OSM test
         You->>API: GET /submissions/{submission_id}/marked-pdf
         API-->>You: 200 — annotated sheet as one PDF
@@ -143,14 +156,14 @@ sequenceDiagram
     opt cohort numbers + files (v1.3)
         You->>API: GET /assignments/{id}/analytics
         API-->>You: 200 {score_distribution, problem_areas, average_score, ...}
-        You->>API: GET /assignments/{id}/export?format=xlsx (or zip, OSM tests)
+        You->>API: GET /assignments/{id}/export?format=xlsx<br/>(or zip, OSM tests)
         API-->>You: 200 — the file, server-built
     end
     opt a page landed under the wrong question (v1.3)
         You->>API: GET /submissions/{id}/page-layout
         You->>API: PUT /submissions/{id}/page-overrides {enabled, questions}
         You->>API: POST /submissions/{id}/grade?mode=overrides
-        API-->>You: 202 — re-grades only the moved questions, then bakes the layout
+        API-->>You: 202 — re-grades only the moved questions,<br/>then bakes the layout
     end
 ```
 

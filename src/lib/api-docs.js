@@ -21,24 +21,19 @@ function methodBadge(html) {
         m => `<span class="meth meth-${m.toLowerCase()}">${m}</span>`);
 }
 
-// ─── Code block HTML ─────────────────────────────────────────────────────────
+// ─── Code block Data ─────────────────────────────────────────────────────────
 
-function codeBlockHtml(raw, lang) {
+function codeBlockData(raw, lang) {
     lang = (lang || '').toLowerCase().trim();
 
     if (lang === 'mermaid') {
-        return `<div class="cb cb-mermaid"><pre><code>${esc(raw)}</code></pre></div>`;
+        return { isMermaid: true, html: `<div class="cb cb-mermaid"><pre><code class="language-mermaid">${esc(raw)}</code></pre></div>` };
     }
     let hi;
     try { hi = hljs.highlight(raw, { language: hljs.getLanguage(lang) ? lang : 'plaintext' }).value; }
     catch { hi = esc(raw); }
     const label = lang || 'text';
-    return `<div class="cb">
-  <div class="cb-head"><span class="cb-lang">${label}</span>
-    <span class="cb-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-  </div>
-  <pre><code class="hljs">${hi}</code></pre>
-</div>`;
+    return { isMermaid: false, label, raw, html: hi };
 }
 
 // ─── Anchor SVG (reused in heading renderer) ──────────────────────────────────
@@ -75,17 +70,22 @@ function makeProseRenderer(usedIds, toc) {
     };
 }
 
-// ─── Split combined markdown at h1 / h2 headings ────────────────────────────
+// ─── Split combined markdown at h1 / h2 / h3 headings ────────────────────────────
 
-function splitAtH1H2(md) {
+function splitAtHeading(md) {
     const sections = [];
     let title = null, level = 0, lines = [];
+    let inCode = false;
     for (const line of md.split('\n')) {
-        const m2 = line.match(/^## (.+)/);
-        const m1 = !m2 && line.match(/^# (.+)/);
-        if (m2 || m1) {
+        if (line.trim().startsWith('```')) inCode = !inCode;
+        const m3 = line.match(/^### (.+)/);
+        const m2 = !m3 && line.match(/^## (.+)/);
+        const m1 = !m3 && !m2 && line.match(/^# (.+)/);
+        if (!inCode && (m3 || m2 || m1)) {
             if (title !== null) sections.push({ title, level, body: lines.join('\n') });
-            title = (m2||m1)[1].trim(); level = m1 ? 1 : 2; lines = [];
+            title = (m3||m2||m1)[1].trim(); 
+            level = m1 ? 1 : (m2 ? 2 : 3); 
+            lines = [];
         } else {
             if (title !== null) lines.push(line);
         }
@@ -95,17 +95,24 @@ function splitAtH1H2(md) {
 }
 
 // ─── Extract fenced code blocks from a markdown body ─────────────────────────
-// Returns { proseMarkdown, codeBlocksHtml[] }
+// Returns { proseMarkdown, codeBlocksData[] }
 
 function extractCodes(body) {
     const blocks = [];
     // match 3- or 4-backtick fences (4-backtick used for nested markdown examples in §4.6)
-    const re = /(`{3,4})(\w*)[ \t]*\n([\s\S]*?)\n\1[ \t]*(?=\n|$)/g;
-    const prose = body.replace(re, (_, _f, lang, code) => {
-        blocks.push(codeBlockHtml(code, lang));
+    // ^ ensures we only match fences at the start of a line, preventing greedy matches across blocks
+    const re = /^(`{3,4})([a-zA-Z0-9_-]*)[ \t]*\n([\s\S]*?)\n\1[ \t]*(?=\n|$)/gm;
+    const prose = body.replace(re, (match, _f, lang, code) => {
+        const l = (lang || '').toLowerCase().trim();
+        console.log(`extractCodes found lang: '${l}'`);
+        if (!l || l === 'mermaid' || l === 'prose' || l === 'markdown') {
+            console.log(`Skipping extraction for ${l}`);
+            return match;
+        }
+        blocks.push(codeBlockData(code, lang));
         return '';
     });
-    return { proseMarkdown: prose.trim(), codeBlocksHtml: blocks };
+    return { proseMarkdown: prose.trim(), codeBlocksData: blocks };
 }
 
 // ─── Main export ──────────────────────────────────────────────────────────────
@@ -119,7 +126,7 @@ export async function getApiDocsData() {
     const toc    = [];
     const usedIds = new Map();
 
-    const rawSections = splitAtH1H2(combined);
+    const rawSections = splitAtHeading(combined);
 
     const sections = rawSections.map(raw => {
         // Assign id to the section heading
@@ -128,15 +135,21 @@ export async function getApiDocsData() {
         usedIds.set(slug, cnt + 1);
         const id = cnt === 0 ? slug : `${slug}-${cnt + 1}`;
 
-        if (raw.level <= 2) toc.push({ level: raw.level, id, title: stripMd(raw.title) });
+        if (raw.level <= 3) toc.push({ level: raw.level, id, title: stripMd(raw.title) });
 
         // Separate code blocks from prose
-        const { proseMarkdown, codeBlocksHtml } = extractCodes(raw.body);
+        const { proseMarkdown, codeBlocksData } = extractCodes(raw.body);
 
-        // Parse prose with custom renderer (handles inner headings h3/h4/h5, tables, blockquotes)
+        // Parse prose with custom renderer (handles inner headings h4/h5, tables, blockquotes)
         const renderer = makeProseRenderer(usedIds, toc);
         const inst = new Marked({ renderer });
-        const proseHtml = proseMarkdown ? inst.parse(proseMarkdown) : '';
+        
+        // Render the main section heading manually since it was stripped from the body
+        const rendHtml = marked.parseInline(raw.title);
+        const display = raw.level === 4 ? methodBadge(rendHtml) : rendHtml;
+        const headingHtml = `<h${raw.level} id="${id}" class="dh dh${raw.level} group"><a href="#${id}" class="da" aria-label="§">${ANCHOR_SVG}</a><span>${display}</span></h${raw.level}>\n`;
+
+        const proseHtml = headingHtml + (proseMarkdown ? inst.parse(proseMarkdown) : '');
 
         return {
             id,
@@ -144,8 +157,8 @@ export async function getApiDocsData() {
             title:     stripMd(raw.title),
             titleHtml: marked.parseInline(raw.title),
             proseHtml,
-            codeBlocksHtml,
-            hasCode: codeBlocksHtml.length > 0,
+            codeBlocksData,
+            hasCode: codeBlocksData.length > 0,
         };
     });
 
