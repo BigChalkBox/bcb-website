@@ -1,59 +1,94 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   BigChalkBox Partner API Docs — Premium Stylesheet
-   Covers every element type found in partner-api-integration-guide.md (585 lines)
-   and partner-api-reference.md (1778 lines) after a full cross-check.
+   BigChalkBox Partner API Docs — Professional Light Theme
+   Brand: white bg · #145a38 green · Plein/Onest fonts · #e4e4e7 borders
+   Inspired by Stripe + Mailchimp dev docs format
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Page shell ─────────────────────────────────────────────────────────── */
-
+/* ── CSS Variables matching BCB brand exactly ───────────────────────────── */
 .api-docs-root {
+    --green:        #145a38;
+    --green-light:  #1c7a4d;
+    --green-pale:   #edf7f2;
+    --green-border: #c3e0d0;
+
+    --ink:          #09090b;
+    --ink-soft:     #52525b;
+    --ink-muted:    #71717a;
+    --border:       #e4e4e7;
+    --border-dark:  #d4d4d8;
+    --surface:      #ffffff;
+    --surface-2:    #fafafa;
+    --surface-3:    #f4f4f5;
+
+    --code-bg:      #0f1117;
+    --code-border:  #1e2433;
+
+    --font-head:  'Plein', 'Onest', sans-serif;
+    --font-body:  'Onest', 'Switzer', sans-serif;
+    --font-mono:  'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
+    /* Method badge colors */
+    --get:    #0d6efd;
+    --post:   #145a38;
+    --patch:  #9333ea;
+    --put:    #ea580c;
+    --delete: #dc2626;
+
     min-height: 100vh;
-    background: #0d1117;
-    font-family: 'Inter', 'Onest', system-ui, sans-serif;
-    color: #e6edf3;
+    background: var(--surface);
+    font-family: var(--font-body);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
 }
 
-/* ── Sticky top bar ─────────────────────────────────────────────────────── */
+/* ── Top bar ─────────────────────────────────────────────────────────────── */
 
 .api-topbar {
     position: sticky;
     top: 0;
-    z-index: 50;
-    width: 100%;
-    height: 56px;
+    z-index: 100;
     display: flex;
     align-items: center;
-    padding: 0 1.5rem;
-    gap: 1rem;
-    background: rgba(13, 17, 23, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #21262d;
+    height: 60px;
+    padding: 0 2rem;
+    gap: 1.5rem;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
 }
 
 .api-topbar-logo {
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-decoration: none;
-    color: #e6edf3;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
 }
 
-.api-topbar-logo .grad {
-    background: linear-gradient(135deg, #58a6ff 0%, #a371f7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.api-topbar-logo .sep {
-    color: #484f58;
-    font-weight: 400;
+.api-topbar-logo .brand-green { color: var(--green); }
+.api-topbar-logo .sep { color: var(--ink-muted); font-weight: 400; margin: 0 0.1rem; }
+.api-topbar-logo .dev-label {
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-size: 0.95rem;
 }
 
 .api-topbar-spacer { flex: 1; }
+
+.api-topbar-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid var(--green-border);
+    color: var(--green);
+    background: var(--green-pale);
+}
 
 .api-topbar-download {
     display: inline-flex;
@@ -62,371 +97,305 @@
     height: 36px;
     padding: 0 1rem;
     border-radius: 8px;
-    background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%);
+    background: var(--green);
     color: #fff;
     font-size: 0.8125rem;
     font-weight: 600;
     text-decoration: none;
-    white-space: nowrap;
-    transition: opacity 0.15s, transform 0.15s;
-    animation: pulse-glow 2.5s ease-in-out infinite;
+    font-family: var(--font-body);
+    transition: background 0.15s;
 }
+.api-topbar-download:hover { background: var(--green-light); }
 
-.api-topbar-download:hover {
-    opacity: 0.88;
-    transform: translateY(-1px);
-}
-
-@keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(56, 139, 253, 0); }
-    50%        { box-shadow: 0 0 14px 4px rgba(56, 139, 253, 0.35); }
-}
-
-/* ── Two-column grid ────────────────────────────────────────────────────── */
+/* ── Two-column layout ───────────────────────────────────────────────────── */
 
 .api-layout {
     display: grid;
-    grid-template-columns: 268px 1fr;
-    max-width: 1440px;
+    grid-template-columns: 260px 1fr;
+    max-width: 1400px;
     margin: 0 auto;
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 60px);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 880px) {
     .api-layout { grid-template-columns: 1fr; }
     .api-sidebar { display: none; }
 }
 
-/* ── Sidebar ────────────────────────────────────────────────────────────── */
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
 
 .api-sidebar {
     position: sticky;
-    top: 56px;
-    height: calc(100vh - 56px);
+    top: 60px;
+    height: calc(100vh - 60px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 1.5rem 0 3rem 0;
-    border-right: 1px solid #21262d;
+    padding: 1.5rem 0 3rem;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
     scrollbar-width: thin;
-    scrollbar-color: #30363d transparent;
+    scrollbar-color: var(--border) transparent;
 }
 
-.api-sidebar::-webkit-scrollbar { width: 4px; }
-.api-sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+.api-sidebar::-webkit-scrollbar { width: 3px; }
+.api-sidebar::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
 
-.api-sidebar-inner {
-    padding: 0 1rem 0 1.25rem;
-}
+.api-sidebar-inner { padding: 0 1rem 0 1.25rem; }
 
-.api-sidebar-heading {
-    font-size: 0.7rem;
+.api-sidebar-section-label {
+    font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #484f58;
-    padding: 0 0.5rem;
-    margin-bottom: 0.75rem;
+    color: var(--ink-muted);
+    padding: 0.5rem 0.5rem 0.4rem;
+    margin-top: 1rem;
 }
+.api-sidebar-section-label:first-child { margin-top: 0; }
 
 .api-toc-list {
     list-style: none;
     padding: 0;
-    margin: 0;
-    border-left: 1px solid #21262d;
-    margin-left: 0.25rem;
+    margin: 0 0 0.25rem;
 }
-
 .api-toc-item { margin: 0; }
 
 .api-toc-link {
     display: block;
-    padding: 0.28rem 0.75rem;
-    font-size: 0.8125rem;
-    color: #8b949e;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.825rem;
+    color: var(--ink-soft);
     text-decoration: none;
-    border-left: 2px solid transparent;
-    margin-left: -1px;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
-    border-radius: 0 6px 6px 0;
+    border-radius: 6px;
+    transition: background 0.1s, color 0.1s;
     line-height: 1.45;
+    word-break: break-word;
 }
-
 .api-toc-link:hover {
-    color: #c9d1d9;
-    background: rgba(139, 148, 158, 0.07);
-    border-left-color: #30363d;
+    background: var(--surface-3);
+    color: var(--ink);
 }
-
 .api-toc-link.active {
-    color: #58a6ff;
-    border-left-color: #58a6ff;
-    background: rgba(88, 166, 255, 0.07);
-    font-weight: 500;
+    background: var(--green-pale);
+    color: var(--green);
+    font-weight: 600;
 }
 
-/* Indentation by heading level */
-.api-toc-l1 { font-weight: 600; font-size: 0.8rem; color: #c9d1d9; }
-.api-toc-l1 .api-toc-link { padding-left: 0.5rem; }
-.api-toc-l2 .api-toc-link { padding-left: 1rem; }
-.api-toc-l3 .api-toc-link { padding-left: 1.75rem; font-size: 0.775rem; }
+/* Level indentation */
+.api-toc-l1 > .api-toc-link { font-weight: 600; font-size: 0.85rem; color: var(--ink); padding-left: 0.6rem; }
+.api-toc-l2 > .api-toc-link { padding-left: 1.1rem; }
+.api-toc-l3 > .api-toc-link { padding-left: 1.75rem; font-size: 0.8rem; color: var(--ink-muted); }
 
-/* ── Main content area ──────────────────────────────────────────────────── */
+/* ── Main content ────────────────────────────────────────────────────────── */
 
 .api-content-area {
     min-width: 0;
-    padding: 2.5rem 4rem 6rem 3rem;
-    max-width: 900px;
+    padding: 2.5rem 3.5rem 6rem 3rem;
+    max-width: 860px;
 }
 
 @media (max-width: 1100px) {
-    .api-content-area { padding: 2rem 1.5rem 4rem 1.5rem; }
+    .api-content-area { padding: 2rem 1.5rem 4rem; }
 }
 
-/* ── Prose ──────────────────────────────────────────────────────────────── */
+/* ── Prose base ─────────────────────────────────────────────────────────── */
 
-.api-prose { line-height: 1.75; color: #c9d1d9; }
+.api-prose { line-height: 1.75; color: var(--ink-soft); font-size: 0.9375rem; }
 
-/* ── Headings ──────────────────────────────────────────────────────────── */
+/* ── Headings ───────────────────────────────────────────────────────────── */
 
 .api-heading {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    scroll-margin-top: 80px;
+    gap: 0.4rem;
+    font-family: var(--font-head);
     font-weight: 700;
-    letter-spacing: -0.01em;
-    color: #e6edf3;
+    color: var(--ink);
     line-height: 1.3;
+    scroll-margin-top: 80px;
+    letter-spacing: -0.01em;
 }
 
-/* Hover anchor icon */
 .api-anchor {
     flex-shrink: 0;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
-    color: #484f58;
-    text-decoration: none;
+    width: 20px;
+    height: 20px;
+    color: var(--border-dark);
     opacity: 0;
-    transition: opacity 0.15s, color 0.15s;
+    text-decoration: none;
     border-radius: 4px;
-    margin-left: -26px;
+    margin-left: -24px;
+    transition: opacity 0.15s, color 0.15s;
+}
+.group:hover .api-anchor { opacity: 1; }
+.api-anchor:hover { color: var(--green); }
+
+.api-h1 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
 }
 
-.group:hover .api-anchor { opacity: 1; color: #8b949e; }
-.api-anchor:hover { color: #58a6ff !important; }
+.api-h1 + p { color: var(--ink-soft); font-size: 1.05rem; margin-top: 0; }
 
-.api-h1 { font-size: 2rem;   margin: 0 0 1.5rem; padding-bottom: 0.6rem; border-bottom: 1px solid #21262d; }
-.api-h2 { font-size: 1.4rem; margin: 3rem 0 1rem;  padding-bottom: 0.5rem; border-bottom: 1px solid #21262d; }
-.api-h3 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: #e6edf3; }
-.api-h4 { font-size: 1rem;  margin: 1.5rem 0 0.5rem; color: #c9d1d9; font-family: 'SF Mono', 'Fira Code', monospace; }
-.api-h5 { font-size: 0.9rem; margin: 1.25rem 0 0.4rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+.api-h2 {
+    font-size: 1.35rem;
+    margin: 2.75rem 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+}
 
-/* Inline code inside headings (e.g. `GET /assignments/{id}`) */
+.api-h3 {
+    font-size: 1.05rem;
+    margin: 1.75rem 0 0.6rem;
+    color: var(--ink);
+}
+
+.api-h4 {
+    font-size: 0.9rem;
+    margin: 1.4rem 0 0.5rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--green);
+    background: var(--green-pale);
+    border: 1px solid var(--green-border);
+    border-radius: 8px;
+    padding: 0.45rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* HTTP method badges inside h4 headings */
+.api-h4 .method-get    { color: var(--get); }
+.api-h4 .method-post   { color: var(--post); }
+.api-h4 .method-patch  { color: var(--patch); }
+.api-h4 .method-put    { color: var(--put); }
+.api-h4 .method-delete { color: var(--delete); }
+
+.api-h5 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin: 1.25rem 0 0.4rem;
+}
+
+/* Inline code in headings */
 .api-heading code {
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-    font-size: 0.88em;
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 5px;
-    padding: 0.1em 0.4em;
-    color: #79c0ff;
-    font-weight: 400;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--green);
+    background: transparent;
+    border: none;
+    padding: 0;
 }
 
 /* ── Paragraphs ─────────────────────────────────────────────────────────── */
 
-.api-prose p {
-    margin: 0 0 1.1rem;
-    color: #c9d1d9;
-}
+.api-prose p { margin: 0 0 1rem; }
 
 /* ── Inline code ────────────────────────────────────────────────────────── */
 
 .api-prose :not(pre) > code {
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-    font-size: 0.84em;
-    background: rgba(110, 118, 129, 0.12);
-    border: 1px solid #30363d;
+    font-family: var(--font-mono);
+    font-size: 0.83em;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 0.1em 0.38em;
-    color: #79c0ff;
+    padding: 0.12em 0.42em;
+    color: var(--green);
+    font-weight: 500;
 }
 
 /* ── Links ──────────────────────────────────────────────────────────────── */
 
 .api-prose a {
-    color: #58a6ff;
+    color: var(--green);
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: rgba(88, 166, 255, 0.4);
-    transition: color 0.15s, text-decoration-color 0.15s;
+    text-decoration-color: var(--green-border);
+    font-weight: 500;
+    transition: color 0.15s;
 }
+.api-prose a:hover { color: var(--green-light); }
 
-.api-prose a:hover {
-    color: #79c0ff;
-    text-decoration-color: rgba(121, 192, 255, 0.6);
-}
+/* ── Bold / italic ──────────────────────────────────────────────────────── */
 
-/* ── Bold / em ──────────────────────────────────────────────────────────── */
-
-.api-prose strong { color: #e6edf3; font-weight: 600; }
-.api-prose em     { color: #d2a8ff; font-style: italic; }
+.api-prose strong { color: var(--ink); font-weight: 700; }
+.api-prose em     { color: var(--ink-soft); font-style: italic; }
 
 /* ── Lists ──────────────────────────────────────────────────────────────── */
 
 .api-prose ul, .api-prose ol {
-    margin: 0.5rem 0 1rem 0;
+    margin: 0.5rem 0 1rem;
     padding-left: 1.5rem;
 }
-
 .api-prose ul { list-style: none; }
-.api-prose ul > li { position: relative; padding-left: 0.75rem; margin-bottom: 0.35rem; }
+.api-prose ul > li {
+    position: relative;
+    padding-left: 0.75rem;
+    margin-bottom: 0.3rem;
+}
 .api-prose ul > li::before {
     content: '';
     position: absolute;
-    left: -0.2rem;
+    left: -0.15rem;
     top: 0.65em;
-    width: 5px;
-    height: 5px;
+    width: 5px; height: 5px;
     border-radius: 50%;
-    background: #30363d;
+    background: var(--green-border);
 }
+.api-prose ol > li { margin-bottom: 0.3rem; }
+.api-prose li > ul, .api-prose li > ol { margin: 0.25rem 0; }
 
-.api-prose ol { list-style: decimal; }
-.api-prose ol > li { margin-bottom: 0.35rem; padding-left: 0.25rem; }
-
-/* Nested lists */
-.api-prose li > ul, .api-prose li > ol { margin: 0.3rem 0 0.3rem 0; }
-
-/* Checkbox list items (go-live checklist §8) */
+/* Checkbox list items (go-live checklist §8 in integration guide) */
 .api-prose input[type="checkbox"] {
-    accent-color: #1f6feb;
-    width: 14px;
-    height: 14px;
-    margin-right: 0.4rem;
+    accent-color: var(--green);
+    margin-right: 0.45rem;
     vertical-align: middle;
     cursor: default;
 }
 
-/* ── Code blocks ────────────────────────────────────────────────────────── */
-
-.api-code-block {
-    margin: 1.25rem 0 1.5rem;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #21262d;
-    background: #010409;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-}
-
-.api-code-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.45rem 1rem;
-    background: #0d1117;
-    border-bottom: 1px solid #21262d;
-}
-
-.api-code-lang {
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #484f58;
-}
-
-.api-code-dots {
-    display: flex;
-    gap: 5px;
-}
-.api-code-dots span {
-    display: block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #21262d;
-}
-
-.api-code-block pre {
-    margin: 0;
-    padding: 1.1rem 1.25rem;
-    overflow-x: auto;
-    font-size: 0.8125rem;
-    line-height: 1.65;
-}
-
-.api-code-block pre code {
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-    background: transparent;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    color: inherit;
-}
-
-/* ── Mermaid diagrams (sequenceDiagram in §2 of integration guide) ──────── */
-
-.api-mermaid-block {
-    margin: 1.25rem 0 1.5rem;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #21262d;
-    background: #010409;
-}
-
-.api-mermaid-block pre {
-    margin: 0;
-    padding: 1.1rem 1.25rem;
-    overflow-x: auto;
-}
-
-.api-mermaid-block code {
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 0.8rem;
-    color: #79c0ff;
-    line-height: 1.6;
-    white-space: pre;
-}
-
-/* ── Blockquotes (version callouts in both docs) ────────────────────────── */
+/* ── Blockquotes ────────────────────────────────────────────────────────── */
 
 .api-blockquote {
     margin: 1.25rem 0;
-    padding: 0.75rem 1.25rem;
-    border-left: 3px solid #1f6feb;
-    background: rgba(31, 111, 235, 0.07);
+    padding: 0.85rem 1.25rem;
+    border-left: 3px solid var(--green);
+    background: var(--green-pale);
     border-radius: 0 8px 8px 0;
-    color: #8b949e;
     font-size: 0.9rem;
 }
-
-.api-blockquote p { margin: 0 0 0.4rem; color: inherit; }
+.api-blockquote p { margin: 0 0 0.4rem; color: var(--ink-soft); }
 .api-blockquote p:last-child { margin: 0; }
-
-.api-blockquote strong { color: #79c0ff; }
+.api-blockquote strong { color: var(--green); }
 .api-blockquote code {
-    background: rgba(110, 118, 129, 0.1);
-    border: 1px solid #21262d;
-    color: #79c0ff;
-    font-size: 0.82em;
-    padding: 0.1em 0.35em;
-    border-radius: 4px;
+    background: rgba(20,90,56,0.1);
+    border: 1px solid var(--green-border);
+    color: var(--green);
 }
 
-/* ── Tables ─────────────────────────────────────────────────────────────── */
-/* Critical: docs have ~30+ tables covering endpoints, fields, errors, limits */
+/* ── Tables — the hero element ───────────────────────────────────────────── */
+/* Docs have ~30 tables; every one must look great */
 
 .api-table-wrapper {
-    margin: 1.25rem 0 1.5rem;
+    margin: 1.25rem 0 1.75rem;
     overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid #21262d;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    /* Subtle shadow */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
 .api-table {
@@ -434,81 +403,161 @@
     border-collapse: collapse;
     font-size: 0.855rem;
     line-height: 1.55;
+    background: var(--surface);
 }
 
 .api-table thead {
-    background: #0d1117;
-    border-bottom: 1px solid #21262d;
+    background: var(--surface-3);
+    border-bottom: 1px solid var(--border);
 }
 
 .api-table th {
     text-align: left;
     padding: 0.65rem 1rem;
-    font-weight: 600;
-    font-size: 0.8rem;
-    color: #8b949e;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     white-space: nowrap;
+    font-family: var(--font-body);
 }
 
 .api-table td {
-    padding: 0.65rem 1rem;
-    color: #c9d1d9;
-    border-bottom: 1px solid #161b22;
+    padding: 0.7rem 1rem;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--border);
     vertical-align: top;
+    line-height: 1.6;
 }
 
 .api-table tbody tr:last-child td { border-bottom: none; }
+.api-table tbody tr:hover td { background: var(--surface-2); }
 
-.api-table tbody tr:hover td { background: rgba(139, 148, 158, 0.05); }
-
-/* Inline code inside tables */
-.api-table td code, .api-table th code {
-    font-family: 'SF Mono', 'Fira Code', monospace;
+/* First column emphasis (field names, etc.) */
+.api-table td:first-child {
+    color: var(--ink);
+    font-weight: 600;
+    font-family: var(--font-mono);
     font-size: 0.82em;
-    background: rgba(110, 118, 129, 0.12);
-    border: 1px solid #30363d;
-    border-radius: 4px;
-    padding: 0.1em 0.35em;
-    color: #79c0ff;
+    white-space: nowrap;
 }
 
-/* Bold in tables */
-.api-table strong { color: #e6edf3; font-weight: 600; }
+/* Code inside tables */
+.api-table td code, .api-table th code {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    color: var(--green);
+    font-weight: 500;
+}
 
-/* Links in tables */
-.api-table a { color: #58a6ff; text-underline-offset: 2px; }
+.api-table strong { color: var(--ink); font-weight: 700; }
+.api-table a { color: var(--green); }
 
-/* ── Horizontal rules (section separators) ──────────────────────────────── */
+/* ── Code blocks ─────────────────────────────────────────────────────────── */
+
+.api-code-block {
+    margin: 1.25rem 0 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--code-border);
+    background: var(--code-bg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.api-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 1rem;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--code-border);
+}
+
+.api-code-lang {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #4ade80;
+    opacity: 0.7;
+}
+
+.api-code-dots { display: flex; gap: 5px; }
+.api-code-dots span {
+    display: block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+}
+
+.api-code-block pre {
+    margin: 0;
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+
+.api-code-block pre code {
+    font-family: var(--font-mono);
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #e2e8f0;
+}
+
+.api-code-block pre::-webkit-scrollbar { height: 3px; }
+.api-code-block pre::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+/* ── Mermaid / ASCII diagrams ────────────────────────────────────────────── */
+
+.api-mermaid-block {
+    margin: 1.25rem 0 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+}
+
+.api-mermaid-block pre {
+    margin: 0;
+    padding: 1.1rem 1.5rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    line-height: 1.65;
+}
+
+.api-mermaid-block code {
+    font-family: var(--font-mono);
+    color: var(--ink-soft);
+    white-space: pre;
+}
+
+/* ── Horizontal rules ────────────────────────────────────────────────────── */
 
 .api-divider {
     margin: 3rem 0;
     border: none;
-    border-top: 1px solid #21262d;
+    border-top: 1px solid var(--border);
 }
 
-/* ── highlight.js overrides for dark theme (atom-one-dark) ──────────────── */
-
-/* Ensure the hljs base doesn't fight our bg */
+/* ── hljs overrides ──────────────────────────────────────────────────────── */
 .hljs { background: transparent !important; }
 
-/* ── Scrollbar for code blocks ──────────────────────────────────────────── */
-
-.api-code-block pre::-webkit-scrollbar { height: 4px; }
-.api-code-block pre::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
-
-/* ── Version badges (v1.1, v1.2, v1.3) ─────────────────────────────────── */
-/* These appear inline in headings like "`GET /analytics` — v1.3" */
-/* The em-dash + version text is already part of the heading text; no extra markup */
-
-/* ── Responsive ─────────────────────────────────────────────────────────── */
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-    .api-content-area { padding: 1.5rem 1rem 4rem; }
-    .api-h1  { font-size: 1.6rem; }
-    .api-h2  { font-size: 1.2rem; }
+    .api-content-area { padding: 1.25rem 1rem 3rem; }
+    .api-h1 { font-size: 1.6rem; }
+    .api-h2 { font-size: 1.15rem; }
     .api-table { font-size: 0.8rem; }
     .api-table th, .api-table td { padding: 0.5rem 0.75rem; }
+    .api-topbar-badge,
     .api-topbar-download { display: none; }
 }

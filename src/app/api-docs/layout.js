@@ -3,7 +3,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 import './api-docs.css';
 
 export const metadata = {
-    title: 'Partner API Reference | BigChalkBox',
+    title: 'Partner API Reference | BigChalkBox Developers',
     description:
         'Complete API Reference and Integration Guide for the BigChalkBox Partner API v1.3 — authentication, grading lifecycle, webhooks, and every endpoint.',
 };
@@ -11,24 +11,29 @@ export const metadata = {
 export default function ApiDocsLayout({ children }) {
     return (
         <div className="api-docs-root">
-            {/* ── Top navigation bar ── */}
+            {/* ── Top bar ── */}
             <header className="api-topbar">
                 <Link href="/" className="api-topbar-logo">
-                    <span className="grad">BigChalkBox</span>
+                    {/* Reuse brand logo text in BCB style */}
+                    <span className="brand-green">BigChalkBox</span>
                     <span className="sep">/</span>
-                    <span style={{ color: '#8b949e', fontWeight: 400 }}>Developers</span>
+                    <span className="dev-label">Developers</span>
                 </Link>
+
+                <span className="api-topbar-badge">v1.3</span>
+
                 <div className="api-topbar-spacer" />
+
                 <a
                     href="/partner-api-openapi.json"
                     download="partner-api-openapi.json"
                     className="api-topbar-download"
                 >
-                    ↓ Download OpenAPI Spec
+                    ↓ OpenAPI Spec
                 </a>
             </header>
 
-            {/* ── Main two-column grid ── */}
+            {/* ── Two-column body ── */}
             <div className="api-layout">
                 {children}
             </div>
