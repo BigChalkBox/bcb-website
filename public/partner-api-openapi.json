@@ -1,0 +1,3038 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BigChalkBox Partner API",
+    "description": "External server-to-server API: assignments, submissions, grading, metering.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/partner/v1/health": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Partner Api Health",
+        "description": "Auth smoke-check for integrators: proves the key works and shows\nwhich client it resolves to.",
+        "operationId": "partner_api_health_partner_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/me": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Who Am I",
+        "description": "Client identity plus the service account it acts as. v1 keys are\nunscoped (every key can do everything), so `capabilities` documents\nthe surface rather than gating it.",
+        "operationId": "who_am_i_partner_v1_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/usage": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Usage",
+        "description": "Metering snapshot for this client's service account (plan + free-tier\nusage counters). Read-only: enforcement of these limits on partner\nroutes arrives with Phase 1 \u2014 this endpoint lets platforms meter what\nthey resell before that. Usage counters live in the CORE database, so\nthis reads the core bridge, not the partner-local mirror.",
+        "operationId": "get_usage_partner_v1_usage_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "List Assignments",
+        "operationId": "list_assignments_partner_v1_assignments_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PartnerAssignmentSummary"
+                  },
+                  "type": "array",
+                  "title": "Response List Assignments Partner V1 Assignments Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Create Assignment",
+        "operationId": "create_assignment_partner_v1_assignments_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssignmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Assignment",
+        "description": "Assignment detail \u2014 the bulk-generate poll endpoint: while\nbulk_gen_status is RUNNING, bulk_gen_progress carries\n{current, total, label} (checked on every read, and a job whose last\ncheckpoint is >3 min old is reconciled to FAILED here).",
+        "operationId": "get_assignment_partner_v1_assignments__assignment_id__get",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Update Assignment",
+        "description": "Partial update of a test's content fields and lifecycle status.\nStatus transitions DRAFT->ACTIVE and CLOSED->ACTIVE are NOT quota-gated\nhere (the UI's free-credit gate is a consumer-tier mechanism \u2014 partner\naccounts meter via GET /usage; enforcement lands in Phase 1).",
+        "operationId": "update_assignment_partner_v1_assignments__assignment_id__patch",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartnerAssignmentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Delete Assignment",
+        "description": "Delete a test and its stored answer sheets (DRAFT or CLOSED only \u2014\nan ACTIVE test must be closed first, so a stray call can't destroy a\nlive collection target).",
+        "operationId": "delete_assignment_partner_v1_assignments__assignment_id__delete",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/questions": {
+      "put": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Put Assignment Questions",
+        "description": "Full replace of the question set \u2014 same validation and canonical\nmaterialization as create, so the grader's invariants (rubric per\nsubjective question, answers per MCQ) hold after any edit. Rubrics are\nre-materialized together with questions because question-level rubrics\nmove with their questions.",
+        "operationId": "put_assignment_questions_partner_v1_assignments__assignment_id__questions_put",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutQuestionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/rubrics": {
+      "put": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Put Assignment Rubrics",
+        "description": "Full replace of the rubric set. Stored as given; whether every\nsubjective question ends up covered is checked at grading time\n(_grading_ready) so a partial rubric set can be staged across calls.",
+        "operationId": "put_assignment_rubrics_partner_v1_assignments__assignment_id__rubrics_put",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutRubricsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/papers/extract": {
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Extract Paper Questions",
+        "description": "Question-paper PDF -> structured questions. The paper is sent to\nbuilder-ai's extraction pipeline over the internal network and the\nresult is passed through unchanged (questions, total_marks,\nextraction_confidence, sections_meta).\n\nThe parse engine is resolved server-side from THIS client's\napi_clients.parse_engine (Admin -> API Clients): an explicit \"glm_ocr\"\nuses the self-hosted GLM-OCR hybrid read, anything else (null/\n\"default\") the default vision path. The caller has no engine or\nprovider parameter (S2: AI control stays with us); flipping the admin\ntoggle takes effect on the client's next extract call.\n\nLong by nature \u2014 a large paper can take tens of minutes (builder-ai's\nworst case ~2800s; nginx's partner timeout covers it). Use a read\ntimeout of at least 30 minutes for this call.",
+        "operationId": "extract_paper_questions_partner_v1_papers_extract_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_extract_paper_questions_partner_v1_papers_extract_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/from-file": {
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Create Assignment From File",
+        "description": "Create a test from a Markdown paper template \u2014 deterministic,\nzero-LLM, LINE-NUMBERED errors (FORMAT SPEC v1 lives in\npaper_parser.py). The template carries the paper itself (question\ntext, marks, MCQ options) and, optionally, the answer key\n(#### MODEL ANSWER / #### RUBRIC / #### MCQ ANSWERS sections).\n\nA template without a key still creates the test \u2014 it just isn't\ngradeable yet: complete it with POST /assignments/{id}/bulk-generate\n(AI fills model answers, rubrics, MCQ correct answers) or add the key\nsections and resend. Grading an uncovered question is refused with a\n422 naming it, so nothing can grade silently.\n\nSend either a .md/.markdown FILE or the md_text FORM field (not both).\nForm title/subject/instructions override the file's '# <title>' /\n'Subject: \u2026' / 'Instructions: \u2026' lines. Parse warnings (marks\nmismatch, MCQs still missing answers) come back in the 201 body.",
+        "operationId": "create_assignment_from_file_partner_v1_assignments_from_file_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_assignment_from_file_partner_v1_assignments_from_file_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentFromFile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/bulk-generate": {
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Start Bulk Generate",
+        "description": "Fill in what the test is missing \u2014 SUBJECTIVE model answers +\nrubrics, MCQ correct answers (flat or per sub-question) \u2014 with\nbuilder-ai, one question at a time, in the background.\n\nAnswers 202 immediately; poll GET /assignments/{id} \u2014\nbulk_gen_status runs RUNNING \u2192 DONE | FAILED and bulk_gen_progress\ncarries {current, total, label} while running. Questions that are\nalready complete are skipped; an AI call that fails for one unit\nskips that unit (the run still ends DONE \u2014 check what's missing\nbefore grading). A second start while RUNNING is 409; a run whose\nworker died is reconciled to FAILED after 3 quiet minutes.",
+        "operationId": "start_bulk_generate_partner_v1_assignments__assignment_id__bulk_generate_post",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkGenerateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/submissions": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "List Assignment Roster",
+        "description": "Gradebook for one test: every student's submission status and score,\nnewest-first by upload time (keyset-paginated on (submitted_at, id) DESC \u2014\nevery partner-uploaded submission has submitted_at, unlike box-link rows\nwhich are a Phase 1 feature). Per-question detail is not included; fetch\n/submissions/{id}/results for that.",
+        "operationId": "list_assignment_roster_partner_v1_assignments__assignment_id__submissions_get",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerRosterPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Create Submission",
+        "description": "Upload one student's answer sheet as a single PDF and (by default)\nimmediately queue it for AI grading. Mirrors the box upload flow\n(dases_box.py) for storage keys, student upsert, and duplicate\nhandling \u2014 minus the hardcoded .edu email fallback: partners must\nsend an explicit email address.",
+        "operationId": "create_submission_partner_v1_assignments__assignment_id__submissions_post",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_submission_partner_v1_assignments__assignment_id__submissions_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerSubmissionCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/analytics": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Assignment Analytics",
+        "description": "Score bands, problem areas and dashboard counts for one test.\nProblem areas are the questions in the 3 worst DISTINCT average-score\ntiers (DENSE_RANK, not a flat LIMIT \u2014 a tie at the cutoff keeps every\ntied question). OR-group alternatives the student did not attempt\n(skipped_or_alternative) are excluded so they cannot masquerade as\nproblem areas.",
+        "operationId": "get_assignment_analytics_partner_v1_assignments__assignment_id__analytics_get",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAssignmentAnalytics"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/export": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Export Assignment",
+        "description": "Server-built export (S1=B \u2014 we make the file):\nformat=xlsx \u2014 the results roster: every non-NOT_SUBMITTED student \u00d7\n  the paper's questions (marks obtained per question, Total Score),\n  same columns and row order as teacher-web's Excel export (see\n  exports.py for the parity contract).\nformat=zip  \u2014 one marked PDF per EVALUATED submission (OSM tests\n  only), members named report_<Student_Name>_<id-prefix>.pdf.",
+        "operationId": "export_assignment_partner_v1_assignments__assignment_id__export_get",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "xlsx",
+                "zip"
+              ],
+              "type": "string",
+              "default": "xlsx",
+              "title": "Format"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/assignments/{assignment_id}/submissions/bulk": {
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Bulk Upload Submissions",
+        "description": "Upload a whole batch of answer sheets in one request. Per-file\nidentity, two ways (the explicit map wins):\n  students \u2014 JSON object mapping EACH uploaded filename to\n             {\"email\": ..., \"name\": ..., \"enrollment_number\": ...};\n  email_domain \u2014 fall back to [ID]_[First]_[Last]_[extra].pdf parsing:\n             email = <ID>@<domain>.\nHTTP 200 with a per-file report even when some files fail (core\nparity). Per-file outcomes:\n  success \u2014 stored; queued (submitted_status QUEUED) when auto_grade\n    and the answer key is grade-ready, otherwise SUBMITTED;\n  error   \u2014 not a PDF, over 25MB, duplicate filename in the batch, an\n    unresolvable identity, or an existing submission that is\n    EVALUATED/PROCESSING/QUEUED (never replaced in flight or after\n    grading \u2014 re-grade via POST /submissions/{id}/grade).\nA SUBMITTED-but-ungraded existing submission IS replaced: the new\nupload wins (same as core's teacher flow, same submission id + S3 key\nso the old object is overwritten in place). Webhook:\nsubmission.received per success, same transaction as the upload.",
+        "operationId": "bulk_upload_submissions_partner_v1_assignments__assignment_id__submissions_bulk_post",
+        "parameters": [
+          {
+            "name": "assignment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Assignment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_bulk_upload_submissions_partner_v1_assignments__assignment_id__submissions_bulk_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerBulkUploadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/grade": {
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Grade Submission",
+        "description": "Queue (or re-queue) a submission for grading.\n  mode=full (default) \u2014 re-run the whole pipeline (PDF -> pages ->\n    classify -> grade); resets the current report. Use after uploading\n    with auto_grade=false, or to re-grade after the assignment's rubrics\n    were updated.\n  mode=existing-pages \u2014 re-grade every question from the pages the last\n    run already produced; skips render/classify/segmentation (the fast\n    option, e.g. after a rubric or provider change). Requires EVALUATED;\n    the report is preserved until the new run replaces it.\n  mode=overrides \u2014 re-grade only the questions whose pages were\n    rearranged via PUT /submissions/{id}/page-overrides, then the\n    arrangement is baked into storage. Requires EVALUATED + a stored\n    arrangement.\nThe fast modes are idempotent while a run is in flight (202), like\ncore's /reevaluate variants \u2014 `full` keeps 409 for a double-queue.",
+        "operationId": "grade_submission_partner_v1_submissions__submission_id__grade_post",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "full",
+                "existing-pages",
+                "overrides"
+              ],
+              "type": "string",
+              "default": "full",
+              "title": "Mode"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerSubmissionStatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Submission Status",
+        "description": "Poll this until status is EVALUATED or ERROR \u2014 grading is\nasynchronous. Webhook subscribers get grading.completed /\ngrading.failed pushed instead (POST /webhooks).",
+        "operationId": "get_submission_status_partner_v1_submissions__submission_id__get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerSubmissionStatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/results": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Submission Results",
+        "operationId": "get_submission_results_partner_v1_submissions__submission_id__results_get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerSubmissionResults"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/pdf": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Submission Pdf",
+        "description": "302 to a 1-hour presigned URL for the student's submitted PDF.",
+        "operationId": "get_submission_pdf_partner_v1_submissions__submission_id__pdf_get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/pages": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Submission Pages",
+        "description": "The graded page images grouped by question directory (q1, q2, \u2026,\nqMCQs), each with a 1-hour presigned URL. Reflects the post-grading\ngrouping \u2014 for OSM tests the annotated variants are what the\nmarked-PDF endpoint packs; the originals are listed here.",
+        "operationId": "get_submission_pages_partner_v1_submissions__submission_id__pages_get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/page-layout": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Submission Page Layout",
+        "description": "The page-rearrangement payload: the original full pages (no\nsub-directory), the per-question page crops grouped by directory\n(q1, q2a, qMCQs, \u2026), and the stored override when one is active.\nEvery path also carries a 1-hour presigned URL \u2014 unlike core's\nUI-relative media links, a partner can fetch pages directly.",
+        "operationId": "get_submission_page_layout_partner_v1_submissions__submission_id__page_layout_get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/page-overrides": {
+      "put": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Put Submission Page Overrides",
+        "description": "Store (or reset with enabled=false) a manual page arrangement.\n`questions` maps a question number to the ORDERED list of page paths\nit should grade from (an empty list = the question reads as not\nattempted). Only changed questions need be sent. Re-grade with\nPOST /submissions/{id}/grade?mode=overrides.",
+        "operationId": "put_submission_page_overrides_partner_v1_submissions__submission_id__page_overrides_put",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageOverridesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/submissions/{submission_id}/marked-pdf": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Submission Marked Pdf",
+        "description": "Streams a PDF of the OSM-annotated answer sheets (badge on page 1)\nfor tests created with osm_enabled=true \u2014 the visual 'returned sheet'.",
+        "operationId": "get_submission_marked_pdf_partner_v1_submissions__submission_id__marked_pdf_get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/webhooks": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Get Webhook Config",
+        "description": "Current subscription. Never returns the secret.",
+        "operationId": "get_webhook_config_partner_v1_webhooks_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookConfigOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Set Webhook Config",
+        "description": "Register (or fully replace) this client's webhook subscription.\nThe secret is shown exactly once, in this response.",
+        "operationId": "set_webhook_config_partner_v1_webhooks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookConfigOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Patch Webhook Config",
+        "description": "Partial update. The secret is returned only when it changed.",
+        "operationId": "patch_webhook_config_partner_v1_webhooks_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookConfigPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookConfigOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/webhook-deliveries": {
+      "get": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "List Webhook Deliveries",
+        "description": "Newest-first delivery log \u2014 the client's redrive/debug view.",
+        "operationId": "list_webhook_deliveries_partner_v1_webhook_deliveries_get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WebhookDeliveryOut"
+                  },
+                  "title": "Response List Webhook Deliveries Partner V1 Webhook Deliveries Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/partner/v1/webhook-deliveries/{delivery_id}/retry": {
+      "post": {
+        "tags": [
+          "Partner API (public)"
+        ],
+        "summary": "Retry Webhook Delivery",
+        "description": "Re-queue a dead (or pending) delivery immediately. Delivered rows are\nimmutable history \u2014 409.",
+        "operationId": "retry_webhook_delivery_partner_v1_webhook_deliveries__delivery_id__retry_post",
+        "parameters": [
+          {
+            "name": "delivery_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Delivery Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDeliveryOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Unauthenticated probe for load balancers / uptime monitors. The\nauthenticated smoke-check for integrators is GET /partner/v1/health.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_bulk_upload_submissions_partner_v1_assignments__assignment_id__submissions_bulk_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "students": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Students"
+          },
+          "email_domain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email Domain"
+          },
+          "auto_grade": {
+            "type": "boolean",
+            "title": "Auto Grade",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "files"
+        ],
+        "title": "Body_bulk_upload_submissions_partner_v1_assignments__assignment_id__submissions_bulk_post"
+      },
+      "Body_create_assignment_from_file_partner_v1_assignments_from_file_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "md_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Md Text"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          },
+          "osm_enabled": {
+            "type": "boolean",
+            "title": "Osm Enabled",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "Body_create_assignment_from_file_partner_v1_assignments_from_file_post"
+      },
+      "Body_create_submission_partner_v1_assignments__assignment_id__submissions_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "student_email": {
+            "type": "string",
+            "title": "Student Email"
+          },
+          "student_name": {
+            "type": "string",
+            "title": "Student Name",
+            "default": ""
+          },
+          "enrollment_number": {
+            "type": "string",
+            "title": "Enrollment Number",
+            "default": ""
+          },
+          "auto_grade": {
+            "type": "boolean",
+            "title": "Auto Grade",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "student_email"
+        ],
+        "title": "Body_create_submission_partner_v1_assignments__assignment_id__submissions_post"
+      },
+      "Body_extract_paper_questions_partner_v1_papers_extract_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_extract_paper_questions_partner_v1_papers_extract_post"
+      },
+      "BulkGenerateRequest": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "all",
+              "answers",
+              "rubrics"
+            ],
+            "title": "Mode",
+            "default": "all"
+          },
+          "answer_instructions": {
+            "type": "string",
+            "title": "Answer Instructions",
+            "default": ""
+          },
+          "rubric_instructions": {
+            "type": "string",
+            "title": "Rubric Instructions",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "BulkGenerateRequest"
+      },
+      "CreateAssignmentRequest": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionIn"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "osm_enabled": {
+            "type": "boolean",
+            "title": "Osm Enabled",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "questions"
+        ],
+        "title": "CreateAssignmentRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ModelAnswerIn": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "rubric": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RubricCriterionIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rubric"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "ModelAnswerIn"
+      },
+      "PageOverridesRequest": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "questions": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Questions",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "PageOverridesRequest"
+      },
+      "PartnerAssignmentAnalytics": {
+        "properties": {
+          "total_submissions": {
+            "type": "integer",
+            "title": "Total Submissions"
+          },
+          "submitted_count": {
+            "type": "integer",
+            "title": "Submitted Count"
+          },
+          "evaluated_count": {
+            "type": "integer",
+            "title": "Evaluated Count"
+          },
+          "pending_count": {
+            "type": "integer",
+            "title": "Pending Count"
+          },
+          "processing_count": {
+            "type": "integer",
+            "title": "Processing Count"
+          },
+          "error_count": {
+            "type": "integer",
+            "title": "Error Count"
+          },
+          "score_distribution": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerScoreBand"
+            },
+            "type": "array",
+            "title": "Score Distribution"
+          },
+          "problem_areas": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerProblemArea"
+            },
+            "type": "array",
+            "title": "Problem Areas"
+          },
+          "average_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_submissions",
+          "submitted_count",
+          "evaluated_count",
+          "pending_count",
+          "processing_count",
+          "error_count",
+          "score_distribution",
+          "problem_areas"
+        ],
+        "title": "PartnerAssignmentAnalytics",
+        "description": "Port of core-api's per-assignment analytics (the headline numbers of\nthe teacher results page). Status counts cover the whole cohort; bands,\naverage and problem areas cover EVALUATED rows only. `pending` is the\nresidual (NOT_SUBMITTED + QUEUED), matching core."
+      },
+      "PartnerAssignmentCreated": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "num_questions": {
+            "type": "integer",
+            "title": "Num Questions"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "num_questions",
+          "created_at"
+        ],
+        "title": "PartnerAssignmentCreated"
+      },
+      "PartnerAssignmentDetail": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "num_submissions": {
+            "type": "integer",
+            "title": "Num Submissions"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          },
+          "questions_json": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Questions Json"
+          },
+          "rubrics_json": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rubrics Json"
+          },
+          "bulk_gen_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bulk Gen Status"
+          },
+          "bulk_gen_progress": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bulk Gen Progress"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "num_submissions",
+          "created_at"
+        ],
+        "title": "PartnerAssignmentDetail"
+      },
+      "PartnerAssignmentFromFile": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "num_submissions": {
+            "type": "integer",
+            "title": "Num Submissions"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          },
+          "questions_json": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Questions Json"
+          },
+          "rubrics_json": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rubrics Json"
+          },
+          "bulk_gen_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bulk Gen Status"
+          },
+          "bulk_gen_progress": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bulk Gen Progress"
+          },
+          "num_questions": {
+            "type": "integer",
+            "title": "Num Questions"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "num_submissions",
+          "created_at",
+          "num_questions"
+        ],
+        "title": "PartnerAssignmentFromFile"
+      },
+      "PartnerAssignmentSummary": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "num_submissions": {
+            "type": "integer",
+            "title": "Num Submissions"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "num_submissions",
+          "created_at"
+        ],
+        "title": "PartnerAssignmentSummary"
+      },
+      "PartnerAssignmentUpdate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject"
+          },
+          "instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instructions"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "ACTIVE",
+                  "CLOSED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "osm_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Osm Enabled"
+          }
+        },
+        "type": "object",
+        "title": "PartnerAssignmentUpdate",
+        "description": "Partial update. Only the fields a partner owns \u2014 require_secure_login\nand submission_mode are UI-only and not part of the external contract.\nToggling osm_enabled only affects FUTURE grading runs (re-queue a\nsubmission to re-grade it with the new setting)."
+      },
+      "PartnerBulkUploadResponse": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "successful": {
+            "type": "integer",
+            "title": "Successful"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerBulkUploadResultItem"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "successful",
+          "failed",
+          "results"
+        ],
+        "title": "PartnerBulkUploadResponse"
+      },
+      "PartnerBulkUploadResultItem": {
+        "properties": {
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "student_email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Email"
+          },
+          "submission_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submission Id"
+          },
+          "submitted_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "filename",
+          "status",
+          "message"
+        ],
+        "title": "PartnerBulkUploadResultItem"
+      },
+      "PartnerProblemArea": {
+        "properties": {
+          "question_number": {
+            "type": "string",
+            "title": "Question Number"
+          },
+          "question_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question Text"
+          },
+          "average_score_percentage": {
+            "type": "number",
+            "title": "Average Score Percentage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question_number",
+          "average_score_percentage"
+        ],
+        "title": "PartnerProblemArea"
+      },
+      "PartnerRosterItem": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "title": "Submission Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "student_email": {
+            "type": "string",
+            "title": "Student Email"
+          },
+          "student_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Name"
+          },
+          "student_enrollment_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Enrollment Number"
+          },
+          "total_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Score"
+          },
+          "max_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Score"
+          },
+          "page_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Count"
+          },
+          "error_log": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Log"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "evaluated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evaluated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "status",
+          "student_email"
+        ],
+        "title": "PartnerRosterItem",
+        "description": "One row of a test's gradebook. Deliberately excludes report_json \u2014\nper-student detail lives behind /submissions/{id}/results; pulling the\nfull report into a roster listing would make the page payload enormous."
+      },
+      "PartnerRosterPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerRosterItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "PartnerRosterPage"
+      },
+      "PartnerRubricCriterion": {
+        "properties": {
+          "criteria": {
+            "type": "string",
+            "title": "Criteria"
+          },
+          "max_marks": {
+            "type": "number",
+            "title": "Max Marks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criteria",
+          "max_marks"
+        ],
+        "title": "PartnerRubricCriterion"
+      },
+      "PartnerRubricEntry": {
+        "properties": {
+          "question_number": {
+            "type": "string",
+            "title": "Question Number"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerRubricCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question_number",
+          "criteria"
+        ],
+        "title": "PartnerRubricEntry"
+      },
+      "PartnerScoreBand": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "count"
+        ],
+        "title": "PartnerScoreBand"
+      },
+      "PartnerSubmissionCreated": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "title": "Submission Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "student_email": {
+            "type": "string",
+            "title": "Student Email"
+          },
+          "auto_grade": {
+            "type": "boolean",
+            "title": "Auto Grade"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "status",
+          "student_email",
+          "auto_grade"
+        ],
+        "title": "PartnerSubmissionCreated"
+      },
+      "PartnerSubmissionResults": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "title": "Submission Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "error_log": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Log"
+          },
+          "total_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Score"
+          },
+          "max_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Score"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "evaluated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evaluated At"
+          },
+          "assignment_title": {
+            "type": "string",
+            "title": "Assignment Title"
+          },
+          "student_email": {
+            "type": "string",
+            "title": "Student Email"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "status",
+          "assignment_title",
+          "student_email"
+        ],
+        "title": "PartnerSubmissionResults"
+      },
+      "PartnerSubmissionStatus": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "title": "Submission Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "error_log": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Log"
+          },
+          "total_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Score"
+          },
+          "max_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Score"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "evaluated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evaluated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "status"
+        ],
+        "title": "PartnerSubmissionStatus"
+      },
+      "PutQuestionsRequest": {
+        "properties": {
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionIn"
+            },
+            "type": "array",
+            "title": "Questions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "questions"
+        ],
+        "title": "PutQuestionsRequest"
+      },
+      "PutRubricsRequest": {
+        "properties": {
+          "rubrics": {
+            "items": {
+              "$ref": "#/components/schemas/PartnerRubricEntry"
+            },
+            "type": "array",
+            "title": "Rubrics"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rubrics"
+        ],
+        "title": "PutRubricsRequest"
+      },
+      "QuestionIn": {
+        "properties": {
+          "question_number": {
+            "type": "string",
+            "title": "Question Number"
+          },
+          "question_text": {
+            "type": "string",
+            "title": "Question Text"
+          },
+          "max_marks": {
+            "type": "number",
+            "title": "Max Marks"
+          },
+          "question_type": {
+            "type": "string",
+            "enum": [
+              "MCQ",
+              "SUBJECTIVE"
+            ],
+            "title": "Question Type",
+            "default": "SUBJECTIVE"
+          },
+          "section_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section Label"
+          },
+          "or_group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Or Group"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options"
+          },
+          "correct_answers": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correct Answers"
+          },
+          "sub_questions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sub Questions"
+          },
+          "model_answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Answer"
+          },
+          "model_answers": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ModelAnswerIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Answers"
+          },
+          "rubric": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RubricCriterionIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rubric"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question_number",
+          "question_text",
+          "max_marks"
+        ],
+        "title": "QuestionIn",
+        "description": "One question of a partner-created assignment. The stored shape\nmirrors the canonical questions_json the teacher UI produces (see\nassignment_questions.json) so the grader reads it unchanged. Field\nnames model_answer/model_answers are the canonical storage names the\ngrader reads \u2014 hence the disabled pydantic model_ namespace."
+      },
+      "RubricCriterionIn": {
+        "properties": {
+          "criteria": {
+            "type": "string",
+            "title": "Criteria"
+          },
+          "max_marks": {
+            "type": "number",
+            "title": "Max Marks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criteria",
+          "max_marks"
+        ],
+        "title": "RubricCriterionIn"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WebhookConfigOut": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "events": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Events"
+          },
+          "secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "events",
+          "updated_at"
+        ],
+        "title": "WebhookConfigOut"
+      },
+      "WebhookConfigPatch": {
+        "properties": {
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "events": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Events"
+          },
+          "secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret"
+          }
+        },
+        "type": "object",
+        "title": "WebhookConfigPatch"
+      },
+      "WebhookConfigRequest": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "events": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Events"
+          },
+          "secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "WebhookConfigRequest"
+      },
+      "WebhookDeliveryOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "event_type": {
+            "type": "string",
+            "title": "Event Type"
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "Attempts"
+          },
+          "next_attempt_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Attempt At"
+          },
+          "last_http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Http Status"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "delivered_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivered At"
+          },
+          "payload": {
+            "type": "object",
+            "title": "Payload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "event_type",
+          "event_id",
+          "status",
+          "attempts",
+          "next_attempt_at",
+          "last_http_status",
+          "last_error",
+          "created_at",
+          "delivered_at",
+          "payload"
+        ],
+        "title": "WebhookDeliveryOut"
+      }
+    }
+  }
+}

@@ -1,0 +1,514 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BigChalkBox Partner API Docs — Premium Stylesheet
+   Covers every element type found in partner-api-integration-guide.md (585 lines)
+   and partner-api-reference.md (1778 lines) after a full cross-check.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Page shell ─────────────────────────────────────────────────────────── */
+
+.api-docs-root {
+    min-height: 100vh;
+    background: #0d1117;
+    font-family: 'Inter', 'Onest', system-ui, sans-serif;
+    color: #e6edf3;
+}
+
+/* ── Sticky top bar ─────────────────────────────────────────────────────── */
+
+.api-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    gap: 1rem;
+    background: rgba(13, 17, 23, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #21262d;
+}
+
+.api-topbar-logo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #e6edf3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.api-topbar-logo .grad {
+    background: linear-gradient(135deg, #58a6ff 0%, #a371f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.api-topbar-logo .sep {
+    color: #484f58;
+    font-weight: 400;
+}
+
+.api-topbar-spacer { flex: 1; }
+
+.api-topbar-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 36px;
+    padding: 0 1rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%);
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.15s, transform 0.15s;
+    animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.api-topbar-download:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(56, 139, 253, 0); }
+    50%        { box-shadow: 0 0 14px 4px rgba(56, 139, 253, 0.35); }
+}
+
+/* ── Two-column grid ────────────────────────────────────────────────────── */
+
+.api-layout {
+    display: grid;
+    grid-template-columns: 268px 1fr;
+    max-width: 1440px;
+    margin: 0 auto;
+    min-height: calc(100vh - 56px);
+}
+
+@media (max-width: 900px) {
+    .api-layout { grid-template-columns: 1fr; }
+    .api-sidebar { display: none; }
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────────── */
+
+.api-sidebar {
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.5rem 0 3rem 0;
+    border-right: 1px solid #21262d;
+    scrollbar-width: thin;
+    scrollbar-color: #30363d transparent;
+}
+
+.api-sidebar::-webkit-scrollbar { width: 4px; }
+.api-sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+.api-sidebar-inner {
+    padding: 0 1rem 0 1.25rem;
+}
+
+.api-sidebar-heading {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #484f58;
+    padding: 0 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.api-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 1px solid #21262d;
+    margin-left: 0.25rem;
+}
+
+.api-toc-item { margin: 0; }
+
+.api-toc-link {
+    display: block;
+    padding: 0.28rem 0.75rem;
+    font-size: 0.8125rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    margin-left: -1px;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    border-radius: 0 6px 6px 0;
+    line-height: 1.45;
+}
+
+.api-toc-link:hover {
+    color: #c9d1d9;
+    background: rgba(139, 148, 158, 0.07);
+    border-left-color: #30363d;
+}
+
+.api-toc-link.active {
+    color: #58a6ff;
+    border-left-color: #58a6ff;
+    background: rgba(88, 166, 255, 0.07);
+    font-weight: 500;
+}
+
+/* Indentation by heading level */
+.api-toc-l1 { font-weight: 600; font-size: 0.8rem; color: #c9d1d9; }
+.api-toc-l1 .api-toc-link { padding-left: 0.5rem; }
+.api-toc-l2 .api-toc-link { padding-left: 1rem; }
+.api-toc-l3 .api-toc-link { padding-left: 1.75rem; font-size: 0.775rem; }
+
+/* ── Main content area ──────────────────────────────────────────────────── */
+
+.api-content-area {
+    min-width: 0;
+    padding: 2.5rem 4rem 6rem 3rem;
+    max-width: 900px;
+}
+
+@media (max-width: 1100px) {
+    .api-content-area { padding: 2rem 1.5rem 4rem 1.5rem; }
+}
+
+/* ── Prose ──────────────────────────────────────────────────────────────── */
+
+.api-prose { line-height: 1.75; color: #c9d1d9; }
+
+/* ── Headings ──────────────────────────────────────────────────────────── */
+
+.api-heading {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    scroll-margin-top: 80px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #e6edf3;
+    line-height: 1.3;
+}
+
+/* Hover anchor icon */
+.api-anchor {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: #484f58;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s;
+    border-radius: 4px;
+    margin-left: -26px;
+}
+
+.group:hover .api-anchor { opacity: 1; color: #8b949e; }
+.api-anchor:hover { color: #58a6ff !important; }
+
+.api-h1 { font-size: 2rem;   margin: 0 0 1.5rem; padding-bottom: 0.6rem; border-bottom: 1px solid #21262d; }
+.api-h2 { font-size: 1.4rem; margin: 3rem 0 1rem;  padding-bottom: 0.5rem; border-bottom: 1px solid #21262d; }
+.api-h3 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: #e6edf3; }
+.api-h4 { font-size: 1rem;  margin: 1.5rem 0 0.5rem; color: #c9d1d9; font-family: 'SF Mono', 'Fira Code', monospace; }
+.api-h5 { font-size: 0.9rem; margin: 1.25rem 0 0.4rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Inline code inside headings (e.g. `GET /assignments/{id}`) */
+.api-heading code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.88em;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    padding: 0.1em 0.4em;
+    color: #79c0ff;
+    font-weight: 400;
+}
+
+/* ── Paragraphs ─────────────────────────────────────────────────────────── */
+
+.api-prose p {
+    margin: 0 0 1.1rem;
+    color: #c9d1d9;
+}
+
+/* ── Inline code ────────────────────────────────────────────────────────── */
+
+.api-prose :not(pre) > code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+    font-size: 0.84em;
+    background: rgba(110, 118, 129, 0.12);
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 0.1em 0.38em;
+    color: #79c0ff;
+}
+
+/* ── Links ──────────────────────────────────────────────────────────────── */
+
+.api-prose a {
+    color: #58a6ff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(88, 166, 255, 0.4);
+    transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.api-prose a:hover {
+    color: #79c0ff;
+    text-decoration-color: rgba(121, 192, 255, 0.6);
+}
+
+/* ── Bold / em ──────────────────────────────────────────────────────────── */
+
+.api-prose strong { color: #e6edf3; font-weight: 600; }
+.api-prose em     { color: #d2a8ff; font-style: italic; }
+
+/* ── Lists ──────────────────────────────────────────────────────────────── */
+
+.api-prose ul, .api-prose ol {
+    margin: 0.5rem 0 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.api-prose ul { list-style: none; }
+.api-prose ul > li { position: relative; padding-left: 0.75rem; margin-bottom: 0.35rem; }
+.api-prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: -0.2rem;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #30363d;
+}
+
+.api-prose ol { list-style: decimal; }
+.api-prose ol > li { margin-bottom: 0.35rem; padding-left: 0.25rem; }
+
+/* Nested lists */
+.api-prose li > ul, .api-prose li > ol { margin: 0.3rem 0 0.3rem 0; }
+
+/* Checkbox list items (go-live checklist §8) */
+.api-prose input[type="checkbox"] {
+    accent-color: #1f6feb;
+    width: 14px;
+    height: 14px;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    cursor: default;
+}
+
+/* ── Code blocks ────────────────────────────────────────────────────────── */
+
+.api-code-block {
+    margin: 1.25rem 0 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #21262d;
+    background: #010409;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+.api-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 1rem;
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+}
+
+.api-code-lang {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #484f58;
+}
+
+.api-code-dots {
+    display: flex;
+    gap: 5px;
+}
+.api-code-dots span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #21262d;
+}
+
+.api-code-block pre {
+    margin: 0;
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+}
+
+.api-code-block pre code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+/* ── Mermaid diagrams (sequenceDiagram in §2 of integration guide) ──────── */
+
+.api-mermaid-block {
+    margin: 1.25rem 0 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #21262d;
+    background: #010409;
+}
+
+.api-mermaid-block pre {
+    margin: 0;
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+}
+
+.api-mermaid-block code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #79c0ff;
+    line-height: 1.6;
+    white-space: pre;
+}
+
+/* ── Blockquotes (version callouts in both docs) ────────────────────────── */
+
+.api-blockquote {
+    margin: 1.25rem 0;
+    padding: 0.75rem 1.25rem;
+    border-left: 3px solid #1f6feb;
+    background: rgba(31, 111, 235, 0.07);
+    border-radius: 0 8px 8px 0;
+    color: #8b949e;
+    font-size: 0.9rem;
+}
+
+.api-blockquote p { margin: 0 0 0.4rem; color: inherit; }
+.api-blockquote p:last-child { margin: 0; }
+
+.api-blockquote strong { color: #79c0ff; }
+.api-blockquote code {
+    background: rgba(110, 118, 129, 0.1);
+    border: 1px solid #21262d;
+    color: #79c0ff;
+    font-size: 0.82em;
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────────── */
+/* Critical: docs have ~30+ tables covering endpoints, fields, errors, limits */
+
+.api-table-wrapper {
+    margin: 1.25rem 0 1.5rem;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #21262d;
+}
+
+.api-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.855rem;
+    line-height: 1.55;
+}
+
+.api-table thead {
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+}
+
+.api-table th {
+    text-align: left;
+    padding: 0.65rem 1rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.api-table td {
+    padding: 0.65rem 1rem;
+    color: #c9d1d9;
+    border-bottom: 1px solid #161b22;
+    vertical-align: top;
+}
+
+.api-table tbody tr:last-child td { border-bottom: none; }
+
+.api-table tbody tr:hover td { background: rgba(139, 148, 158, 0.05); }
+
+/* Inline code inside tables */
+.api-table td code, .api-table th code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82em;
+    background: rgba(110, 118, 129, 0.12);
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    color: #79c0ff;
+}
+
+/* Bold in tables */
+.api-table strong { color: #e6edf3; font-weight: 600; }
+
+/* Links in tables */
+.api-table a { color: #58a6ff; text-underline-offset: 2px; }
+
+/* ── Horizontal rules (section separators) ──────────────────────────────── */
+
+.api-divider {
+    margin: 3rem 0;
+    border: none;
+    border-top: 1px solid #21262d;
+}
+
+/* ── highlight.js overrides for dark theme (atom-one-dark) ──────────────── */
+
+/* Ensure the hljs base doesn't fight our bg */
+.hljs { background: transparent !important; }
+
+/* ── Scrollbar for code blocks ──────────────────────────────────────────── */
+
+.api-code-block pre::-webkit-scrollbar { height: 4px; }
+.api-code-block pre::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+/* ── Version badges (v1.1, v1.2, v1.3) ─────────────────────────────────── */
+/* These appear inline in headings like "`GET /analytics` — v1.3" */
+/* The em-dash + version text is already part of the heading text; no extra markup */
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .api-content-area { padding: 1.5rem 1rem 4rem; }
+    .api-h1  { font-size: 1.6rem; }
+    .api-h2  { font-size: 1.2rem; }
+    .api-table { font-size: 0.8rem; }
+    .api-table th, .api-table td { padding: 0.5rem 0.75rem; }
+    .api-topbar-download { display: none; }
+}
