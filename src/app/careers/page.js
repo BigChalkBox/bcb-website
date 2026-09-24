@@ -325,8 +325,8 @@ export default function CareersPage() {
 
                               {!showApplyForm ? (
                                 <div style={{ marginTop: '1rem' }}>
-                                  <button onClick={() => setShowApplyForm(true)} style={{ cursor: 'pointer', border: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '1rem 2.5rem', background: 'var(--color-gold)', color: 'var(--color-ink)', borderRadius: '9999px', fontWeight: 800, fontSize: '1rem', transition: 'all 0.25s' }}
-                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 20px rgba(20,90,56,0.15)' }}
+                                  <button onClick={() => setShowApplyForm(true)} style={{ cursor: 'pointer', border: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '1rem 2.5rem', background: 'var(--color-ink)', color: 'white', borderRadius: '9999px', fontWeight: 800, fontSize: '1rem', transition: 'all 0.25s' }}
+                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)' }}
                                     onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}
                                   >
                                     Apply Now <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>arrow_forward</span>
@@ -346,28 +346,28 @@ export default function CareersPage() {
                                       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                                         <div style={{ flex: '1 1 200px' }}>
                                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Full Name *</label>
-                                          <input name="fullName" required type="text" placeholder="John Doe" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
+                                          <input name="fullName" required type="text" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
                                         </div>
                                         <div style={{ flex: '1 1 200px' }}>
                                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Email Address *</label>
-                                          <input name="email" required type="email" placeholder="john@example.com" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
+                                          <input name="email" required type="email" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
                                         </div>
                                       </div>
 
                                       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                                         <div style={{ flex: '1 1 200px' }}>
                                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Phone Number *</label>
-                                          <input name="phone" required type="tel" placeholder="+91 98765 43210" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
+                                          <input name="phone" required type="tel" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
                                         </div>
                                         <div style={{ flex: '1 1 200px' }}>
                                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Link to Resume (Drive, Notion, etc.) *</label>
-                                          <input name="resumeLink" required type="url" placeholder="https://..." style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
+                                          <input name="resumeLink" required type="url" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
                                         </div>
                                       </div>
 
                                       <div>
                                         <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Why are you a good fit? / Comments (Optional)</label>
-                                        <textarea name="comments" rows="3" placeholder="Tell us a bit about your experience..." style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none', resize: 'vertical' }}></textarea>
+                                        <textarea name="comments" rows="3" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none', resize: 'vertical' }}></textarea>
                                       </div>
 
                                       <button disabled={submitting} type="submit" style={{ cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, border: 'none', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', padding: '1rem', background: 'var(--color-ink)', color: 'white', borderRadius: '0.5rem', fontWeight: 700, fontSize: '1rem', transition: 'all 0.25s' }}>
