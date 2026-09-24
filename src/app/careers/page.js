@@ -357,7 +357,9 @@ export default function CareersPage() {
                                       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                                         <div style={{ flex: '1 1 200px' }}>
                                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Phone Number *</label>
-                                          <input name="phone" required type="tel" style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
+                                          <input name="phone" required type="tel" 
+                                            onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9+\-()\s]/g, '') }} 
+                                            style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-ink)', fontFamily: 'var(--font-sans)', outline: 'none' }} />
                                         </div>
                                         <div style={{ flex: '1 1 200px' }}>
                                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-ink-soft)' }}>Link to Resume (Drive, Notion, etc.) *</label>
