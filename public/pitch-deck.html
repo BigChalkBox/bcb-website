@@ -86,6 +86,9 @@ img { max-width: 100%; max-height: 100%; }
 .page-num b { color: var(--indigo); }
 .dark .page-num { color: rgba(255,255,255,.55); }
 .dark .page-num b { color: var(--yellow); }
+
+.swipe-indicator { position: absolute; bottom: 36px; right: 64px; z-index: 5; font-size: 20px; letter-spacing: .06em; color: var(--yellow); font-weight: 700; display: flex; align-items: center; gap: 8px; animation: swipe-pulse 1.5s ease-in-out infinite; }
+@keyframes swipe-pulse { 0%, 100% { transform: translateX(0); opacity: 0.8; } 50% { transform: translateX(12px); opacity: 1; } }
 .brand-mini { position: absolute; bottom: 34px; left: 120px; z-index: 5; font-family: 'Amaranth', var(--font-display), sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
 .brand-mini .g { color: #266235; } .brand-mini .d { color: #1f2937; }
 .dark .brand-mini .g { color: var(--green-soft); } .dark .brand-mini .d { color: #fff; }
@@ -353,6 +356,10 @@ img { max-width: 100%; max-height: 100%; }
       <span class="chip">Verify <span class="arr">&#10003;</span></span>
       <span class="chip">Evaluate</span>
     </div>
+  </div>
+  <div class="swipe-indicator reveal d4">
+    <span>Swipe</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </div>
 </section>
 
