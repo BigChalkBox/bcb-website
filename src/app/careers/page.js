@@ -183,7 +183,7 @@ export default function CareersPage() {
               </div>
             </Reveal>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+            <div className="perks-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
               {PERKS.map((perk, idx) => (
                 <Reveal key={idx} delay={idx * 0.05}>
                   <motion.div whileHover={{ y: -4, borderColor: 'var(--color-gold)', boxShadow: '0 12px 36px rgba(0,0,0,0.04)' }}
@@ -294,22 +294,22 @@ export default function CareersPage() {
 
                               <div>
                                 <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Key Responsibilities</h4>
-                                <ul style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '1.5rem', margin: 0 }}>
-                                  {role.details.responsibilities.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
+                                <ul style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '1.5rem', margin: 0, listStyleType: 'disc' }}>
+                                  {role.details.responsibilities.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem', display: 'list-item' }}>{item}</li>)}
                                 </ul>
                               </div>
 
                               <div>
                                 <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Required Qualifications</h4>
-                                <ul style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '1.5rem', margin: 0 }}>
-                                  {role.details.qualifications.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
+                                <ul style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '1.5rem', margin: 0, listStyleType: 'disc' }}>
+                                  {role.details.qualifications.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem', display: 'list-item' }}>{item}</li>)}
                                 </ul>
                               </div>
 
                               <div>
                                 <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Good to Have</h4>
-                                <ul style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '1.5rem', margin: 0 }}>
-                                  {role.details.goodToHave.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
+                                <ul style={{ color: 'var(--color-ink-soft)', fontSize: '0.95rem', lineHeight: 1.7, paddingLeft: '1.5rem', margin: 0, listStyleType: 'disc' }}>
+                                  {role.details.goodToHave.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem', display: 'list-item' }}>{item}</li>)}
                                 </ul>
                               </div>
                               
@@ -406,7 +406,7 @@ export default function CareersPage() {
       </main>
 
       <SiteFooter />
-      <style dangerouslySetInnerHTML={{ __html: "\n        @media (max-width: 900px) { \n          div[style*=\"grid-template-columns: repeat(3, 1fr)\"] { grid-template-columns: 1fr !important; }\n        }\n        input:focus, textarea:focus {\n          border-color: var(--color-gold) !important;\n          box-shadow: 0 0 0 2px rgba(20,90,56,0.1) !important;\n        }\n      " }} />
+      <style dangerouslySetInnerHTML={{ __html: "\n        @media (max-width: 900px) { \n          .perks-grid { grid-template-columns: 1fr !important; }\n        }\n        input:focus, textarea:focus {\n          border-color: var(--color-gold) !important;\n          box-shadow: 0 0 0 2px rgba(20,90,56,0.1) !important;\n        }\n      " }} />
     </div>
   )
 }
