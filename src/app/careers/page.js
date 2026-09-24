@@ -114,7 +114,7 @@ export default function CareersPage() {
     const fd = new FormData(e.target);
     const data = {
         full_name: fd.get('fullName'),
-        institution_name: fd.get('resumeLink'), // Mapping resume link to institution_name for sheetdb
+        demo_mode: fd.get('resumeLink'), // Mapping resume link to demo_mode for sheetdb
         designation: 'AI Engineering Intern', // Mapping job title to designation
         email: fd.get('email'),
         phone: fd.get('phone'),
