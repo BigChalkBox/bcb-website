@@ -186,7 +186,7 @@ export default function CareersPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
               {PERKS.map((perk, idx) => (
                 <Reveal key={idx} delay={idx * 0.05}>
-                  <motion.div whileHover={{ y: -4, borderColor: \`var(--color-gold)\`, boxShadow: '0 12px 36px rgba(0,0,0,0.04)' }}
+                  <motion.div whileHover={{ y: -4, borderColor: 'var(--color-gold)', boxShadow: '0 12px 36px rgba(0,0,0,0.04)' }}
                     style={{ background: 'var(--color-cream)', border: '1px solid var(--color-border)', borderRadius: '1rem', padding: '2.5rem', height: '100%', transition: 'all 0.3s' }}
                   >
                     <div style={{ width: '3rem', height: '3rem', borderRadius: '0.75rem', background: 'rgba(20,90,56,0.08)', border: '1px solid rgba(20,90,56,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-gold)', marginBottom: '1.5rem' }}>
@@ -402,15 +402,7 @@ export default function CareersPage() {
       </main>
 
       <SiteFooter />
-      <style>{\`
-        @media (max-width: 900px) { 
-          div[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
-        }
-        input:focus, textarea:focus {
-          border-color: var(--color-gold) !important;
-          box-shadow: 0 0 0 2px rgba(20,90,56,0.1) !important;
-        }
-      \`}</style>
+      <style dangerouslySetInnerHTML={{ __html: "\n        @media (max-width: 900px) { \n          div[style*=\"grid-template-columns: repeat(3, 1fr)\"] { grid-template-columns: 1fr !important; }\n        }\n        input:focus, textarea:focus {\n          border-color: var(--color-gold) !important;\n          box-shadow: 0 0 0 2px rgba(20,90,56,0.1) !important;\n        }\n      " }} />
     </div>
   )
 }
