@@ -145,7 +145,7 @@ export default function SiteFooter() {
                         <ul>
                             <li>
                                 <a href="https://youtube.com/@dases_ai" target="_blank" rel="noopener noreferrer">
-                                    YouTube ↗
+                                    YouTube
                                 </a>
                             </li>
                         </ul>
