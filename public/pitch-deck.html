@@ -2549,63 +2549,33 @@
           <div class="kicker reveal d1">Module 04 &middot; Exam Integrity</div>
           <h2 class="title reveal d2">Proctoring: Secure online <span class="hl">exams.</span></h2>
           <div class="body reveal d3" style="width:100%; margin-top:20px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 40px; height: 100%;">
-              <div style="position:relative; border-radius: 40px; overflow: hidden; background: #131916; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
-                <!-- Radar grid background -->
-                <div style="position:absolute; inset:0; background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.6;"></div>
-                
-                <!-- Center eye / camera lens -->
-                <div style="position: relative; width: 180px; height: 180px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 40px rgba(255,255,255,0.02), 0 0 80px rgba(20,90,56,0.15);">
-                   <div style="width: 130px; height: 130px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center;">
-                     <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--green-soft); box-shadow: 0 0 50px var(--green-soft), 0 0 20px rgba(255,255,255,0.5);"></div>
-                   </div>
-                   <!-- Scanning line abstraction -->
-                   <div style="position:absolute; inset:0; border-radius: 50%; background: conic-gradient(from 45deg, transparent 70%, rgba(20,90,56,0.6) 100%); mix-blend-mode: screen;"></div>
-                </div>
-
-                <!-- Decorative corner elements to look like a UI viewfinder -->
-                <div style="position:absolute; top:48px; left:48px; width:32px; height:32px; border-top: 2px solid rgba(255,255,255,0.4); border-left: 2px solid rgba(255,255,255,0.4);"></div>
-                <div style="position:absolute; top:48px; right:48px; width:32px; height:32px; border-top: 2px solid rgba(255,255,255,0.4); border-right: 2px solid rgba(255,255,255,0.4);"></div>
-                <div style="position:absolute; bottom:48px; left:48px; width:32px; height:32px; border-bottom: 2px solid rgba(255,255,255,0.4); border-left: 2px solid rgba(255,255,255,0.4);"></div>
-                <div style="position:absolute; bottom:48px; right:48px; width:32px; height:32px; border-bottom: 2px solid rgba(255,255,255,0.4); border-right: 2px solid rgba(255,255,255,0.4);"></div>
-                
-                <!-- Top red recording indicator -->
-                <div style="position:absolute; top:48px; display:flex; align-items:center; gap:8px;">
-                  <div style="width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow: 0 0 10px #ef4444;"></div>
-                  <div style="font-family:var(--font-display); font-size:14px; font-weight:700; letter-spacing:1px; color:rgba(255,255,255,0.7);">REC</div>
-                </div>
-                
-                <div style="position:absolute; inset:0; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1); border-radius: 40px; pointer-events: none;"></div>
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width:100%;">
+              <!-- Card 1 -->
+              <div style="background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:32px; padding:40px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); position:relative; overflow:hidden;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">01</div>
+                <div style="font-family:var(--font-display);font-weight:800;font-size:28px;color:#fff;margin-bottom:12px;">Online Monitoring</div>
+                <div style="font-size:18px;line-height:1.5;color:rgba(255,255,255,.7);">Students take exams online while the system seamlessly monitors the environment in real-time.</div>
               </div>
-              <div style="display:flex; flex-direction:column; justify-content:center; gap: 32px; padding: 20px;">
-                <div style="display:flex; align-items:flex-start; gap: 16px;">
-                  <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">01</div>
-                  <div>
-                    <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 24px; color: #fff; margin-bottom: 8px;">Online Monitoring</h3>
-                    <p style="font-size: 20px; color: rgba(255,255,255,0.7); line-height: 1.5;">Students take exams online while the system monitors the environment.</p>
-                  </div>
-                </div>
-                <div style="display:flex; align-items:flex-start; gap: 16px;">
-                  <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">02</div>
-                  <div>
-                    <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 24px; color: #fff; margin-bottom: 8px;">Continuous Logging</h3>
-                    <p style="font-size: 20px; color: rgba(255,255,255,0.7); line-height: 1.5;">The system logs frame-by-frame video of the session.</p>
-                  </div>
-                </div>
-                <div style="display:flex; align-items:flex-start; gap: 16px;">
-                  <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">03</div>
-                  <div>
-                    <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 24px; color: #fff; margin-bottom: 8px;">Anomaly Detection</h3>
-                    <p style="font-size: 20px; color: rgba(255,255,255,0.7); line-height: 1.5;">Includes gaze tracking, device lock, and environment scanning.</p>
-                  </div>
-                </div>
-                <div style="display:flex; align-items:flex-start; gap: 16px;">
-                  <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">04</div>
-                  <div>
-                    <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 24px; color: #fff; margin-bottom: 8px;">Exportable Evidence</h3>
-                    <p style="font-size: 20px; color: rgba(255,255,255,0.7); line-height: 1.5;">Incident reports include timestamps and irrefutable proof.</p>
-                  </div>
-                </div>
+
+              <!-- Card 2 -->
+              <div style="background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:32px; padding:40px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); position:relative; overflow:hidden;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">02</div>
+                <div style="font-family:var(--font-display);font-weight:800;font-size:28px;color:#fff;margin-bottom:12px;">Continuous Logging</div>
+                <div style="font-size:18px;line-height:1.5;color:rgba(255,255,255,.7);">The infrastructure captures and encrypts frame-by-frame video and audio of the entire session.</div>
+              </div>
+
+              <!-- Card 3 -->
+              <div style="background:var(--indigo-deep); border:1px solid rgba(255,255,255,.1); border-radius:32px; padding:40px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); position:relative; overflow:hidden;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">03</div>
+                <div style="font-family:var(--font-display);font-weight:800;font-size:28px;color:#fff;margin-bottom:12px;">Anomaly Detection</div>
+                <div style="font-size:18px;line-height:1.5;color:rgba(255,255,255,.7);">Advanced heuristics track gaze deviation, browser tabs, device locks, and secondary displays.</div>
+              </div>
+
+              <!-- Card 4 -->
+              <div style="background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:32px; padding:40px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); position:relative; overflow:hidden;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); color: var(--yellow); display:flex; align-items:center; justify-content:center; font-weight: 800; font-size: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">04</div>
+                <div style="font-family:var(--font-display);font-weight:800;font-size:28px;color:#fff;margin-bottom:12px;">Exportable Evidence</div>
+                <div style="font-size:18px;line-height:1.5;color:rgba(255,255,255,.7);">Automated incident reports compile timestamps, confidence scores, and irrefutable proof.</div>
               </div>
             </div>
           </div>
