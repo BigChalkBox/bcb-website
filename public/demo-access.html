@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>BigChalkBox demo logins</title>
+<style>
+:root { --ink:#06110a; --forest:#0f3d22; --green:#1d6b35; --gold:#e4bc52; --chalk:#f6f2e7; --muted:#56665b; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font: 16px/1.45 -apple-system, "Segoe UI", system-ui, sans-serif; background: #f6f2e7; color: #0d1a12; -webkit-font-smoothing: antialiased; }
+header { padding: 28px 20px 26px; background: linear-gradient(155deg, #14502d, #0f3d22 55%, #092c18); color: var(--chalk); }
+header b { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+header h1 { margin-top: 8px; font-size: 28px; line-height: 1.1; letter-spacing: -.02em; }
+header p { margin-top: 8px; opacity: .8; font-size: 15px; }
+main { padding: 18px 16px 40px; max-width: 560px; margin: 0 auto; display: grid; gap: 16px; }
+.card { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 14px 30px -18px rgba(15, 61, 34, .45), 0 0 0 1px rgba(15, 61, 34, .08); }
+.card h2 { font-size: 20px; letter-spacing: -.01em; }
+.card .tag { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #b5832a; font-weight: 700; }
+.row { margin-top: 12px; }
+.row label { display: block; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.val { display: flex; gap: 8px; margin-top: 4px; }
+.val code { flex: 1; min-width: 0; padding: 12px 12px; border-radius: 12px; background: #f1efe4; font: 600 15px/1.2 ui-monospace, Menlo, monospace; overflow-x: auto; white-space: nowrap; }
+button, .open { border: 0; border-radius: 12px; padding: 0 14px; min-height: 44px; font: 700 14px/1 inherit; cursor: pointer; background: #e4efe6; color: var(--forest); }
+.open { display: block; margin-top: 14px; padding: 15px; text-align: center; text-decoration: none; background: var(--forest); color: var(--gold); font-size: 16px; }
+.note { font-size: 13px; color: var(--muted); text-align: center; padding: 4px 8px; }
+.empty { text-align: center; color: var(--muted); padding: 30px 10px; }
+</style></head><body>
+<header><b>BigChalkBox</b><h1>Your demo logins</h1><p>Tap Copy, then Open. These are test accounts with sample data.</p></header>
+<main id="m"></main>
+<script>
+(function () {
+  var KEY = 'bcb-demo', raw = {};
+  try {
+    var h = location.hash.replace(/^#/, '');
+    if (h) { h.split('&').forEach(function (p) { var i = p.indexOf('='); if (i > 0) raw[p.slice(0, i)] = decodeURIComponent(p.slice(i + 1)); }); sessionStorage.setItem(KEY, JSON.stringify(raw)); history.replaceState(null, '', location.pathname); }
+    else { raw = JSON.parse(sessionStorage.getItem(KEY) || '{}'); }
+  } catch (e) { raw = {}; }
+  var items = [
+    { k: 'a', tag: 'Option A', name: 'Question Paper Generation', url: 'https://generation.bigchalkbox.com/login' },
+    { k: 'b', tag: 'Option B', name: 'Question Bank', url: 'https://generation.bigchalkbox.com/login' },
+    { k: 'c', tag: 'Option C', name: 'Moderate manually set QP', url: 'https://moderation.bigchalkbox.com/login' }
+  ];
+  var m = document.getElementById('m'), shown = 0;
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function copy(text, btn) { function ok() { var o = btn.textContent; btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = o; }, 1200); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(ok); else { var t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); ok(); } catch (e) {} t.remove(); } }
+  function row(label, value, secret) { var r = el('div', 'row'); r.appendChild(el('label', '', label)); var v = el('div', 'val'); var c = el('code', '', secret ? '\u2022'.repeat(value.length) : value); v.appendChild(c);
+    if (secret) { var s = el('button', '', 'Show'); s.onclick = function () { var on = s.textContent === 'Show'; c.textContent = on ? value : '\u2022'.repeat(value.length); s.textContent = on ? 'Hide' : 'Show'; }; v.appendChild(s); }
+    var b = el('button', '', 'Copy'); b.onclick = function () { copy(value, b); }; v.appendChild(b); r.appendChild(v); return r; }
+  items.forEach(function (it) {
+    var pair = (raw[it.k] || '').split('~'); if (pair.length !== 2 || !pair[0] || !pair[1]) return; shown++;
+    var c = el('section', 'card'); c.appendChild(el('div', 'tag', it.tag)); c.appendChild(el('h2', '', it.name));
+    c.appendChild(row('Email', pair[0], false)); c.appendChild(row('Password', pair[1], true));
+    var a = el('a', 'open', 'Open ' + it.name); a.href = it.url; a.rel = 'noopener'; c.appendChild(a); m.appendChild(c);
+  });
+  if (!shown) m.appendChild(el('div', 'empty', 'Scan the code on the last slide to see the demo logins here.'));
+  m.appendChild(el('p', 'note', 'Questions? admin@bigchalkbox.com'));
+})();
+</script></body></html>
