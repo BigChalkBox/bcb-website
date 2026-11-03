@@ -620,7 +620,7 @@ a.rep { display: block; position: relative; color: inherit; text-decoration: non
 
 /* ---- Option A morphing tracker: one element, two layouts (big on slide 3, mini top right on 4 to 7) ---- */
 .otrack { display: none; }
-.s-o3 .tl { visibility: hidden; }
+.s-o3[data-track] .tl { visibility: hidden; }
 .otk { position: absolute; inset: 0; z-index: 40; pointer-events: none; opacity: 0; transition: opacity .5s ease; }
 .otk.shown { opacity: 1; }
 .otk.big { --x0: 112px; --cw: 424px; --y0: 420px; --cd: 140px; --tf: 42px; --gap: 24px; --th: 6px; --bd: 48px; --bf: 25px; --bo: -4px; --bor: -4px; --bw: 3px; --svg: 60px; }
