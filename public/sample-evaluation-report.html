@@ -132,7 +132,8 @@ a { color: inherit; text-decoration: none; }
 
 .status { max-width: var(--pw, 900px); margin: 0 auto 22px; padding: 14px 18px; border-radius: 16px; background: var(--glass); border: 1px solid var(--line); font: 600 14px/1.4 var(--f-body); color: var(--muted); display: flex; align-items: center; gap: 12px; }
 .status .bar { flex: 1; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, .1); overflow: hidden; }
-.status .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--green-2), var(--mint)); transition: width .3s; }
+.status .bar i { display: block; height: 100%; width: 14%; background: linear-gradient(90deg, var(--green-2), var(--mint)); transition: width .3s; animation: ind 1.3s ease-in-out infinite; }
+@keyframes ind { 0% { margin-left: -14%; } 100% { margin-left: 100%; } }
 .status.err { color: var(--rose); border-color: rgba(255, 138, 128, .35); }
 .status a { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
 .status.hide { display: none; }
@@ -439,7 +440,7 @@ function buildPages() {
     const lib = await import('/vendor/pdfjs/pdf.min.js');
     lib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
     const task = lib.getDocument({ url: PDF_URL });
-    task.onProgress = (p) => { if (p.total) { const pc = Math.round((p.loaded / p.total) * 100); $('stBar').style.width = pc + '%'; $('stTxt').textContent = 'Loading the report ' + pc + '%'; } };
+    task.onProgress = (p) => { if (p.total) { $('stBar').style.animation = 'none';  const pc = Math.round((p.loaded / p.total) * 100); $('stBar').style.width = pc + '%'; $('stTxt').textContent = 'Loading the report ' + pc + '%'; } };
     pdf = await task.promise;
     N = pdf.numPages;
     const first = await pdf.getPage(1); const vp = first.getViewport({ scale: 1 });
